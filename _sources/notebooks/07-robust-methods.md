@@ -247,48 +247,51 @@ Se observa que variables como `Overall Qual`, `Gr Liv Area`, `Garage Cars` y `Ye
 ### 7.4 OLS vs. HC3 vs. Bootstrap
 
 ```{code-cell} ipython3
-import pandas as pd
 
+import pandas as pd
+# 1Extraer y alinear objetos base
 coef_ols = modelo_base.params
 se_ols = modelo_base.bse
 se_hc3 = resultados_HC3.bse
 
-if 'variable' in bootstrap_df.columns: bootstrap_df = bootstrap_df.set_index('variable')
+# Asegurar que bootstrap_df esté indexado por el nombre del coeficiente (si aplica)
+if isinstance(bootstrap_df, pd.DataFrame) and 'variable' in bootstrap_df.columns and bootstrap_df.index.name != 'variable':
+    bootstrap_df = bootstrap_df.set_index('variable')
 
 coef_boot_mean = bootstrap_df['Coef_mean'].reindex(coef_ols.index)
 se_boot = bootstrap_df['SE_bootstrap'].reindex(coef_ols.index)
 
+# 2 Anchuras de IC (97.5 - 2.5) para cada método
 ic_ols_width = (modelo_base.conf_int().iloc[:, 1] - modelo_base.conf_int().iloc[:, 0]).reindex(coef_ols.index)
 
 hc3_ci = resultados_HC3.conf_int()
+# Normalizar a DataFrame con el mismo índice
+if isinstance(hc3_ci, pd.DataFrame):
+    hc3_ci_df = hc3_ci
+else:
+    hc3_ci_df = pd.DataFrame(hc3_ci, index=coef_ols.index, columns=[0, 1])
 
-conf_int() 
-
-if not isinstance(hc3_ci, pd.DataFrame):
-hc3_ci = pd.DataFrame(hc3_ci, index=coef_ols.index, columns=[0,1])
-ic_hc3_width = (hc3_ci.iloc[:, 1] - hc3_ci.iloc[:, 0]).reindex(coef_ols.index)
-
+ic_hc3_width = (hc3_ci_df.iloc[:, 1] - hc3_ci_df.iloc[:, 0]).reindex(coef_ols.index)
 ic_boot_width = (bootstrap_df['IC_97.5%'] - bootstrap_df['IC_2.5%']).reindex(coef_ols.index)
 
-
-
+# 3 Tabla maestra comparativa
 comparative_df = pd.DataFrame({
-'Coef_OLS': coef_ols,
-'Coef_Bootstrap': coef_boot_mean,
-'SE_OLS': se_ols,
-'SE_HC3': se_hc3,
-'SE_Bootstrap': se_boot,
-'IC_width_OLS': ic_ols_width,
-'IC_width_HC3': ic_hc3_width,
-'IC_width_Bootstrap': ic_boot_width
+    'Coef_OLS': coef_ols,
+    'Coef_Bootstrap': coef_boot_mean,
+    'SE_OLS': se_ols,
+    'SE_HC3': se_hc3,
+    'SE_Bootstrap': se_boot,
+    'IC_width_OLS': ic_ols_width,
+    'IC_width_HC3': ic_hc3_width,
+    'IC_width_Bootstrap': ic_boot_width
 })
 
-
-
+# 4 Subtablas
 coef_df = comparative_df[['Coef_OLS', 'Coef_Bootstrap']]
 se_df = comparative_df[['SE_OLS', 'SE_HC3', 'SE_Bootstrap']]
 ic_df = comparative_df[['IC_width_OLS', 'IC_width_HC3', 'IC_width_Bootstrap']]
 
+# Mostrar por conveniencia
 coef_df
 ```
 
