@@ -4,7 +4,7 @@ jupytext:
   text_representation: {extension: .md, format_name: myst}
 kernelspec: {name: python3, display_name: Python 3}
 ---
-# C7 · Métodos Robustos y/o Validación
+# Capítulo 7: Remedios y métodos robustos
 
 ## Overview
 Se exploran estimadores robustos (Huber/RLM, Regresión Cuantílica) y procedimientos de validación. Incluye una sección de **Bootstrap** para evaluar la variabilidad de los estimadores y comparar OLS, errores estándar HC3 y percentiles bootstrap.
@@ -126,197 +126,98 @@ Alineados con los errores estándar ([Tabla 7.4.2](#tabla-742-se-ols-hc3-boot)),
 ## 7.4 OLS vs. HC3 vs. Bootstrap
 
 
-```{code-cell} ipython3
-# Ruta canónica para resultados de Bootstrap (guardado/lectura)
-from pathlib import Path
-BOOT_CSV_PATH = Path("../data/bootstrap_results.csv")
-print("Archivo Bootstrap:", BOOT_CSV_PATH.resolve())
-```
 
 ```{code-cell} ipython3
-from pathlib import Path
 import pandas as pd
-
-# Definir ruta de datos relativa al capítulo (ejecutado desde book/notebooks/)
-DATA_PATH = Path("../data/AmesHousing_codificada.csv")
-assert DATA_PATH.is_file(), f"No se encontró '{DATA_PATH}'"
-print("Usando CSV base:", DATA_PATH.resolve())
-
-# Lectura canónica a reutilizar en el capítulo
-df = pd.read_csv(DATA_PATH)
-df.shape
-```
-```{code-cell} ipython3
-import statsmodels.api as sm
-import pandas as pd
-
-pd.set_option('display.float_format', '{:.6f}'.format)
-
-data_modelo_base = pd.read_csv(DATA_PATH)
-
-data_modelo_base = data_modelo_base[['SalePrice_log', 'Overall Qual', 'Gr Liv Area', 
-                                     'Garage Cars', 'Total Bsmt SF', '1st Flr SF', 
-                                     'Full Bath', 'Year Built', 'Fireplaces', 'Lot Area']]
-X = data_modelo_base[['Overall Qual', 'Gr Liv Area', 'Garage Cars', 'Total Bsmt SF',
-                      '1st Flr SF', 'Full Bath', 'Year Built', 'Fireplaces', 'Lot Area']]
-y = data_modelo_base[['SalePrice_log']]
-
-X = sm.add_constant(X)
-
-modelo_base = sm.OLS(y, X).fit()
-
-resultados_HC0 = modelo_base.get_robustcov_results(cov_type='HC0')
-resultados_HC1 = modelo_base.get_robustcov_results(cov_type='HC1')
-resultados_HC2 = modelo_base.get_robustcov_results(cov_type='HC2')
-resultados_HC3 = modelo_base.get_robustcov_results(cov_type='HC3')
-
-def get_confint_df(result, var_names):
-    ci = result.conf_int()
-    if isinstance(ci, pd.DataFrame):
-        ci = ci.loc[var_names]
-    else:
-        ci = pd.DataFrame(ci, columns=["lower", "upper"], index=var_names)
-    return ci
-
-variables = modelo_base.params.index
-
-se_df = pd.DataFrame({
-    "OLS": modelo_base.bse,
-    "HC0": resultados_HC0.bse,
-    "HC1": resultados_HC1.bse,
-    "HC2": resultados_HC2.bse,
-    "HC3": resultados_HC3.bse,
-})
-se_df.index.name = "Variable"
-
-ic_ols = get_confint_df(modelo_base, variables)
-ic_hc0 = get_confint_df(resultados_HC0, variables)
-ic_hc1 = get_confint_df(resultados_HC1, variables)
-ic_hc2 = get_confint_df(resultados_HC2, variables)
-ic_hc3 = get_confint_df(resultados_HC3, variables)
-
-ic_df = pd.DataFrame({
-    "OLS_lower": ic_ols.iloc[:,0],
-    "OLS_upper": ic_ols.iloc[:,1],
-    "HC0_lower": ic_hc0.iloc[:,0],
-    "HC0_upper": ic_hc0.iloc[:,1],
-    "HC1_lower": ic_hc1.iloc[:,0],
-    "HC1_upper": ic_hc1.iloc[:,1],
-    "HC2_lower": ic_hc2.iloc[:,0],
-    "HC2_upper": ic_hc2.iloc[:,1],
-    "HC3_lower": ic_hc3.iloc[:,0],
-    "HC3_upper": ic_hc3.iloc[:,1],
-})
-ic_df.index = variables
-ic_df.index.name = "Variable"
-
-display(se_df.style.format("{:.6f}"))
-```
-
-```{code-cell} ipython3
-display(ic_df.style.format("{:.6f}"))
-```
-
-```{code-cell} ipython3
-import statsmodels.api as sm
-import pandas as pd
-
-rlm_huber = sm.RLM(y, X, M=sm.robust.norms.HuberT()).fit()       # Función de pérdida Huber
-rlm_tukey = sm.RLM(y, X, M=sm.robust.norms.TukeyBiweight()).fit() # Función de pérdida Tukey Biweight
-
-rlm_df = pd.DataFrame({
-    'OLS': modelo_base.params,
-    'RLM_Huber': rlm_huber.params,
-    'RLM_Tukey': rlm_tukey.params
-})
-
-weights_df = pd.DataFrame({
-    'Huber_weights': rlm_huber.weights,
-    'Tukey_weights': rlm_tukey.weights
-})
-
-display(rlm_df)
-```
-
-```{code-cell} ipython3
-display(weights_df)
-```
-
-```{code-cell} ipython3
-from sklearn.utils import resample
 import numpy as np
-import pandas as pd
 
-B = 1000
-coef_boot = np.zeros((B, X.shape[1]))
+# 0) Carga bootstrap_df si no existe (usando la ruta canónica BOOT_CSV_PATH)
+try:
+    bootstrap_df  # noqa: F821
+except NameError:
+    try:
+        bootstrap_df = pd.read_csv(BOOT_CSV_PATH)
+        print("Cargado bootstrap_df desde:", BOOT_CSV_PATH)
+    except Exception as e:
+        print("Aviso: no se pudo cargar bootstrap_df automáticamente:", e)
 
-for i in range(B):
-    X_resample, y_resample = resample(X, y)
-    model_bs = sm.OLS(y_resample, X_resample).fit()
-    coef_boot[i, :] = model_bs.params
+# 1) OLS (base)
+coef_ols = modelo_base.params                    # pd.Series con índice = nombres de coeficientes
+se_ols   = modelo_base.bse                       # pd.Series
+ci_ols   = modelo_base.conf_int()                # pd.DataFrame [lower, upper]
+ic_ols_width = ci_ols.iloc[:, 1] - ci_ols.iloc[:, 0]
+if not isinstance(ic_ols_width, pd.Series):
+    ic_ols_width = pd.Series(ic_ols_width, index=coef_ols.index)
 
-coef_mean = coef_boot.mean(axis=0)        
-coef_se = coef_boot.std(axis=0)                     
-ic_lower = np.percentile(coef_boot, 2.5, axis=0)       
-ic_upper = np.percentile(coef_boot, 97.5, axis=0)  
+# 2) HC3 (robusta)
+# En algunos entornos, bse/conf_int del objeto robusto devuelven arrays → conviértelos y ALÍNEALOS
+se_hc3_raw = getattr(resultados_HC3, "bse", None)
+if isinstance(se_hc3_raw, pd.Series):
+    se_hc3 = se_hc3_raw
+else:
+    se_hc3 = pd.Series(np.asarray(se_hc3_raw), index=coef_ols.index)
 
-bootstrap_df = pd.DataFrame({
-    'Coef_mean': coef_mean,
-    'SE_bootstrap': coef_se,
-    'IC_2.5%': ic_lower,
-    'IC_97.5%': ic_upper
-}, index=X.columns)
+ci_hc3_raw = resultados_HC3.conf_int()
+if isinstance(ci_hc3_raw, pd.DataFrame):
+    ic_hc3_width = ci_hc3_raw.iloc[:, 1] - ci_hc3_raw.iloc[:, 0]
+    if not isinstance(ic_hc3_width, pd.Series):
+        ic_hc3_width = pd.Series(ic_hc3_width, index=coef_ols.index)
+else:
+    arr = np.asarray(ci_hc3_raw)  # shape (p,2)
+    ic_hc3_width = pd.Series(arr[:, 1] - arr[:, 0], index=coef_ols.index)
 
-bootstrap_df.to_csv(BOOT_CSV_PATH, sep=",", index=False)
+# 3) Bootstrap
+# Normaliza bootstrap_df para que su índice sean los nombres de coeficientes y haya columnas esperadas
+if isinstance(bootstrap_df, pd.DataFrame):
+    # Intenta detectar columna de nombres
+    name_cols = [c for c in bootstrap_df.columns if c.lower() in ("term", "variable", "coef_name", "feature")]
+    if name_cols:
+        bootstrap_df = bootstrap_df.set_index(name_cols[0])
+    elif len(bootstrap_df) == len(coef_ols) and bootstrap_df.index.dtype == "int64":
+        # Si el tamaño coincide y el índice es numérico, usa el índice de coef_ols
+        bootstrap_df.index = coef_ols.index
 
-bootstrap_df
-```
+    # Columnas esperadas (ajusta aquí si en tu CSV tienen otros nombres)
+    col_mean = "Coef_mean"
+    col_se   = "SE_bootstrap"
+    col_l    = "IC_2.5%"
+    col_u    = "IC_97.5%"
 
-```{code-cell} ipython3
-import pandas as pd
+    # Series desde bootstrap con reindex para alinear
+    coef_boot_mean = bootstrap_df[col_mean].reindex(coef_ols.index) if col_mean in bootstrap_df.columns else pd.Series(dtype=float, index=coef_ols.index)
+    se_boot        = bootstrap_df[col_se].reindex(coef_ols.index)   if col_se   in bootstrap_df.columns else pd.Series(dtype=float, index=coef_ols.index)
 
-# Construye comparativos y corrige IC con iloc (evita errores de indexación tipo array)
-coef_ols = modelo_base.params
-se_ols   = modelo_base.bse
+    if {col_l, col_u}.issubset(bootstrap_df.columns):
+        ic_boot_width = (bootstrap_df[col_u] - bootstrap_df[col_l]).reindex(coef_ols.index)
+    else:
+        ic_boot_width = pd.Series(dtype=float, index=coef_ols.index)
+else:
+    # Fallback si bootstrap_df no es DataFrame
+    coef_boot_mean = pd.Series(dtype=float, index=coef_ols.index)
+    se_boot        = pd.Series(dtype=float, index=coef_ols.index)
+    ic_boot_width  = pd.Series(dtype=float, index=coef_ols.index)
 
-se_hc3   = resultados_HC3.bse
-
-# Desde bootstrap (ya creado arriba o cargado desde BOOT_CSV_PATH)
-coef_boot_mean = bootstrap_df['Coef_mean']
-se_boot        = bootstrap_df['SE_bootstrap']
-
-# Intervalos y anchos de IC: usar .iloc para DataFrame devuelto por conf_int()
-ci_ols = modelo_base.conf_int()
-ic_ols = ci_ols.iloc[:, 1] - ci_ols.iloc[:, 0]
-
-ci_hc3 = resultados_HC3.conf_int()
-if not isinstance(ci_hc3, pd.DataFrame):
-    # En algunos entornos puede devolver array; conviértelo para usar iloc
-    ci_hc3 = pd.DataFrame(ci_hc3, index=modelo_base.params.index, columns=['lower','upper'])
-ic_hc3 = ci_hc3.iloc[:, 1] - ci_hc3.iloc[:, 0]
-
-ic_boot = bootstrap_df['IC_97.5%'] - bootstrap_df['IC_2.5%']
-
-# Arma comparative_df alineando por el índice de coeficientes (clave para comparación coherente)
+# 4) DataFrame comparativo (todo alineado por índice)
 comparative_df = pd.DataFrame({
     "Coef_OLS": coef_ols,
-    "Coef_Bootstrap": coef_boot_mean.reindex(coef_ols.index),
+    "Coef_Bootstrap": coef_boot_mean,
     "SE_OLS": se_ols,
-    "SE_HC3": se_hc3.reindex(coef_ols.index),
-    "SE_Bootstrap": se_boot.reindex(coef_ols.index),
-    "IC_width_OLS": ic_ols.reindex(coef_ols.index) if isinstance(ic_ols, pd.Series) else pd.Series(ic_ols, index=coef_ols.index),
-    "IC_width_HC3": ic_hc3.reindex(coef_ols.index) if isinstance(ic_hc3, pd.Series) else pd.Series(ic_hc3, index=coef_ols.index),
-    "IC_width_Bootstrap": ic_boot.reindex(coef_ols.index),
+    "SE_HC3": se_hc3.reindex(coef_ols.index) if isinstance(se_hc3, pd.Series) else pd.Series(se_hc3, index=coef_ols.index),
+    "SE_Bootstrap": se_boot,
+    "IC_width_OLS": ic_ols_width.reindex(coef_ols.index) if isinstance(ic_ols_width, pd.Series) else pd.Series(ic_ols_width, index=coef_ols.index),
+    "IC_width_HC3": ic_hc3_width.reindex(coef_ols.index) if isinstance(ic_hc3_width, pd.Series) else pd.Series(ic_hc3_width, index=coef_ols.index),
+    "IC_width_Bootstrap": ic_boot_width,
 })
 
-# Subconjuntos tal como usas más abajo
+# 5) Tablas finales
 coef_df = comparative_df[["Coef_OLS", "Coef_Bootstrap"]]
 se_df   = comparative_df[["SE_OLS", "SE_HC3", "SE_Bootstrap"]]
 ic_df   = comparative_df[["IC_width_OLS", "IC_width_HC3", "IC_width_Bootstrap"]]
 
-# Vista de coeficientes
+# Vista
 coef_df
 ```
+
 
 ```{code-cell} ipython3
 se_df

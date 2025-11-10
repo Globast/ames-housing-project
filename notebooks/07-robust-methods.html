@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>C7 · Métodos Robustos y/o Validación &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>Capítulo 7: Remedios y métodos robustos &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -179,7 +179,7 @@
 <li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">C7 · Métodos Robustos y/o Validación</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 7: Remedios y métodos robustos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="09-monte-carlo.html">Capitulo 09. Montecarlo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="10-interpretation.html">Capitulo 10. Interpretacion</a></li>
@@ -322,7 +322,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>C7 · Métodos Robustos y/o Validación</h1>
+    <h1>Capítulo 7: Remedios y métodos robustos</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -352,8 +352,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="c7-metodos-robustos-y-o-validacion">
-<h1>C7 · Métodos Robustos y/o Validación<a class="headerlink" href="#c7-metodos-robustos-y-o-validacion" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="capitulo-7-remedios-y-metodos-robustos">
+<h1>Capítulo 7: Remedios y métodos robustos<a class="headerlink" href="#capitulo-7-remedios-y-metodos-robustos" title="Link to this heading">#</a></h1>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>Se exploran estimadores robustos (Huber/RLM, Regresión Cuantílica) y procedimientos de validación. Incluye una sección de <strong>Bootstrap</strong> para evaluar la variabilidad de los estimadores y comparar OLS, errores estándar HC3 y percentiles bootstrap.</p>
@@ -459,795 +459,111 @@ document.write(`
 <h2>7.4 OLS vs. HC3 vs. Bootstrap<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ruta canónica para resultados de Bootstrap (guardado/lectura)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="n">BOOT_CSV_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/bootstrap_results.csv&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Archivo Bootstrap:&quot;</span><span class="p">,</span> <span class="n">BOOT_CSV_PATH</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Archivo Bootstrap: /workspaces/ames-housing-project/book/data/bootstrap_results.csv
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-
-<span class="c1"># Definir ruta de datos relativa al capítulo (ejecutado desde book/notebooks/)</span>
-<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/AmesHousing_codificada.csv&quot;</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;No se encontró &#39;</span><span class="si">{</span><span class="n">DATA_PATH</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usando CSV base:&quot;</span><span class="p">,</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
-
-<span class="c1"># Lectura canónica a reutilizar en el capítulo</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
-<span class="n">df</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Usando CSV base: /workspaces/ames-housing-project/book/data/AmesHousing_codificada.csv
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2768, 222)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-
-<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.float_format&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:.6f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
-
-<span class="n">data_modelo_base</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
-
-<span class="n">data_modelo_base</span> <span class="o">=</span> <span class="n">data_modelo_base</span><span class="p">[[</span><span class="s1">&#39;SalePrice_log&#39;</span><span class="p">,</span> <span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span> <span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span> 
-                                     <span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span> <span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span> <span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span> 
-                                     <span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span> <span class="s1">&#39;Year Built&#39;</span><span class="p">,</span> <span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span> <span class="s1">&#39;Lot Area&#39;</span><span class="p">]]</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">data_modelo_base</span><span class="p">[[</span><span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span> <span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span> <span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span> <span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span> <span class="s1">&#39;Year Built&#39;</span><span class="p">,</span> <span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span> <span class="s1">&#39;Lot Area&#39;</span><span class="p">]]</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">data_modelo_base</span><span class="p">[[</span><span class="s1">&#39;SalePrice_log&#39;</span><span class="p">]]</span>
-
-<span class="n">X</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-
-<span class="n">modelo_base</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-
-<span class="n">resultados_HC0</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">get_robustcov_results</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="s1">&#39;HC0&#39;</span><span class="p">)</span>
-<span class="n">resultados_HC1</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">get_robustcov_results</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="s1">&#39;HC1&#39;</span><span class="p">)</span>
-<span class="n">resultados_HC2</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">get_robustcov_results</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="s1">&#39;HC2&#39;</span><span class="p">)</span>
-<span class="n">resultados_HC3</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">get_robustcov_results</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="s1">&#39;HC3&#39;</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">get_confint_df</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">var_names</span><span class="p">):</span>
-    <span class="n">ci</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ci</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-        <span class="n">ci</span> <span class="o">=</span> <span class="n">ci</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">var_names</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">ci</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">ci</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span> <span class="s2">&quot;upper&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">var_names</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">ci</span>
-
-<span class="n">variables</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">index</span>
-
-<span class="n">se_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s2">&quot;OLS&quot;</span><span class="p">:</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">bse</span><span class="p">,</span>
-    <span class="s2">&quot;HC0&quot;</span><span class="p">:</span> <span class="n">resultados_HC0</span><span class="o">.</span><span class="n">bse</span><span class="p">,</span>
-    <span class="s2">&quot;HC1&quot;</span><span class="p">:</span> <span class="n">resultados_HC1</span><span class="o">.</span><span class="n">bse</span><span class="p">,</span>
-    <span class="s2">&quot;HC2&quot;</span><span class="p">:</span> <span class="n">resultados_HC2</span><span class="o">.</span><span class="n">bse</span><span class="p">,</span>
-    <span class="s2">&quot;HC3&quot;</span><span class="p">:</span> <span class="n">resultados_HC3</span><span class="o">.</span><span class="n">bse</span><span class="p">,</span>
-<span class="p">})</span>
-<span class="n">se_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Variable&quot;</span>
-
-<span class="n">ic_ols</span> <span class="o">=</span> <span class="n">get_confint_df</span><span class="p">(</span><span class="n">modelo_base</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span>
-<span class="n">ic_hc0</span> <span class="o">=</span> <span class="n">get_confint_df</span><span class="p">(</span><span class="n">resultados_HC0</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span>
-<span class="n">ic_hc1</span> <span class="o">=</span> <span class="n">get_confint_df</span><span class="p">(</span><span class="n">resultados_HC1</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span>
-<span class="n">ic_hc2</span> <span class="o">=</span> <span class="n">get_confint_df</span><span class="p">(</span><span class="n">resultados_HC2</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span>
-<span class="n">ic_hc3</span> <span class="o">=</span> <span class="n">get_confint_df</span><span class="p">(</span><span class="n">resultados_HC3</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span>
-
-<span class="n">ic_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s2">&quot;OLS_lower&quot;</span><span class="p">:</span> <span class="n">ic_ols</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;OLS_upper&quot;</span><span class="p">:</span> <span class="n">ic_ols</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
-    <span class="s2">&quot;HC0_lower&quot;</span><span class="p">:</span> <span class="n">ic_hc0</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;HC0_upper&quot;</span><span class="p">:</span> <span class="n">ic_hc0</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
-    <span class="s2">&quot;HC1_lower&quot;</span><span class="p">:</span> <span class="n">ic_hc1</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;HC1_upper&quot;</span><span class="p">:</span> <span class="n">ic_hc1</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
-    <span class="s2">&quot;HC2_lower&quot;</span><span class="p">:</span> <span class="n">ic_hc2</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;HC2_upper&quot;</span><span class="p">:</span> <span class="n">ic_hc2</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
-    <span class="s2">&quot;HC3_lower&quot;</span><span class="p">:</span> <span class="n">ic_hc3</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;HC3_upper&quot;</span><span class="p">:</span> <span class="n">ic_hc3</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
-<span class="p">})</span>
-<span class="n">ic_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">variables</span>
-<span class="n">ic_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Variable&quot;</span>
-
-<span class="n">display</span><span class="p">(</span><span class="n">se_df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.6f}</span><span class="s2">&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><style type="text/css">
-</style>
-<table id="T_fefaf">
-  <thead>
-    <tr>
-      <th class="blank level0" >&nbsp;</th>
-      <th id="T_fefaf_level0_col0" class="col_heading level0 col0" >OLS</th>
-      <th id="T_fefaf_level0_col1" class="col_heading level0 col1" >HC0</th>
-      <th id="T_fefaf_level0_col2" class="col_heading level0 col2" >HC1</th>
-      <th id="T_fefaf_level0_col3" class="col_heading level0 col3" >HC2</th>
-      <th id="T_fefaf_level0_col4" class="col_heading level0 col4" >HC3</th>
-    </tr>
-    <tr>
-      <th class="index_name level0" >Variable</th>
-      <th class="blank col0" >&nbsp;</th>
-      <th class="blank col1" >&nbsp;</th>
-      <th class="blank col2" >&nbsp;</th>
-      <th class="blank col3" >&nbsp;</th>
-      <th class="blank col4" >&nbsp;</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th id="T_fefaf_level0_row0" class="row_heading level0 row0" >const</th>
-      <td id="T_fefaf_row0_col0" class="data row0 col0" >0.253443</td>
-      <td id="T_fefaf_row0_col1" class="data row0 col1" >0.289644</td>
-      <td id="T_fefaf_row0_col2" class="data row0 col2" >0.290168</td>
-      <td id="T_fefaf_row0_col3" class="data row0 col3" >0.290559</td>
-      <td id="T_fefaf_row0_col4" class="data row0 col4" >0.291480</td>
-    </tr>
-    <tr>
-      <th id="T_fefaf_level0_row1" class="row_heading level0 row1" >Overall Qual</th>
-      <td id="T_fefaf_row1_col0" class="data row1 col0" >0.003334</td>
-      <td id="T_fefaf_row1_col1" class="data row1 col1" >0.004443</td>
-      <td id="T_fefaf_row1_col2" class="data row1 col2" >0.004451</td>
-      <td id="T_fefaf_row1_col3" class="data row1 col3" >0.004459</td>
-      <td id="T_fefaf_row1_col4" class="data row1 col4" >0.004474</td>
-    </tr>
-    <tr>
-      <th id="T_fefaf_level0_row2" class="row_heading level0 row2" >Gr Liv Area</th>
-      <td id="T_fefaf_row2_col0" class="data row2 col0" >0.000010</td>
-      <td id="T_fefaf_row2_col1" class="data row2 col1" >0.000010</td>
-      <td id="T_fefaf_row2_col2" class="data row2 col2" >0.000010</td>
-      <td id="T_fefaf_row2_col3" class="data row2 col3" >0.000010</td>
-      <td id="T_fefaf_row2_col4" class="data row2 col4" >0.000011</td>
-    </tr>
-    <tr>
-      <th id="T_fefaf_level0_row3" class="row_heading level0 row3" >Garage Cars</th>
-      <td id="T_fefaf_row3_col0" class="data row3 col0" >0.005301</td>
-      <td id="T_fefaf_row3_col1" class="data row3 col1" >0.006828</td>
-      <td id="T_fefaf_row3_col2" class="data row3 col2" >0.006841</td>
-      <td id="T_fefaf_row3_col3" class="data row3 col3" >0.006851</td>
-      <td id="T_fefaf_row3_col4" class="data row3 col4" >0.006874</td>
-    </tr>
-    <tr>
-      <th id="T_fefaf_level0_row4" class="row_heading level0 row4" >Total Bsmt SF</th>
-      <td id="T_fefaf_row4_col0" class="data row4 col0" >0.000013</td>
-      <td id="T_fefaf_row4_col1" class="data row4 col1" >0.000015</td>
-      <td id="T_fefaf_row4_col2" class="data row4 col2" >0.000015</td>
-      <td id="T_fefaf_row4_col3" class="data row4 col3" >0.000015</td>
-      <td id="T_fefaf_row4_col4" class="data row4 col4" >0.000015</td>
-    </tr>
-    <tr>
-      <th id="T_fefaf_level0_row5" class="row_heading level0 row5" >1st Flr SF</th>
-      <td id="T_fefaf_row5_col0" class="data row5 col0" >0.000014</td>
-      <td id="T_fefaf_row5_col1" class="data row5 col1" >0.000016</td>
-      <td id="T_fefaf_row5_col2" class="data row5 col2" >0.000016</td>
-      <td id="T_fefaf_row5_col3" class="data row5 col3" >0.000016</td>
-      <td id="T_fefaf_row5_col4" class="data row5 col4" >0.000016</td>
-    </tr>
-    <tr>
-      <th id="T_fefaf_level0_row6" class="row_heading level0 row6" >Full Bath</th>
-      <td id="T_fefaf_row6_col0" class="data row6 col0" >0.007656</td>
-      <td id="T_fefaf_row6_col1" class="data row6 col1" >0.008385</td>
-      <td id="T_fefaf_row6_col2" class="data row6 col2" >0.008400</td>
-      <td id="T_fefaf_row6_col3" class="data row6 col3" >0.008412</td>
-      <td id="T_fefaf_row6_col4" class="data row6 col4" >0.008439</td>
-    </tr>
-    <tr>
-      <th id="T_fefaf_level0_row7" class="row_heading level0 row7" >Year Built</th>
-      <td id="T_fefaf_row7_col0" class="data row7 col0" >0.000134</td>
-      <td id="T_fefaf_row7_col1" class="data row7 col1" >0.000151</td>
-      <td id="T_fefaf_row7_col2" class="data row7 col2" >0.000151</td>
-      <td id="T_fefaf_row7_col3" class="data row7 col3" >0.000151</td>
-      <td id="T_fefaf_row7_col4" class="data row7 col4" >0.000152</td>
-    </tr>
-    <tr>
-      <th id="T_fefaf_level0_row8" class="row_heading level0 row8" >Fireplaces</th>
-      <td id="T_fefaf_row8_col0" class="data row8 col0" >0.005274</td>
-      <td id="T_fefaf_row8_col1" class="data row8 col1" >0.005640</td>
-      <td id="T_fefaf_row8_col2" class="data row8 col2" >0.005650</td>
-      <td id="T_fefaf_row8_col3" class="data row8 col3" >0.005658</td>
-      <td id="T_fefaf_row8_col4" class="data row8 col4" >0.005676</td>
-    </tr>
-    <tr>
-      <th id="T_fefaf_level0_row9" class="row_heading level0 row9" >Lot Area</th>
-      <td id="T_fefaf_row9_col0" class="data row9 col0" >0.000001</td>
-      <td id="T_fefaf_row9_col1" class="data row9 col1" >0.000001</td>
-      <td id="T_fefaf_row9_col2" class="data row9 col2" >0.000001</td>
-      <td id="T_fefaf_row9_col3" class="data row9 col3" >0.000001</td>
-      <td id="T_fefaf_row9_col4" class="data row9 col4" >0.000001</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">ic_df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.6f}</span><span class="s2">&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><style type="text/css">
-</style>
-<table id="T_94778">
-  <thead>
-    <tr>
-      <th class="blank level0" >&nbsp;</th>
-      <th id="T_94778_level0_col0" class="col_heading level0 col0" >OLS_lower</th>
-      <th id="T_94778_level0_col1" class="col_heading level0 col1" >OLS_upper</th>
-      <th id="T_94778_level0_col2" class="col_heading level0 col2" >HC0_lower</th>
-      <th id="T_94778_level0_col3" class="col_heading level0 col3" >HC0_upper</th>
-      <th id="T_94778_level0_col4" class="col_heading level0 col4" >HC1_lower</th>
-      <th id="T_94778_level0_col5" class="col_heading level0 col5" >HC1_upper</th>
-      <th id="T_94778_level0_col6" class="col_heading level0 col6" >HC2_lower</th>
-      <th id="T_94778_level0_col7" class="col_heading level0 col7" >HC2_upper</th>
-      <th id="T_94778_level0_col8" class="col_heading level0 col8" >HC3_lower</th>
-      <th id="T_94778_level0_col9" class="col_heading level0 col9" >HC3_upper</th>
-    </tr>
-    <tr>
-      <th class="index_name level0" >Variable</th>
-      <th class="blank col0" >&nbsp;</th>
-      <th class="blank col1" >&nbsp;</th>
-      <th class="blank col2" >&nbsp;</th>
-      <th class="blank col3" >&nbsp;</th>
-      <th class="blank col4" >&nbsp;</th>
-      <th class="blank col5" >&nbsp;</th>
-      <th class="blank col6" >&nbsp;</th>
-      <th class="blank col7" >&nbsp;</th>
-      <th class="blank col8" >&nbsp;</th>
-      <th class="blank col9" >&nbsp;</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th id="T_94778_level0_row0" class="row_heading level0 row0" >const</th>
-      <td id="T_94778_row0_col0" class="data row0 col0" >4.749133</td>
-      <td id="T_94778_row0_col1" class="data row0 col1" >5.743047</td>
-      <td id="T_94778_row0_col2" class="data row0 col2" >4.678149</td>
-      <td id="T_94778_row0_col3" class="data row0 col3" >5.814030</td>
-      <td id="T_94778_row0_col4" class="data row0 col4" >4.677121</td>
-      <td id="T_94778_row0_col5" class="data row0 col5" >5.815059</td>
-      <td id="T_94778_row0_col6" class="data row0 col6" >4.676355</td>
-      <td id="T_94778_row0_col7" class="data row0 col7" >5.815825</td>
-      <td id="T_94778_row0_col8" class="data row0 col8" >4.674550</td>
-      <td id="T_94778_row0_col9" class="data row0 col9" >5.817630</td>
-    </tr>
-    <tr>
-      <th id="T_94778_level0_row1" class="row_heading level0 row1" >Overall Qual</th>
-      <td id="T_94778_row1_col0" class="data row1 col0" >0.095133</td>
-      <td id="T_94778_row1_col1" class="data row1 col1" >0.108206</td>
-      <td id="T_94778_row1_col2" class="data row1 col2" >0.092957</td>
-      <td id="T_94778_row1_col3" class="data row1 col3" >0.110382</td>
-      <td id="T_94778_row1_col4" class="data row1 col4" >0.092942</td>
-      <td id="T_94778_row1_col5" class="data row1 col5" >0.110397</td>
-      <td id="T_94778_row1_col6" class="data row1 col6" >0.092927</td>
-      <td id="T_94778_row1_col7" class="data row1 col7" >0.110412</td>
-      <td id="T_94778_row1_col8" class="data row1 col8" >0.092897</td>
-      <td id="T_94778_row1_col9" class="data row1 col9" >0.110442</td>
-    </tr>
-    <tr>
-      <th id="T_94778_level0_row2" class="row_heading level0 row2" >Gr Liv Area</th>
-      <td id="T_94778_row2_col0" class="data row2 col0" >0.000220</td>
-      <td id="T_94778_row2_col1" class="data row2 col1" >0.000259</td>
-      <td id="T_94778_row2_col2" class="data row2 col2" >0.000219</td>
-      <td id="T_94778_row2_col3" class="data row2 col3" >0.000260</td>
-      <td id="T_94778_row2_col4" class="data row2 col4" >0.000219</td>
-      <td id="T_94778_row2_col5" class="data row2 col5" >0.000260</td>
-      <td id="T_94778_row2_col6" class="data row2 col6" >0.000219</td>
-      <td id="T_94778_row2_col7" class="data row2 col7" >0.000260</td>
-      <td id="T_94778_row2_col8" class="data row2 col8" >0.000219</td>
-      <td id="T_94778_row2_col9" class="data row2 col9" >0.000260</td>
-    </tr>
-    <tr>
-      <th id="T_94778_level0_row3" class="row_heading level0 row3" >Garage Cars</th>
-      <td id="T_94778_row3_col0" class="data row3 col0" >0.038647</td>
-      <td id="T_94778_row3_col1" class="data row3 col1" >0.059434</td>
-      <td id="T_94778_row3_col2" class="data row3 col2" >0.035652</td>
-      <td id="T_94778_row3_col3" class="data row3 col3" >0.062430</td>
-      <td id="T_94778_row3_col4" class="data row3 col4" >0.035627</td>
-      <td id="T_94778_row3_col5" class="data row3 col5" >0.062454</td>
-      <td id="T_94778_row3_col6" class="data row3 col6" >0.035607</td>
-      <td id="T_94778_row3_col7" class="data row3 col7" >0.062475</td>
-      <td id="T_94778_row3_col8" class="data row3 col8" >0.035561</td>
-      <td id="T_94778_row3_col9" class="data row3 col9" >0.062520</td>
-    </tr>
-    <tr>
-      <th id="T_94778_level0_row4" class="row_heading level0 row4" >Total Bsmt SF</th>
-      <td id="T_94778_row4_col0" class="data row4 col0" >0.000129</td>
-      <td id="T_94778_row4_col1" class="data row4 col1" >0.000178</td>
-      <td id="T_94778_row4_col2" class="data row4 col2" >0.000125</td>
-      <td id="T_94778_row4_col3" class="data row4 col3" >0.000182</td>
-      <td id="T_94778_row4_col4" class="data row4 col4" >0.000125</td>
-      <td id="T_94778_row4_col5" class="data row4 col5" >0.000182</td>
-      <td id="T_94778_row4_col6" class="data row4 col6" >0.000125</td>
-      <td id="T_94778_row4_col7" class="data row4 col7" >0.000182</td>
-      <td id="T_94778_row4_col8" class="data row4 col8" >0.000125</td>
-      <td id="T_94778_row4_col9" class="data row4 col9" >0.000183</td>
-    </tr>
-    <tr>
-      <th id="T_94778_level0_row5" class="row_heading level0 row5" >1st Flr SF</th>
-      <td id="T_94778_row5_col0" class="data row5 col0" >-0.000026</td>
-      <td id="T_94778_row5_col1" class="data row5 col1" >0.000031</td>
-      <td id="T_94778_row5_col2" class="data row5 col2" >-0.000028</td>
-      <td id="T_94778_row5_col3" class="data row5 col3" >0.000033</td>
-      <td id="T_94778_row5_col4" class="data row5 col4" >-0.000028</td>
-      <td id="T_94778_row5_col5" class="data row5 col5" >0.000033</td>
-      <td id="T_94778_row5_col6" class="data row5 col6" >-0.000028</td>
-      <td id="T_94778_row5_col7" class="data row5 col7" >0.000033</td>
-      <td id="T_94778_row5_col8" class="data row5 col8" >-0.000028</td>
-      <td id="T_94778_row5_col9" class="data row5 col9" >0.000033</td>
-    </tr>
-    <tr>
-      <th id="T_94778_level0_row6" class="row_heading level0 row6" >Full Bath</th>
-      <td id="T_94778_row6_col0" class="data row6 col0" >-0.028511</td>
-      <td id="T_94778_row6_col1" class="data row6 col1" >0.001512</td>
-      <td id="T_94778_row6_col2" class="data row6 col2" >-0.029940</td>
-      <td id="T_94778_row6_col3" class="data row6 col3" >0.002941</td>
-      <td id="T_94778_row6_col4" class="data row6 col4" >-0.029970</td>
-      <td id="T_94778_row6_col5" class="data row6 col5" >0.002971</td>
-      <td id="T_94778_row6_col6" class="data row6 col6" >-0.029993</td>
-      <td id="T_94778_row6_col7" class="data row6 col7" >0.002994</td>
-      <td id="T_94778_row6_col8" class="data row6 col8" >-0.030046</td>
-      <td id="T_94778_row6_col9" class="data row6 col9" >0.003047</td>
-    </tr>
-    <tr>
-      <th id="T_94778_level0_row7" class="row_heading level0 row7" >Year Built</th>
-      <td id="T_94778_row7_col0" class="data row7 col0" >0.002500</td>
-      <td id="T_94778_row7_col1" class="data row7 col1" >0.003024</td>
-      <td id="T_94778_row7_col2" class="data row7 col2" >0.002467</td>
-      <td id="T_94778_row7_col3" class="data row7 col3" >0.003058</td>
-      <td id="T_94778_row7_col4" class="data row7 col4" >0.002466</td>
-      <td id="T_94778_row7_col5" class="data row7 col5" >0.003058</td>
-      <td id="T_94778_row7_col6" class="data row7 col6" >0.002466</td>
-      <td id="T_94778_row7_col7" class="data row7 col7" >0.003059</td>
-      <td id="T_94778_row7_col8" class="data row7 col8" >0.002465</td>
-      <td id="T_94778_row7_col9" class="data row7 col9" >0.003060</td>
-    </tr>
-    <tr>
-      <th id="T_94778_level0_row8" class="row_heading level0 row8" >Fireplaces</th>
-      <td id="T_94778_row8_col0" class="data row8 col0" >0.035813</td>
-      <td id="T_94778_row8_col1" class="data row8 col1" >0.056495</td>
-      <td id="T_94778_row8_col2" class="data row8 col2" >0.035095</td>
-      <td id="T_94778_row8_col3" class="data row8 col3" >0.057213</td>
-      <td id="T_94778_row8_col4" class="data row8 col4" >0.035075</td>
-      <td id="T_94778_row8_col5" class="data row8 col5" >0.057233</td>
-      <td id="T_94778_row8_col6" class="data row8 col6" >0.035060</td>
-      <td id="T_94778_row8_col7" class="data row8 col7" >0.057248</td>
-      <td id="T_94778_row8_col8" class="data row8 col8" >0.035025</td>
-      <td id="T_94778_row8_col9" class="data row8 col9" >0.057283</td>
-    </tr>
-    <tr>
-      <th id="T_94778_level0_row9" class="row_heading level0 row9" >Lot Area</th>
-      <td id="T_94778_row9_col0" class="data row9 col0" >0.000008</td>
-      <td id="T_94778_row9_col1" class="data row9 col1" >0.000011</td>
-      <td id="T_94778_row9_col2" class="data row9 col2" >0.000008</td>
-      <td id="T_94778_row9_col3" class="data row9 col3" >0.000012</td>
-      <td id="T_94778_row9_col4" class="data row9 col4" >0.000008</td>
-      <td id="T_94778_row9_col5" class="data row9 col5" >0.000012</td>
-      <td id="T_94778_row9_col6" class="data row9 col6" >0.000008</td>
-      <td id="T_94778_row9_col7" class="data row9 col7" >0.000012</td>
-      <td id="T_94778_row9_col8" class="data row9 col8" >0.000008</td>
-      <td id="T_94778_row9_col9" class="data row9 col9" >0.000012</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-
-<span class="n">rlm_huber</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">RLM</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">robust</span><span class="o">.</span><span class="n">norms</span><span class="o">.</span><span class="n">HuberT</span><span class="p">())</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>       <span class="c1"># Función de pérdida Huber</span>
-<span class="n">rlm_tukey</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">RLM</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">robust</span><span class="o">.</span><span class="n">norms</span><span class="o">.</span><span class="n">TukeyBiweight</span><span class="p">())</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span> <span class="c1"># Función de pérdida Tukey Biweight</span>
-
-<span class="n">rlm_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;OLS&#39;</span><span class="p">:</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
-    <span class="s1">&#39;RLM_Huber&#39;</span><span class="p">:</span> <span class="n">rlm_huber</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
-    <span class="s1">&#39;RLM_Tukey&#39;</span><span class="p">:</span> <span class="n">rlm_tukey</span><span class="o">.</span><span class="n">params</span>
-<span class="p">})</span>
-
-<span class="n">weights_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;Huber_weights&#39;</span><span class="p">:</span> <span class="n">rlm_huber</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span>
-    <span class="s1">&#39;Tukey_weights&#39;</span><span class="p">:</span> <span class="n">rlm_tukey</span><span class="o">.</span><span class="n">weights</span>
-<span class="p">})</span>
-
-<span class="n">display</span><span class="p">(</span><span class="n">rlm_df</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>OLS</th>
-      <th>RLM_Huber</th>
-      <th>RLM_Tukey</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>const</th>
-      <td>5.246090</td>
-      <td>5.554695</td>
-      <td>5.757333</td>
-    </tr>
-    <tr>
-      <th>Overall Qual</th>
-      <td>0.101670</td>
-      <td>0.093458</td>
-      <td>0.090582</td>
-    </tr>
-    <tr>
-      <th>Gr Liv Area</th>
-      <td>0.000240</td>
-      <td>0.000243</td>
-      <td>0.000245</td>
-    </tr>
-    <tr>
-      <th>Garage Cars</th>
-      <td>0.049041</td>
-      <td>0.055135</td>
-      <td>0.056782</td>
-    </tr>
-    <tr>
-      <th>Total Bsmt SF</th>
-      <td>0.000154</td>
-      <td>0.000169</td>
-      <td>0.000176</td>
-    </tr>
-    <tr>
-      <th>1st Flr SF</th>
-      <td>0.000003</td>
-      <td>-0.000008</td>
-      <td>-0.000013</td>
-    </tr>
-    <tr>
-      <th>Full Bath</th>
-      <td>-0.013499</td>
-      <td>-0.017119</td>
-      <td>-0.016548</td>
-    </tr>
-    <tr>
-      <th>Year Built</th>
-      <td>0.002762</td>
-      <td>0.002626</td>
-      <td>0.002528</td>
-    </tr>
-    <tr>
-      <th>Fireplaces</th>
-      <td>0.046154</td>
-      <td>0.040135</td>
-      <td>0.038912</td>
-    </tr>
-    <tr>
-      <th>Lot Area</th>
-      <td>0.000010</td>
-      <td>0.000011</td>
-      <td>0.000011</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">weights_df</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Huber_weights</th>
-      <th>Tukey_weights</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1.000000</td>
-      <td>0.953644</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1.000000</td>
-      <td>0.866662</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>1.000000</td>
-      <td>0.970765</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>1.000000</td>
-      <td>0.922950</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>1.000000</td>
-      <td>0.962404</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>2763</th>
-      <td>1.000000</td>
-      <td>0.986576</td>
-    </tr>
-    <tr>
-      <th>2764</th>
-      <td>1.000000</td>
-      <td>0.999931</td>
-    </tr>
-    <tr>
-      <th>2765</th>
-      <td>1.000000</td>
-      <td>0.974192</td>
-    </tr>
-    <tr>
-      <th>2766</th>
-      <td>1.000000</td>
-      <td>0.993637</td>
-    </tr>
-    <tr>
-      <th>2767</th>
-      <td>0.693427</td>
-      <td>0.679286</td>
-    </tr>
-  </tbody>
-</table>
-<p>2768 rows × 2 columns</p>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">resample</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-
-<span class="n">B</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">coef_boot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">B</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="p">):</span>
-    <span class="n">X_resample</span><span class="p">,</span> <span class="n">y_resample</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-    <span class="n">model_bs</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_resample</span><span class="p">,</span> <span class="n">X_resample</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-    <span class="n">coef_boot</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">model_bs</span><span class="o">.</span><span class="n">params</span>
-
-<span class="n">coef_mean</span> <span class="o">=</span> <span class="n">coef_boot</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>        
-<span class="n">coef_se</span> <span class="o">=</span> <span class="n">coef_boot</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>                     
-<span class="n">ic_lower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">coef_boot</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>       
-<span class="n">ic_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">coef_boot</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  
-
-<span class="n">bootstrap_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;Coef_mean&#39;</span><span class="p">:</span> <span class="n">coef_mean</span><span class="p">,</span>
-    <span class="s1">&#39;SE_bootstrap&#39;</span><span class="p">:</span> <span class="n">coef_se</span><span class="p">,</span>
-    <span class="s1">&#39;IC_2.5%&#39;</span><span class="p">:</span> <span class="n">ic_lower</span><span class="p">,</span>
-    <span class="s1">&#39;IC_97.5%&#39;</span><span class="p">:</span> <span class="n">ic_upper</span>
-<span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-
-<span class="n">bootstrap_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">BOOT_CSV_PATH</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">bootstrap_df</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Coef_mean</th>
-      <th>SE_bootstrap</th>
-      <th>IC_2.5%</th>
-      <th>IC_97.5%</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>const</th>
-      <td>5.242084</td>
-      <td>0.287363</td>
-      <td>4.688581</td>
-      <td>5.800990</td>
-    </tr>
-    <tr>
-      <th>Overall Qual</th>
-      <td>0.101569</td>
-      <td>0.004342</td>
-      <td>0.093454</td>
-      <td>0.110134</td>
-    </tr>
-    <tr>
-      <th>Gr Liv Area</th>
-      <td>0.000240</td>
-      <td>0.000010</td>
-      <td>0.000221</td>
-      <td>0.000261</td>
-    </tr>
-    <tr>
-      <th>Garage Cars</th>
-      <td>0.049109</td>
-      <td>0.006896</td>
-      <td>0.035359</td>
-      <td>0.063000</td>
-    </tr>
-    <tr>
-      <th>Total Bsmt SF</th>
-      <td>0.000154</td>
-      <td>0.000015</td>
-      <td>0.000126</td>
-      <td>0.000182</td>
-    </tr>
-    <tr>
-      <th>1st Flr SF</th>
-      <td>0.000002</td>
-      <td>0.000015</td>
-      <td>-0.000028</td>
-      <td>0.000033</td>
-    </tr>
-    <tr>
-      <th>Full Bath</th>
-      <td>-0.013873</td>
-      <td>0.008473</td>
-      <td>-0.030145</td>
-      <td>0.002345</td>
-    </tr>
-    <tr>
-      <th>Year Built</th>
-      <td>0.002765</td>
-      <td>0.000150</td>
-      <td>0.002474</td>
-      <td>0.003054</td>
-    </tr>
-    <tr>
-      <th>Fireplaces</th>
-      <td>0.046094</td>
-      <td>0.005681</td>
-      <td>0.034512</td>
-      <td>0.056602</td>
-    </tr>
-    <tr>
-      <th>Lot Area</th>
-      <td>0.000010</td>
-      <td>0.000001</td>
-      <td>0.000008</td>
-      <td>0.000012</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="c1"># Construye comparativos y corrige IC con iloc (evita errores de indexación tipo array)</span>
-<span class="n">coef_ols</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span>
-<span class="n">se_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">bse</span>
+<span class="c1"># 0) Carga bootstrap_df si no existe (usando la ruta canónica BOOT_CSV_PATH)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">bootstrap_df</span>  <span class="c1"># noqa: F821</span>
+<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bootstrap_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">BOOT_CSV_PATH</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cargado bootstrap_df desde:&quot;</span><span class="p">,</span> <span class="n">BOOT_CSV_PATH</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aviso: no se pudo cargar bootstrap_df automáticamente:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 
-<span class="n">se_hc3</span>   <span class="o">=</span> <span class="n">resultados_HC3</span><span class="o">.</span><span class="n">bse</span>
+<span class="c1"># 1) OLS (base)</span>
+<span class="n">coef_ols</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span>                    <span class="c1"># pd.Series con índice = nombres de coeficientes</span>
+<span class="n">se_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">bse</span>                       <span class="c1"># pd.Series</span>
+<span class="n">ci_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>                <span class="c1"># pd.DataFrame [lower, upper]</span>
+<span class="n">ic_ols_width</span> <span class="o">=</span> <span class="n">ci_ols</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ci_ols</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ic_ols_width</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+    <span class="n">ic_ols_width</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ic_ols_width</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 
-<span class="c1"># Desde bootstrap (ya creado arriba o cargado desde BOOT_CSV_PATH)</span>
-<span class="n">coef_boot_mean</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="s1">&#39;Coef_mean&#39;</span><span class="p">]</span>
-<span class="n">se_boot</span>        <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="s1">&#39;SE_bootstrap&#39;</span><span class="p">]</span>
+<span class="c1"># 2) HC3 (robusta)</span>
+<span class="c1"># En algunos entornos, bse/conf_int del objeto robusto devuelven arrays → conviértelos y ALÍNEALOS</span>
+<span class="n">se_hc3_raw</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">resultados_HC3</span><span class="p">,</span> <span class="s2">&quot;bse&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">se_hc3_raw</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+    <span class="n">se_hc3</span> <span class="o">=</span> <span class="n">se_hc3_raw</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">se_hc3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">se_hc3_raw</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 
-<span class="c1"># Intervalos y anchos de IC: usar .iloc para DataFrame devuelto por conf_int()</span>
-<span class="n">ci_ols</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>
-<span class="n">ic_ols</span> <span class="o">=</span> <span class="n">ci_ols</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ci_ols</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">ci_hc3_raw</span> <span class="o">=</span> <span class="n">resultados_HC3</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>
+<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ci_hc3_raw</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+    <span class="n">ic_hc3_width</span> <span class="o">=</span> <span class="n">ci_hc3_raw</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ci_hc3_raw</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ic_hc3_width</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">ic_hc3_width</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ic_hc3_width</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ci_hc3_raw</span><span class="p">)</span>  <span class="c1"># shape (p,2)</span>
+    <span class="n">ic_hc3_width</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 
-<span class="n">ci_hc3</span> <span class="o">=</span> <span class="n">resultados_HC3</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ci_hc3</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-    <span class="c1"># En algunos entornos puede devolver array; conviértelo para usar iloc</span>
-    <span class="n">ci_hc3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">ci_hc3</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span><span class="s1">&#39;upper&#39;</span><span class="p">])</span>
-<span class="n">ic_hc3</span> <span class="o">=</span> <span class="n">ci_hc3</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ci_hc3</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="c1"># 3) Bootstrap</span>
+<span class="c1"># Normaliza bootstrap_df para que su índice sean los nombres de coeficientes y haya columnas esperadas</span>
+<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bootstrap_df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+    <span class="c1"># Intenta detectar columna de nombres</span>
+    <span class="n">name_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;term&quot;</span><span class="p">,</span> <span class="s2">&quot;variable&quot;</span><span class="p">,</span> <span class="s2">&quot;coef_name&quot;</span><span class="p">,</span> <span class="s2">&quot;feature&quot;</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">name_cols</span><span class="p">:</span>
+        <span class="n">bootstrap_df</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">name_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">bootstrap_df</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">coef_ols</span><span class="p">)</span> <span class="ow">and</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;int64&quot;</span><span class="p">:</span>
+        <span class="c1"># Si el tamaño coincide y el índice es numérico, usa el índice de coef_ols</span>
+        <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span>
 
-<span class="n">ic_boot</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="s1">&#39;IC_97.5%&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="s1">&#39;IC_2.5%&#39;</span><span class="p">]</span>
+    <span class="c1"># Columnas esperadas (ajusta aquí si en tu CSV tienen otros nombres)</span>
+    <span class="n">col_mean</span> <span class="o">=</span> <span class="s2">&quot;Coef_mean&quot;</span>
+    <span class="n">col_se</span>   <span class="o">=</span> <span class="s2">&quot;SE_bootstrap&quot;</span>
+    <span class="n">col_l</span>    <span class="o">=</span> <span class="s2">&quot;IC_2.5%&quot;</span>
+    <span class="n">col_u</span>    <span class="o">=</span> <span class="s2">&quot;IC_97.5%&quot;</span>
 
-<span class="c1"># Arma comparative_df alineando por el índice de coeficientes (clave para comparación coherente)</span>
+    <span class="c1"># Series desde bootstrap con reindex para alinear</span>
+    <span class="n">coef_boot_mean</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="n">col_mean</span><span class="p">]</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">if</span> <span class="n">col_mean</span> <span class="ow">in</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">se_boot</span>        <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="n">col_se</span><span class="p">]</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>   <span class="k">if</span> <span class="n">col_se</span>   <span class="ow">in</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">{</span><span class="n">col_l</span><span class="p">,</span> <span class="n">col_u</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">bootstrap_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="n">ic_boot_width</span> <span class="o">=</span> <span class="p">(</span><span class="n">bootstrap_df</span><span class="p">[</span><span class="n">col_u</span><span class="p">]</span> <span class="o">-</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="n">col_l</span><span class="p">])</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ic_boot_width</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Fallback si bootstrap_df no es DataFrame</span>
+    <span class="n">coef_boot_mean</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">se_boot</span>        <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">ic_boot_width</span>  <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+<span class="c1"># 4) DataFrame comparativo (todo alineado por índice)</span>
 <span class="n">comparative_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
     <span class="s2">&quot;Coef_OLS&quot;</span><span class="p">:</span> <span class="n">coef_ols</span><span class="p">,</span>
-    <span class="s2">&quot;Coef_Bootstrap&quot;</span><span class="p">:</span> <span class="n">coef_boot_mean</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+    <span class="s2">&quot;Coef_Bootstrap&quot;</span><span class="p">:</span> <span class="n">coef_boot_mean</span><span class="p">,</span>
     <span class="s2">&quot;SE_OLS&quot;</span><span class="p">:</span> <span class="n">se_ols</span><span class="p">,</span>
-    <span class="s2">&quot;SE_HC3&quot;</span><span class="p">:</span> <span class="n">se_hc3</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
-    <span class="s2">&quot;SE_Bootstrap&quot;</span><span class="p">:</span> <span class="n">se_boot</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
-    <span class="s2">&quot;IC_width_OLS&quot;</span><span class="p">:</span> <span class="n">ic_ols</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ic_ols</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ic_ols</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
-    <span class="s2">&quot;IC_width_HC3&quot;</span><span class="p">:</span> <span class="n">ic_hc3</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ic_hc3</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ic_hc3</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
-    <span class="s2">&quot;IC_width_Bootstrap&quot;</span><span class="p">:</span> <span class="n">ic_boot</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+    <span class="s2">&quot;SE_HC3&quot;</span><span class="p">:</span> <span class="n">se_hc3</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">se_hc3</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">se_hc3</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+    <span class="s2">&quot;SE_Bootstrap&quot;</span><span class="p">:</span> <span class="n">se_boot</span><span class="p">,</span>
+    <span class="s2">&quot;IC_width_OLS&quot;</span><span class="p">:</span> <span class="n">ic_ols_width</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ic_ols_width</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ic_ols_width</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+    <span class="s2">&quot;IC_width_HC3&quot;</span><span class="p">:</span> <span class="n">ic_hc3_width</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ic_hc3_width</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ic_hc3_width</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+    <span class="s2">&quot;IC_width_Bootstrap&quot;</span><span class="p">:</span> <span class="n">ic_boot_width</span><span class="p">,</span>
 <span class="p">})</span>
 
-<span class="c1"># Subconjuntos tal como usas más abajo</span>
+<span class="c1"># 5) Tablas finales</span>
 <span class="n">coef_df</span> <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s2">&quot;Coef_OLS&quot;</span><span class="p">,</span> <span class="s2">&quot;Coef_Bootstrap&quot;</span><span class="p">]]</span>
 <span class="n">se_df</span>   <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s2">&quot;SE_OLS&quot;</span><span class="p">,</span> <span class="s2">&quot;SE_HC3&quot;</span><span class="p">,</span> <span class="s2">&quot;SE_Bootstrap&quot;</span><span class="p">]]</span>
 <span class="n">ic_df</span>   <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s2">&quot;IC_width_OLS&quot;</span><span class="p">,</span> <span class="s2">&quot;IC_width_HC3&quot;</span><span class="p">,</span> <span class="s2">&quot;IC_width_Bootstrap&quot;</span><span class="p">]]</span>
 
-<span class="c1"># Vista de coeficientes</span>
+<span class="c1"># Vista</span>
 <span class="n">coef_df</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Aviso: no se pudo cargar bootstrap_df automáticamente: name &#39;BOOT_CSV_PATH&#39; is not defined
+</pre></div>
+</div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">line</span> <span class="mi">30</span>
-<span class="g g-Whitespace">     </span><span class="mi">23</span> <span class="n">ic_boot</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="s1">&#39;IC_97.5%&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="s1">&#39;IC_2.5%&#39;</span><span class="p">]</span>
-<span class="g g-Whitespace">     </span><span class="mi">25</span> <span class="c1"># Arma comparative_df alineando por el índice de coeficientes (clave para comparación coherente)</span>
-<span class="g g-Whitespace">     </span><span class="mi">26</span> <span class="n">comparative_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="g g-Whitespace">     </span><span class="mi">27</span>     <span class="s2">&quot;Coef_OLS&quot;</span><span class="p">:</span> <span class="n">coef_ols</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">28</span>     <span class="s2">&quot;Coef_Bootstrap&quot;</span><span class="p">:</span> <span class="n">coef_boot_mean</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
-<span class="g g-Whitespace">     </span><span class="mi">29</span>     <span class="s2">&quot;SE_OLS&quot;</span><span class="p">:</span> <span class="n">se_ols</span><span class="p">,</span>
-<span class="ne">---&gt; </span><span class="mi">30</span>     <span class="s2">&quot;SE_HC3&quot;</span><span class="p">:</span> <span class="n">se_hc3</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
-<span class="g g-Whitespace">     </span><span class="mi">31</span>     <span class="s2">&quot;SE_Bootstrap&quot;</span><span class="p">:</span> <span class="n">se_boot</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
-<span class="g g-Whitespace">     </span><span class="mi">32</span>     <span class="s2">&quot;IC_width_OLS&quot;</span><span class="p">:</span> <span class="n">ic_ols</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ic_ols</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ic_ols</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
-<span class="g g-Whitespace">     </span><span class="mi">33</span>     <span class="s2">&quot;IC_width_HC3&quot;</span><span class="p">:</span> <span class="n">ic_hc3</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ic_hc3</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ic_hc3</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
-<span class="g g-Whitespace">     </span><span class="mi">34</span>     <span class="s2">&quot;IC_width_Bootstrap&quot;</span><span class="p">:</span> <span class="n">ic_boot</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
-<span class="g g-Whitespace">     </span><span class="mi">35</span> <span class="p">})</span>
-<span class="g g-Whitespace">     </span><span class="mi">37</span> <span class="c1"># Subconjuntos tal como usas más abajo</span>
-<span class="g g-Whitespace">     </span><span class="mi">38</span> <span class="n">coef_df</span> <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s2">&quot;Coef_OLS&quot;</span><span class="p">,</span> <span class="s2">&quot;Coef_Bootstrap&quot;</span><span class="p">]]</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">15</span>
+<span class="g g-Whitespace">     </span><span class="mi">12</span>         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aviso: no se pudo cargar bootstrap_df automáticamente:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">14</span> <span class="c1"># 1) OLS (base)</span>
+<span class="ne">---&gt; </span><span class="mi">15</span> <span class="n">coef_ols</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span>                    <span class="c1"># pd.Series con índice = nombres de coeficientes</span>
+<span class="g g-Whitespace">     </span><span class="mi">16</span> <span class="n">se_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">bse</span>                       <span class="c1"># pd.Series</span>
+<span class="g g-Whitespace">     </span><span class="mi">17</span> <span class="n">ci_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>                <span class="c1"># pd.DataFrame [lower, upper]</span>
 
-<span class="ne">AttributeError</span>: &#39;numpy.ndarray&#39; object has no attribute &#39;reindex&#39;
+<span class="ne">NameError</span>: name &#39;modelo_base&#39; is not defined
 </pre></div>
 </div>
 </div>
