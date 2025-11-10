@@ -133,27 +133,31 @@ Existen diversas funciones de pérdida que determinan cómo se penalizan los res
 
 - **Huber / TukeyHuberT()**:
 
-$$
+```{math}
+:label: eq:7.2.1-huber
 \rho(r) = 
 \begin{cases} 
 \frac{1}{2} r^2 & \text{si } |r| \le \delta \\[2mm]
 \delta \left(|r| - \frac{1}{2}\delta \right) & \text{si } |r| > \delta
 \end{cases}
-$$  
-**Ecuación 7.2.1.** Función de pérdida Huber.
+```
+  
+_Ecuación_ {eq}`eq:7.2.1-huber`. Función de pérdida Huber.
 
 Protege contra outliers moderados manteniendo eficiencia para valores centrales.
 
 - **Tukey Biweight**:
 
-$$
+```{math}
+:label: eq:7.2.2-tukey
 \rho(r) = 
 \begin{cases}
 \frac{c^2}{6} \left[ 1 - \left(1 - \left(\frac{r}{c}\right)^2 \right)^3 \right] & \text{si } |r| \le c \\[1mm]
 \frac{c^2}{6} & \text{si } |r| > c
 \end{cases}
-$$  
-**Ecuación 7.2.2.** Función de pérdida Tukey.
+```
+  
+_Ecuación_ {eq}`eq:7.2.2-tukey`. Función de pérdida Tukey.
 
 Limita el impacto de observaciones lejanas sin eliminarlas completamente.
 
