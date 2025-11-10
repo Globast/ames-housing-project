@@ -4,7 +4,7 @@ jupytext:
   text_representation: {extension: .md, format_name: myst}
 kernelspec: {name: python3, display_name: Python 3}
 ---
-# C5 · Inferencia de Parámetros
+# Capítulo 5: Inferencia y grados de libertad
 ## Overview
 Se realiza **inferencia**: intervalos de confianza, pruebas de hipótesis sobre coeficientes y ajuste global del modelo. Se reportan supuestos y su impacto en la validez inferencial.
 ```{code-cell} ipython3
@@ -20,7 +20,7 @@ print("Usando CSV:", DATA_PATH.resolve())
 df = pd.read_csv(DATA_PATH)
 df.shape
 ```
-# Capítulo 5: Inferencia y grados de libertad
+
 
 ### 5.1 Grados de libertad
 
