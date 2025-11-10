@@ -4,7 +4,7 @@ jupytext:
   text_representation: {extension: .md, format_name: myst}
 kernelspec: {name: python3, display_name: Python 3}
 ---
-# C7 · Métodos Robustos y/o Validación
+# Capítulo 7: Remedios y métodos robustos
 
 ## Overview
 Se exploran estimadores robustos (Huber/RLM, Regresión Cuantílica) y procedimientos de validación. Incluye una sección de **Bootstrap** para evaluar la variabilidad de los estimadores y comparar OLS, errores estándar HC3 y percentiles bootstrap.
@@ -21,7 +21,6 @@ print("Usando CSV base:", DATA_PATH.resolve())
 df = pd.read_csv(DATA_PATH)
 df.shape
 ```
-# Capítulo 7: Remedios y métodos robustos
 
 ### 7.1 Correcciones para heterocedasticidad
 

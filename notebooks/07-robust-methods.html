@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>C7 · Métodos Robustos y/o Validación &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>Capítulo 7: Remedios y métodos robustos &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -179,8 +179,7 @@
 <li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">C7 · Métodos Robustos y/o Validación</a></li>
-
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 7: Remedios y métodos robustos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="09-monte-carlo.html">Capitulo 09. Montecarlo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="10-interpretation.html">Capitulo 10. Interpretacion</a></li>
@@ -323,7 +322,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>C7 · Métodos Robustos y/o Validación</h1>
+    <h1>Capítulo 7: Remedios y métodos robustos</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -333,21 +332,16 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">C7 · Métodos Robustos y/o Validación</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correcciones-para-heterocedasticidad">7.1 Correcciones para heterocedasticidad</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-robustos-con-funciones-huber-tukey">7.2 Modelos robustos con funciones Huber/Tukey</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap">7.3 Bootstrap</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-hc3-vs-bootstrap">7.4 OLS vs. HC3 vs. Bootstrap</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#capitulo-7-remedios-y-metodos-robustos">Capítulo 7: Remedios y métodos robustos</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correcciones-para-heterocedasticidad">7.1 Correcciones para heterocedasticidad</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-robustos-con-funciones-huber-tukey">7.2 Modelos robustos con funciones Huber/Tukey</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap">7.3 Bootstrap</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-hc3-vs-bootstrap">7.4 OLS vs. HC3 vs. Bootstrap</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">7.4 OLS vs. HC3 vs. Bootstrap</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
-</li>
-</ul>
-
             </nav>
         </div>
     </div>
@@ -358,8 +352,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="c7-metodos-robustos-y-o-validacion">
-<h1>C7 · Métodos Robustos y/o Validación<a class="headerlink" href="#c7-metodos-robustos-y-o-validacion" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="capitulo-7-remedios-y-metodos-robustos">
+<h1>Capítulo 7: Remedios y métodos robustos<a class="headerlink" href="#capitulo-7-remedios-y-metodos-robustos" title="Link to this heading">#</a></h1>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>Se exploran estimadores robustos (Huber/RLM, Regresión Cuantílica) y procedimientos de validación. Incluye una sección de <strong>Bootstrap</strong> para evaluar la variabilidad de los estimadores y comparar OLS, errores estándar HC3 y percentiles bootstrap.</p>
@@ -386,12 +380,8 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="capitulo-7-remedios-y-metodos-robustos">
-<h1>Capítulo 7: Remedios y métodos robustos<a class="headerlink" href="#capitulo-7-remedios-y-metodos-robustos" title="Link to this heading">#</a></h1>
 <section id="correcciones-para-heterocedasticidad">
-<h2>7.1 Correcciones para heterocedasticidad<a class="headerlink" href="#correcciones-para-heterocedasticidad" title="Link to this heading">#</a></h2>
+<h3>7.1 Correcciones para heterocedasticidad<a class="headerlink" href="#correcciones-para-heterocedasticidad" title="Link to this heading">#</a></h3>
 <p>De acuerdo con el supuesto de homocedasticidad (<a class="reference internal" href="#ecuacion-621-varianza-errores"><span class="xref myst">Ecuación 6.2.1</span></a>), la presencia de heterocedasticidad puede provocar que los errores estándar de los coeficientes estén subestimados, afectando los valores <span class="math notranslate nohighlight">\(t\)</span> y las decisiones de significancia. Para corregir este problema, se utilizan los estimadores de varianza robusta <strong>HC</strong> (Heteroscedasticity-Consistent), que ajustan los errores estándar sin cambiar los coeficientes estimados.</p>
 <ul class="simple">
 <li><p><strong>HC0</strong>: Estimador original de White, básico y consistente frente a heterocedasticidad.</p></li>
@@ -409,7 +399,7 @@ document.write(`
 <p>En general, aplicar correcciones HC permite obtener intervalos de confianza más robustos, proporcionando inferencias más conservadoras y fiables cuando se sospecha heterocedasticidad.</p>
 </section>
 <section id="modelos-robustos-con-funciones-huber-tukey">
-<h2>7.2 Modelos robustos con funciones Huber/Tukey<a class="headerlink" href="#modelos-robustos-con-funciones-huber-tukey" title="Link to this heading">#</a></h2>
+<h3>7.2 Modelos robustos con funciones Huber/Tukey<a class="headerlink" href="#modelos-robustos-con-funciones-huber-tukey" title="Link to this heading">#</a></h3>
 <p>Los <strong>modelos de regresión robusta</strong> son una extensión de la regresión lineal ordinaria diseñada para reducir la influencia de outliers o valores atípicos en la estimación de los coeficientes. Mientras que la regresión OLS pondera todos los residuales por igual, los modelos robustos asignan <strong>menor peso a los residuales grandes</strong>, permitiendo obtener estimaciones más confiables y estables.</p>
 <p>Existen diversas funciones de pérdida que determinan cómo se penalizan los residuales, donde cada una equilibra de distinta manera la eficiencia para valores centrales y la robustez frente a outliers extremos:</p>
 <ul class="simple">
@@ -447,13 +437,13 @@ document.write(`
 <p>Además, es evidente que Tukey aplica un castigo más fuerte a residuales extremos.</p>
 </section>
 <section id="bootstrap">
-<h2>7.3 Bootstrap<a class="headerlink" href="#bootstrap" title="Link to this heading">#</a></h2>
+<h3>7.3 Bootstrap<a class="headerlink" href="#bootstrap" title="Link to this heading">#</a></h3>
 <p>El <strong>bootstrap</strong> es un método de remuestreo que permite estimar la variabilidad de los coeficientes de un modelo sin asumir una distribución específica de los errores. Consiste en generar múltiples muestras con reemplazo a partir de los datos originales y recalcular los estimadores para cada réplica, obteniendo así una <strong>distribución empírica</strong> de los coeficientes, a partir de la cual se calculan el error estándar y los intervalos de confianza.</p>
 <p><strong>Tabla 7.3.1.</strong> Resumen Bootstrap.</p>
 <p>Se observa que variables como <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>, <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code> y <code class="docutils literal notranslate"><span class="pre">Year</span> <span class="pre">Built</span></code> tienen coeficientes claramente distintos de cero, con intervalos de confianza estrechos y consistentes, lo que sugiere estimaciones robustas y estables. Por el contrario, <code class="docutils literal notranslate"><span class="pre">1st</span> <span class="pre">Flr</span> <span class="pre">SF</span></code> y <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> presentan intervalos que incluyen el cero, indicando que su efecto sobre la variable respuesta podría no ser significativo.</p>
 </section>
 <section id="ols-vs-hc3-vs-bootstrap">
-<h2>7.4 OLS vs. HC3 vs. Bootstrap<a class="headerlink" href="#ols-vs-hc3-vs-bootstrap" title="Link to this heading">#</a></h2>
+<h3>7.4 OLS vs. HC3 vs. Bootstrap<a class="headerlink" href="#ols-vs-hc3-vs-bootstrap" title="Link to this heading">#</a></h3>
 <p><strong>Tabla 7.4.1.</strong> Coeficientes OLS vs. Bootstrap. <em>Valores en escala logarítmica.</em></p>
 <p>Se observa que la estimación de los parámetros es muy estable frente al remuestreo, lo que sugiere que la muestra utilizada es suficientemente representativa y que los coeficientes no dependen excesivamente de observaciones individuales.</p>
 <p>En particular, las variables como <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code> y <code class="docutils literal notranslate"><span class="pre">Fireplaces</span></code> muestran coeficientes positivos consistentes en ambos métodos, confirmando su relación directa con el precio de la vivienda. Por su parte, <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> mantiene un coeficiente ligeramente negativo, indicando que, controlando por las demás variables, su efecto es mínimo.</p>
@@ -463,6 +453,7 @@ document.write(`
 <p>Es notable que las variables con errores estándar relativamente bajos (<code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>, <code class="docutils literal notranslate"><span class="pre">Lot</span> <span class="pre">Area</span></code>) están estimadas con gran precisión, mientras que aquellas con errores más altos (<code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code>, <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code>) presentan mayor incertidumbre en la estimación de su efecto sobre el precio de la vivienda.</p>
 <p><strong>Tabla 7.4.3.</strong> Amplitud intervalos de confianza OLS vs. HC3 vs. Bootstrap.</p>
 <p>Alineados con los errores estándar (<a class="reference internal" href="#tabla-742-se-ols-hc3-boot"><span class="xref myst">Tabla 7.4.2</span></a>), los intervalos calculados con OLS son consistentemente más estrechos que los obtenidos con HC3 o bootstrap, llegando a la misma conclusión de que el OLS inicial es menos robusto.</p>
+</section>
 </section>
 <section id="id1">
 <h2>7.4 OLS vs. HC3 vs. Bootstrap<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
@@ -848,21 +839,16 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">C7 · Métodos Robustos y/o Validación</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correcciones-para-heterocedasticidad">7.1 Correcciones para heterocedasticidad</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-robustos-con-funciones-huber-tukey">7.2 Modelos robustos con funciones Huber/Tukey</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap">7.3 Bootstrap</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-hc3-vs-bootstrap">7.4 OLS vs. HC3 vs. Bootstrap</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#capitulo-7-remedios-y-metodos-robustos">Capítulo 7: Remedios y métodos robustos</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correcciones-para-heterocedasticidad">7.1 Correcciones para heterocedasticidad</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-robustos-con-funciones-huber-tukey">7.2 Modelos robustos con funciones Huber/Tukey</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap">7.3 Bootstrap</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-hc3-vs-bootstrap">7.4 OLS vs. HC3 vs. Bootstrap</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">7.4 OLS vs. HC3 vs. Bootstrap</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
-</li>
-</ul>
-
   </nav></div>
 
 </div></div>
