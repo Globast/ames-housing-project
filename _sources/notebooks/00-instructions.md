@@ -96,7 +96,7 @@ $$
 y_i = \beta_0 + \beta_1 x_i + \varepsilon_i
 $$
 
-# Función de pérdida
+## Función de pérdida
 
 La función de pérdida de mínimos cuadrados busca minimizar la suma de los errores al cuadrado:
 
@@ -112,7 +112,7 @@ $$
 
 El término $\,\beta^\top X^\top Y\,$ es un escalar porque resulta del producto de un vector fila $Y^\top$ de dimensión $1\times n$, una matriz $X$ de $n\times p$, y un vector columna $\beta$ de $p\times 1$, dando un resultado $1\times 1$.
 
-# Estimador de mínimos cuadrados
+## Estimador de mínimos cuadrados
 
 Para hallar los valores de $\beta$ que minimizan $S(\beta)$, se deriva con respecto a $\beta$:
 
@@ -144,7 +144,7 @@ $$
 \hat{\beta} = (X^\top X)^{-1}X^\top Y
 $$
 
-# Desarrollo de los estimadores $\hat B_0$ y $\hat B_1$
+## Desarrollo de los estimadores $\hat B_0$ y $\hat B_1$
 
 En la regresión simple, la matriz $X$ tiene dos columnas: una de unos (intercepto) y otra con los valores $x_i$. Entonces:
 
@@ -200,7 +200,7 @@ $$
 \hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x}
 $$
 
-# Invertibilidad de $X^\top X$
+## Invertibilidad de $X^\top X$
 
 Para que la solución $\hat{\beta} = (X^\top X)^{-1}X^\top Y$ exista, $X^\top X$ debe ser invertible. En regresión simple:
 

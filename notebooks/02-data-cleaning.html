@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7. Capítulo 2: Descripción y limpieza del dataset &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>3. Capítulo 2: Descripción y limpieza del dataset &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -62,8 +62,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/02-data-cleaning';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="8. Capítulo 3: Análisis exploratorio (EDA)" href="03-eda.html" />
-    <link rel="prev" title="6. Capítulo 1: Introduccióny pregunta de investigación" href="01-introduction.html" />
+    <link rel="next" title="4. Capítulo 3: Análisis exploratorio (EDA)" href="03-eda.html" />
+    <link rel="prev" title="2. Capítulo 1: Introduccióny pregunta de investigación" href="01-introduction.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -169,20 +169,16 @@
     <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="00-instructions.html">1. Capítulo 0 · Instrucciones de reproducción</a></li>
-
-
-
-
-<li class="toctree-l1"><a class="reference internal" href="01-introduction.html">6. Capítulo 1: Introduccióny pregunta de investigación</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">7. Capítulo 2: Descripción y limpieza del dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03-eda.html">8. Capítulo 3: Análisis exploratorio (EDA)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">9. Capítulo 4: Formulación matricial del modelo OLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-inference.html">10. Capítulo 5: Inferencia y grados de libertad</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">11. Capítulo 6: Diagnóstico de supuestos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">12. Capítulo 7 — Remedios y métodos robustos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08-validation.html">13. Capítulo 8 — Validación y selección de modelos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-interpretation.html">14. Capítulo 9: Interpretación aplicada</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10-conclusions.html">15. Capítulo 10: Conclusiones y trabajo futuro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-introduction.html">2. Capítulo 1: Introduccióny pregunta de investigación</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Capítulo 2: Descripción y limpieza del dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-eda.html">4. Capítulo 3: Análisis exploratorio (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">5. Capítulo 4: Formulación matricial del modelo OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-inference.html">6. Capítulo 5: Inferencia y grados de libertad</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">7. Capítulo 6: Diagnóstico de supuestos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">8. Capítulo 7 — Remedios y métodos robustos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-validation.html">9. Capítulo 8 — Validación y selección de modelos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-interpretation.html">10. Capítulo 9: Interpretación aplicada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-conclusions.html">11. Capítulo 10: Conclusiones y trabajo futuro</a></li>
 </ul>
 
     </div>
@@ -331,12 +327,12 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">7.1. Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset">7.2. 2.1 Carga del dataset</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-datos-faltantes">7.3. 2.2 Tratamiento de datos faltantes</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers">7.4. 2.3 Tratamiento de outliers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-de-variables-categoricas">7.5. 2.4 Codificación de variables categóricas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">7.6. Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">3.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset">3.2. 2.1 Carga del dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-datos-faltantes">3.3. 2.2 Tratamiento de datos faltantes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers">3.4. 2.3 Tratamiento de outliers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-de-variables-categoricas">3.5. 2.4 Codificación de variables categóricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">3.6. Takeaways</a></li>
 </ul>
             </nav>
         </div>
@@ -349,13 +345,13 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-2-descripcion-y-limpieza-del-dataset">
-<h1><span class="section-number">7. </span>Capítulo 2: Descripción y limpieza del dataset<a class="headerlink" href="#capitulo-2-descripcion-y-limpieza-del-dataset" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">3. </span>Capítulo 2: Descripción y limpieza del dataset<a class="headerlink" href="#capitulo-2-descripcion-y-limpieza-del-dataset" title="Link to this heading">#</a></h1>
 <section id="overview">
-<h2><span class="section-number">7.1. </span>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.1. </span>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>En este capítulo se parte del CSV original <strong>ames_housing.csv</strong>, se realiza limpieza, codificación de variables categóricas y tratamiento de outliers. La salida produce <strong>AmesHousing_codificada.csv</strong> y <strong>AmesHousing_sin_outliers.csv</strong>. Se documentan las decisiones para garantizar reproducibilidad y coherencia para capítulos posteriores.</p>
 </section>
 <section id="carga-del-dataset">
-<h2><span class="section-number">7.2. </span>2.1 Carga del dataset<a class="headerlink" href="#carga-del-dataset" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.2. </span>2.1 Carga del dataset<a class="headerlink" href="#carga-del-dataset" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -572,7 +568,7 @@ Licencia: Open Data, libre uso académico
 <p><strong>Tabla 2.1.1</strong> Vista/tabulación relevante del conjunto de datos <em>Ames Housing</em>.</p>
 </section>
 <section id="tratamiento-de-datos-faltantes">
-<h2><span class="section-number">7.3. </span>2.2 Tratamiento de datos faltantes<a class="headerlink" href="#tratamiento-de-datos-faltantes" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.3. </span>2.2 Tratamiento de datos faltantes<a class="headerlink" href="#tratamiento-de-datos-faltantes" title="Link to this heading">#</a></h2>
 <p>Se calcula el porcentaje de faltantes por variable</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -755,7 +751,7 @@ x_{ij}^{*} =
 </div>
 </section>
 <section id="tratamiento-de-outliers">
-<h2><span class="section-number">7.4. </span>2.3 Tratamiento de outliers<a class="headerlink" href="#tratamiento-de-outliers" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.4. </span>2.3 Tratamiento de outliers<a class="headerlink" href="#tratamiento-de-outliers" title="Link to this heading">#</a></h2>
 <p>Se aplicó el criterio de <strong>tres desviaciones estándar (3Z)</strong> para identificar observaciones atípicas en las variables numéricas de interés, incluyendo la variable objetivo <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> y 13 predictoras potenciales.</p>
 <p>Bajo este método, un dato se considera <em>outlier</em> si su distancia a la media supera tres desviaciones estándar:</p>
 <div class="math notranslate nohighlight">
@@ -823,7 +819,7 @@ Y' = \log(1 + Y)
 </div>
 </section>
 <section id="codificacion-de-variables-categoricas">
-<h2><span class="section-number">7.5. </span>2.4 Codificación de variables categóricas<a class="headerlink" href="#codificacion-de-variables-categoricas" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.5. </span>2.4 Codificación de variables categóricas<a class="headerlink" href="#codificacion-de-variables-categoricas" title="Link to this heading">#</a></h2>
 <p>Las variables categóricas se transformaron en valores numéricos para facilitar su uso en modelos.</p>
 <p>Primero se codificaron las <strong>variables ordinales</strong> según su nivel, asignando valores enteros que respetan el orden lógico de las categorías (por ejemplo, <em>Po</em> &lt; <em>Fa</em> &lt; <em>TA</em> &lt; <em>Gd</em> &lt; <em>Ex</em>).</p>
 <p>Posteriormente, las <strong>variables nominales</strong> (sin orden inherente) se codificaron mediante variables <em>dummy</em>, creando una representación binaria para cada categoría (y una nueva columna).</p>
@@ -974,7 +970,7 @@ Y' = \log(1 + Y)
 Tras el proceso de imputación, eliminación de outliers, transformación logarítmica y codificación de variables, el dataset final quedó compuesto por <strong>2768 observaciones y 222 variables</strong>, sin valores ausentes.</p>
 </section>
 <section id="takeaways">
-<h2><span class="section-number">7.6. </span>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.6. </span>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>El pipeline deja dos salidas canónicas: <em>AmesHousing_codificada.csv</em> y <em>AmesHousing_sin_outliers.csv</em>.</p></li>
 <li><p>Las transformaciones son <strong>deterministas</strong> y documentadas para reproducibilidad.</p></li>
@@ -1019,7 +1015,7 @@ Tras el proceso de imputación, eliminación de outliers, transformación logar�
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">6. </span>Capítulo 1: Introduccióny pregunta de investigación</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Capítulo 1: Introduccióny pregunta de investigación</p>
       </div>
     </a>
     <a class="right-next"
@@ -1027,7 +1023,7 @@ Tras el proceso de imputación, eliminación de outliers, transformación logar�
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">8. </span>Capítulo 3: Análisis exploratorio (EDA)</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Capítulo 3: Análisis exploratorio (EDA)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1047,12 +1043,12 @@ Tras el proceso de imputación, eliminación de outliers, transformación logar�
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">7.1. Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset">7.2. 2.1 Carga del dataset</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-datos-faltantes">7.3. 2.2 Tratamiento de datos faltantes</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers">7.4. 2.3 Tratamiento de outliers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-de-variables-categoricas">7.5. 2.4 Codificación de variables categóricas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">7.6. Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">3.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset">3.2. 2.1 Carga del dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-datos-faltantes">3.3. 2.2 Tratamiento de datos faltantes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers">3.4. 2.3 Tratamiento de outliers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-de-variables-categoricas">3.5. 2.4 Codificación de variables categóricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">3.6. Takeaways</a></li>
 </ul>
   </nav></div>
 
