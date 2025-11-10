@@ -4,7 +4,7 @@ jupytext:
   text_representation: {extension: .md, format_name: myst}
 kernelspec: {name: python3, display_name: Python 3}
 ---
-# Capítulo 7: Remedios y métodos robustos
+# C7 · Métodos Robustos y/o Validación
 
 ## Overview
 Se exploran estimadores robustos (Huber/RLM, Regresión Cuantílica) y procedimientos de validación. Incluye una sección de **Bootstrap** para evaluar la variabilidad de los estimadores y comparar OLS, errores estándar HC3 y percentiles bootstrap.
@@ -275,23 +275,46 @@ bootstrap_df
 ```{code-cell} ipython3
 import pandas as pd
 
-coef_ols = modelo_base.params         
-se_ols = modelo_base.bse               
+# Construye comparativos y corrige IC con iloc (evita errores de indexación tipo array)
+coef_ols = modelo_base.params
+se_ols   = modelo_base.bse
 
-se_hc3 = resultados_HC3.bse            
+se_hc3   = resultados_HC3.bse
 
-coef_boot_mean = bootstrap_df['Coef_mean']  
-se_boot = bootstrap_df['SE_bootstrap']  
+# Desde bootstrap (ya creado arriba o cargado desde BOOT_CSV_PATH)
+coef_boot_mean = bootstrap_df['Coef_mean']
+se_boot        = bootstrap_df['SE_bootstrap']
 
-ic_ols = modelo_base.conf_int().iloc[:,1] - modelo_base.conf_int().iloc[:,0]
+# Intervalos y anchos de IC: usar .iloc para DataFrame devuelto por conf_int()
+ci_ols = modelo_base.conf_int()
+ic_ols = ci_ols.iloc[:, 1] - ci_ols.iloc[:, 0]
 
-ic_hc3 = resultados_HC3.conf_int()[:,1] - resultados_HC3.conf_int()[:,0]
+ci_hc3 = resultados_HC3.conf_int()
+if not isinstance(ci_hc3, pd.DataFrame):
+    # En algunos entornos puede devolver array; conviértelo para usar iloc
+    ci_hc3 = pd.DataFrame(ci_hc3, index=modelo_base.params.index, columns=['lower','upper'])
+ic_hc3 = ci_hc3.iloc[:, 1] - ci_hc3.iloc[:, 0]
 
 ic_boot = bootstrap_df['IC_97.5%'] - bootstrap_df['IC_2.5%']
 
-coef_df = comparative_df[['Coef_OLS', 'Coef_Bootstrap']]
-se_df = comparative_df[['SE_OLS', 'SE_HC3', 'SE_Bootstrap']]
-ic_df = comparative_df[['IC_width_OLS', 'IC_width_HC3', 'IC_width_Bootstrap']]
+# Arma comparative_df alineando por el índice de coeficientes (clave para comparación coherente)
+comparative_df = pd.DataFrame({
+    "Coef_OLS": coef_ols,
+    "Coef_Bootstrap": coef_boot_mean.reindex(coef_ols.index),
+    "SE_OLS": se_ols,
+    "SE_HC3": se_hc3.reindex(coef_ols.index),
+    "SE_Bootstrap": se_boot.reindex(coef_ols.index),
+    "IC_width_OLS": ic_ols.reindex(coef_ols.index) if isinstance(ic_ols, pd.Series) else pd.Series(ic_ols, index=coef_ols.index),
+    "IC_width_HC3": ic_hc3.reindex(coef_ols.index) if isinstance(ic_hc3, pd.Series) else pd.Series(ic_hc3, index=coef_ols.index),
+    "IC_width_Bootstrap": ic_boot.reindex(coef_ols.index),
+})
+
+# Subconjuntos tal como usas más abajo
+coef_df = comparative_df[["Coef_OLS", "Coef_Bootstrap"]]
+se_df   = comparative_df[["SE_OLS", "SE_HC3", "SE_Bootstrap"]]
+ic_df   = comparative_df[["IC_width_OLS", "IC_width_HC3", "IC_width_Bootstrap"]]
+
+# Vista de coeficientes
 coef_df
 ```
 
