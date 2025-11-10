@@ -29,7 +29,8 @@ from scipy.stats import zscore
 # 1. Cargar dataset y metadatos
 # ===============================
 
-data = pd.read_csv("ames_housing.csv", sep = ",")
+df = pd.read_csv(DATA_PATH)
+
 # Fuente, tamaño, número de variables, licencia
 fuente = "Ames Housing Dataset (De Cock, 2011) — Iowa State University"
 tamano = data.shape[0]
