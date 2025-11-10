@@ -4,39 +4,77 @@ jupytext:
   text_representation: {extension: .md, format_name: myst}
 kernelspec: {name: python3, display_name: Python 3}
 ---
-# Capítulo 3 · Regresión lineal (OLS) e inferencia
+# Capítulo 4: Formulación matricial del modelo OLS
 
-> **Overview**: Ajustar OLS con transformaciones razonables, obtener ICs y pruebas, y evaluar significancia y magnitud de efectos.
-
-```{code-cell} python
-import pandas as pd
-import numpy as np
-import statsmodels.api as sm
+```{code-cell} ipython3
 from pathlib import Path
-
-df = pd.read_csv(Path('data/ames_housing.csv'))
-df['log_SalePrice'] = np.log(df['SalePrice'])
-
-X = df[['Gr Liv Area','Overall Qual','Garage Cars','Total Bsmt SF','Year Built']].copy()
-X = sm.add_constant(X)
-y = df['log_SalePrice']
-
-ols = sm.OLS(y, X).fit()
-print(ols.summary())
+DATA_PATH = Path("../data/data/AmesHousing_codificada.csv")  # relativo a book/notebooks/
+assert DATA_PATH.is_file(), "No se encontró '../data/data/AmesHousing_codificada.csv'"
+print("Usando CSV:", DATA_PATH.resolve())
 ```
 
-**Ecuación del modelo** (estimada, ver {numref}`eq:ols`):
-```{math}
-:label: eq:ols
-\log(SalePrice) = \beta_0 + \beta_1\,GrLivArea + \beta_2\,OverallQual + \cdots + \varepsilon
+### 4.1 Definición del modelo
+El modelo de regresión lineal puede expresarse de forma matricial como:
+
+$$
+Y = X\beta + \varepsilon
+$$
+
+**Ecuación 4.1.1.** Regresión lineal.
+
+La función de pérdida de mínimos cuadrados busca minimizar la suma de los errores al cuadrado:
+
+$$
+S(\beta) = (Y - X\beta)^\top (Y - X\beta)
+$$
+
+**Ecuación 4.1.2.** Función de pérdida mínimos cuadrados.
+
+Donde los estimadores están dados por:
+
+$$
+\hat{\beta} = (X^\top X)^{-1}X^\top Y
+$$
+
+**Ecuación 4.1.3.** Estimadores de mínimos cuadrados.
+```{code-cell} ipython3
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+
+df = pd.read_csv(DATA_PATH)
+
+vars_modelo = [
+    'Overall Qual', 'Gr Liv Area', 'Garage Cars',
+    'Total Bsmt SF', '1st Flr SF', 'Full Bath',
+    'Year Built', 'Fireplaces', 'Lot Area'
+]
+
+y_log = df["SalePrice_log"].values
+X = df[vars_modelo].values
+X = np.column_stack([np.ones(X.shape[0]), X])
+nombres_vars = ["Intercept"] + vars_modelo
+
+XtX_inv = np.linalg.inv(X.T @ X)
+beta_log = XtX_inv @ (X.T @ y_log)
+
+modelo_log = sm.OLS(y_log, sm.add_constant(df[vars_modelo])).fit()
+
+mean_price = np.exp(df["SalePrice_log"]).mean()
+beta_usd = beta_log * mean_price
+ols_usd = modelo_log.params.values * mean_price
+
+tabla_comparacion = pd.DataFrame({
+    "Variable": nombres_vars,
+    "Formulación matricial": np.round(beta_usd, 2),
+    "Statsmodels": np.round(ols_usd, 2)
+})
+
+display(tabla_comparacion)
 ```
+**Tabla 4.1.1.** Formulación matricial vs. Statsmodels.
+Se construye un modelo de regresión lineal para predecir `SalePrice` a partir de nueve variables predictoras. 
 
-Interpreta los coeficientes clave y discute **significancia**, **IC al 95%** y **bondad de ajuste** ({numref}`tab:ols-sum`).
+Primero se calculan los coeficientes manualmente usando la formulación matricial de OLS, y luego se ajusta el mismo modelo con `statsmodels` para verificar los resultados. Se observan los mismos coeficientes.
 
-```{code-cell} python
-# Tabla resumida de coeficientes con IC95%
-summ = ols.summary2().tables[1]
-summ
-```
-
-{takeaways}
+Cada coeficiente indica cuánto se espera que cambie el `SalePrice` por un incremento de una unidad en la variable correspondiente, manteniendo constantes las demás variables. Por ejemplo, el coeficiente de `Overall Qual` es aproximadamente 17 686. Esto significa que, en promedio, por cada punto adicional en la calificación general de la casa, se espera que el precio de venta aumente unos 17 686 dólares, manteniendo constantes las otras variables del modelo.

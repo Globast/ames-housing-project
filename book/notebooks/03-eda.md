@@ -4,227 +4,143 @@ jupytext:
   text_representation: {extension: .md, format_name: myst}
 kernelspec: {name: python3, display_name: Python 3}
 ---
-# Capítulo 2: Descripción y limpieza del dataset
-
-**Notebook original:** Capítulo 2: Descripción y limpieza del dataset
-
-**Librerías usadas:** numpy, pandas, warnings
-
-**Lectura de datos detectada en el .ipynb:** ../data/AmesHousing.csv
+# Capítulo 3: Análisis exploratorio (EDA)
 
 ```{code-cell} ipython3
 from pathlib import Path
-DATA_PATH = Path("../data/ames_housing.csv")  # relativo a book/notebooks/
-assert DATA_PATH.is_file(), "No se encontró '../data/ames_housing.csv'"
+DATA_PATH = Path("../data/AmesHousing_codificada.csv")  # relativo a book/notebooks/
+assert DATA_PATH.is_file(), "No se encontró '../data/data/AmesHousing_codificada.csv'"
 print("Usando CSV:", DATA_PATH.resolve())
 ```
-### 2.1 Carga del dataset
-
+### 3.1 Distribución de la variable respuesta
 ```{code-cell} ipython3
 import pandas as pd
-import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 data = pd.read_csv(DATA_PATH)
-display(data.head())
+
+plt.figure(figsize=(14,10))
+
+plt.subplot(2,2,1)
+sns.histplot(data["SalePrice"], bins=40, kde=True)
+plt.title("Distribución de SalePrice")
+
+plt.subplot(2,2,2)
+sns.boxplot(x=data["SalePrice"])
+plt.title("Boxplot de SalePrice")
+
+plt.subplot(2,2,3)
+sns.histplot(data["SalePrice_log"], bins=40, kde=True, color='orange')
+plt.title("Distribución de SalePrice_log")
+
+plt.subplot(2,2,4)
+sns.boxplot(x=data["SalePrice_log"], color='orange')
+plt.title("Boxplot de SalePrice_log")
+
+plt.tight_layout()
+plt.show()
 ```
+**Figura 3.1.1.** Histogramas y boxplots de SalePrice y SalePrice_log.
+La tabla muestra la distribución de la variable de respuesta `SalePrice` antes y después de aplicar la transformación logarítmica.  
 
-**Tabla 2.1.1.** Conjunto de datos *Ames Housing*.
+La distribución original (panel superior) presenta una **asimetría positiva marcada**, con una cola larga hacia la derecha y presencia de varios valores atípicos.  
 
-Esta tabla muestra las primeras observaciones del dataset original, permitiendo verificar la correcta carga de los datos y la estructura general de las variables.
-
+Tras aplicar la transformación logarítmica ([Ecuación 2.2.2](#eq-2-2-2)), la variable `SalePrice_log` adquiere una dispersión más homogénea y reducción significativa de los outliers.
 ```{code-cell} ipython3
-fuente = "Ames Housing Dataset (De Cock, 2011) — Iowa State University"
-tamano = data.shape[0]
-n_variables = data.shape[1]
-licencia = "Open Data, libre uso académico"
+plt.figure(figsize=(14,5))
 
-print(f"Fuente: {fuente}")
-print(f"Tamaño: {tamano} registros")
-print(f"Número de variables: {n_variables}")
-print(f"Licencia: {licencia}")
+plt.subplot(1,2,1)
+sns.scatterplot(x=data["Gr Liv Area"], y=data["SalePrice"], alpha=0.6)
+plt.title("SalePrice vs Gr Liv Area")
+plt.xlabel("Gr Liv Area")
+plt.ylabel("SalePrice")
+
+plt.subplot(1,2,2)
+sns.scatterplot(x=data["Gr Liv Area"], y=data["SalePrice_log"], alpha=0.6, color='orange')
+plt.title("SalePrice_log vs Gr Liv Area")
+plt.xlabel("Gr Liv Area")
+plt.ylabel("SalePrice_log")
+
+plt.tight_layout()
+plt.show()
 ```
+**Figura 3.1.2.** Diagramas de dispersión Gr Liv Area vs. SalePrice.
+Se compara la relación entre el **precio de venta** (`SalePrice`) y el **área habitable** (`Gr Liv Area`) antes y después de la transformación logarítmica ([Ecuación 2.2.2](#eq-2-2-2)) aplicada a la variable respuesta.
 
-**Tabla 2.1.2.** Metadatos *Ames Housing*.
-
+Inicialmente se observa una **dispersión notable en los valores altos**. Tras aplicar la transformación, el patrón muestra una **relación más lineal y estable**, reduciendo la asimetría y atenuando la influencia de valores extremos.
+### 3.2 Correlaciones entre variables numéricas
 ```{code-cell} ipython3
-faltantes = data.isna().mean() * 100
-tipos = data.dtypes
-
-tabla_faltantes = pd.DataFrame({
-    "Tipo de variable": tipos,
-    "% Faltantes": faltantes.round(2)
-})
-
-tabla_faltantes = (
-    tabla_faltantes[tabla_faltantes["% Faltantes"] > 0]
-    .sort_values(by="% Faltantes", ascending=False)
-)
-
-tabla_faltantes.head(20)
-```
-
-**Tabla 2.1.3.** Valores faltantes por variable.
-
-El tratamiento de valores faltantes se realizó de forma diferenciada según el tipo de variable.  
-Para las **variables numéricas**, se imputó la **mediana**, una medida robusta frente a valores extremos.  
-En las **variables categóricas**, se reemplazaron los valores ausentes por la **moda**, preservando la categoría más frecuente.
-
-La regla aplicada se resume en la siguiente expresión:
-
-$$
-x_{ij}^{*} =
-\begin{cases}
-\text{Mediana}(X_j) & \text{si } X_j \text{ es numérica}\\[4pt]
-\text{Moda}(X_j) & \text{si } X_j \text{ es categórica}
-\end{cases}
-$$
-
-```{code-cell} ipython3
-import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
-
-data_limpia = data.copy()
-
-num_cols = data_limpia.select_dtypes(include=np.number).columns
-for col in num_cols:
-    data_limpia[col].fillna(data_limpia[col].median(), inplace=True)
-
-cat_cols = data_limpia.select_dtypes(exclude=np.number).columns
-for col in cat_cols:
-    data_limpia[col].fillna(data_limpia[col].mode()[0], inplace=True)
-```
-
-### 2.2 Tratamiento de outliers
-
-Se aplicó el criterio de **tres desviaciones estándar (3Z)** para identificar observaciones atípicas en las variables numéricas de interés, incluyendo la variable objetivo `SalePrice` y 13 predictoras potenciales.
-
-Bajo este método, un dato se considera *outlier* si su distancia a la media supera tres desviaciones estándar:
-
-$$
-|z_i| = \left| \frac{x_i - \bar{x}}{s} \right| > 3
-$$
-
-**Ecuación 2.2.1.** Outlier 3Z.
-
-```{code-cell} ipython3
-import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 import numpy as np
 
-vars_outliers = [
-    "Overall Qual", "Gr Liv Area","Garage Area", "Garage Cars","Bedroom AbvGr",
-    "Total Bsmt SF", "Year Remod/Add","TotRms AbvGrd","1st Flr SF", "Full Bath",
-    "Year Built", "Fireplaces", "Lot Area","SalePrice"
+num_vars = data.select_dtypes(include=np.number).columns
+num_vars = num_vars.drop("SalePrice_log")  # Excluir SalePrice_log
+corr = data[num_vars].corr()
+
+top_corr = corr["SalePrice"].sort_values(ascending=False).head(15)
+
+plt.figure(figsize=(10,6))
+sns.heatmap(corr.loc[top_corr.index, top_corr.index], annot=True, cmap="coolwarm", fmt=".2f")
+plt.title("Heatmap de correlaciones")
+plt.show()
+```
+**Figura 3.2.1.** Heatmap de correlaciones.
+```{code-cell} ipython3
+print("Top correlaciones con SalePrice:")
+display(top_corr)
+```
+**Tabla 3.2.1.** Correlaciones principales con SalePrice.
+Variables como `Overall Qual`, `Gr Liv Area`, `Exter Qual` y `Bsmt Qual` tienen una correlación alta con la variable de respuesta (`SalePrice`), por lo que son candidatas a elegirse para el modelo.
+
+Sin embargo, variables como `Garage Cars` y `Garage Area` tienen una correlación alta entre sí, de modo que puede no ser necesario incluir ambas.
+### 3.3 Relaciones de variables categóricas
+```{code-cell} ipython3
+data = pd.read_csv(DATA_PATH)
+
+plt.figure(figsize=(12,5))
+sns.boxplot(x="Neighborhood", y="SalePrice", data=data)
+plt.xticks(rotation=90)
+plt.title("SalePrice por vecindario (Neighborhood)")
+plt.show()
+
+plt.figure(figsize=(12,5))
+sns.boxplot(x="Neighborhood", y="SalePrice_log", data=data, color='orange')
+plt.xticks(rotation=90)
+plt.title("SalePrice_log por vecindario (Neighborhood)")
+plt.show()
+
+plt.figure(figsize=(8,5))
+sns.boxplot(x="Overall Qual", y="SalePrice", data=data)
+plt.title("SalePrice por calidad general (Overall Qual)")
+plt.show()
+
+plt.figure(figsize=(8,5))
+sns.boxplot(x="Overall Qual", y="SalePrice_log", data=data, color='orange')
+plt.title("SalePrice_log por calidad general (Overall Qual)")
+plt.show()
+```
+**Tabla 3.3.1.** Boxplots de SalePrice y SalePrice_log vs. Neighborhood y Overall Qual.
+De acuerdo con los diagramas de caja y bigote, parece haber una relación entre `SalePrice` y variables categóricas como `Neighborhood` y `Overall Qual`.
+
+Además, se notan diferencias entre la variable de respuesta original (`SalePrice`) y la transformada logarítmicamente (`SalePrice_log`).
+```{code-cell} ipython3
+vars_candidatas = [
+  "Overall Qual",    # Calidad general de la casa
+  "Gr Liv Area",     # Área habitable
+  "Garage Cars",     # Capacidad de autos en garaje
+  "Total Bsmt SF",   # Área total del sótano
+  "1st Flr SF",      # Área del primer piso
+  "Full Bath",       # Número de baños completos
+  "Year Built",      # Año de construcción
+  "Fireplaces",      # Número de chimeneas
+  "Lot Area"         # Área del lote
 ]
 
-data_sin_outliers = data_limpia.copy()
-
-def detectar_outliers_3z(col):
-    mean = col.mean()
-    std = col.std()
-    return (col - mean).abs() > 3*std
-
-outliers_mask = np.zeros(len(data_sin_outliers), dtype=bool)
-for var in vars_outliers:
-    outliers_mask |= detectar_outliers_3z(data_sin_outliers[var])
-
-antes = len(data_sin_outliers)
-n_outliers = outliers_mask.sum()
-
-data_sin_outliers = data_sin_outliers.loc[~outliers_mask].copy()
-despues = len(data_sin_outliers)
-
-print(f"Registros antes: {antes}")
-print(f"Outliers detectados (3Z): {n_outliers}")
-print(f"Registros después de eliminar outliers: {despues}")
+print("\nVariables candidatas seleccionadas:")
+for v in vars_candidatas:
+    print("-", v)
 ```
-
-**Tabla 2.2.1.** Resumen tratamiento de outliers.
-
-En total, se detectaron **162 observaciones atípicas**, las cuales fueron eliminadas del conjunto de datos con el objetivo de reducir la influencia de valores extremos sobre el ajuste del modelo a aplicar.
-
-Además, se aplicó una transformación logarítmica natural a la variable **SalePrice** con el fin de mejorar la relación lineal entre esta y las variables predictoras, reduciendo cualquier sesgo presente en la distribución original. 
-
-$$
-Y' = \log(1 + Y)
-$$
-
-**Ecuación 2.2.2.** Transformación logarítmica. <a id="eq-2-2-2"></a>
-
-```{code-cell} ipython3
-data_sin_outliers["SalePrice_log"] = np.log1p(data_sin_outliers["SalePrice"])
-data_sin_outliers.to_csv("../data/AmesHousing_sin_outliers.csv", sep =",", index=False)
-```
-
-### 2.3 Codificación de variables categóricas
-
-Las variables categóricas se transformaron en valores numéricos para facilitar su uso en modelos.  
-
-Primero se codificaron las **variables ordinales** según su nivel, asignando valores enteros que respetan el orden lógico de las categorías (por ejemplo, *Po* < *Fa* < *TA* < *Gd* < *Ex*).  
-
-Posteriormente, las **variables nominales** (sin orden inherente) se codificaron mediante variables *dummy*, creando una representación binaria para cada categoría (y una nueva columna).
-
-```{code-cell} ipython3
-data_ordinal = data_sin_outliers.copy()
-
-map_calidad = {"Po": 1, "Fa": 2, "TA": 3, "Gd": 4, "Ex": 5}
-
-map_poolqc = {"Fa": 1, "TA": 2, "Gd": 3, "Ex": 4}
-
-map_bsmt_exposure = {"No": 1, "Mn": 2, "Av": 3, "Gd": 4}
-
-map_functional = {
-    "Sal": 1, "Sev": 2, "Maj2": 3, "Maj1": 4,
-    "Mod": 5, "Min2": 6, "Min1": 7, "Typ": 8
-}
-
-cols_calidad = [
-    "Exter Qual", "Exter Cond", "Bsmt Qual", "Bsmt Cond",
-    "Heating QC", "Kitchen Qual", "Fireplace Qu",
-    "Garage Qual", "Garage Cond"
-]
-for col in cols_calidad:
-    data_ordinal[col] = data_ordinal[col].map(map_calidad)
-
-data_ordinal["Pool QC"] = data_ordinal["Pool QC"].map(map_poolqc)
-data_ordinal["Bsmt Exposure"] = data_ordinal["Bsmt Exposure"].map(map_bsmt_exposure)
-data_ordinal["Functional"] = data_ordinal["Functional"].map(map_functional)
-
-data_codificada = pd.get_dummies(data_ordinal, drop_first=True)
-
-data_codificada.to_csv("../data/AmesHousing_codificada.csv", sep =",", index=False)
-
-n_ordinales = len(cols_calidad) + 3  # las de cols_calidad + Pool QC, Bsmt Exposure, Functional
-
-n_nominales = data_codificada.shape[1] - data_ordinal.shape[1]
-
-tabla_transformaciones = pd.DataFrame({
-    "Tipo de transformación": ["Ordinales recodificadas", "Nominales codificadas (dummies)"],
-    "Cantidad de variables": [n_ordinales, n_nominales]
-})
-
-display(tabla_transformaciones)
-```
-
-**Tabla 2.3.1.** Resumen variables categóricas codificadas.
-
-El resultado muestra que se transformaron **12 variables ordinales** mediante recodificación numérica y **139 variables nominales** a través de codificación *dummy*.  
-
-Con estas transformaciones, el dataset quedó sin valores faltantes, sin outliers y con todas las variables en formato adecuado para su modelación.
-
-```{code-cell} ipython3
-resumen = pd.DataFrame({
-    "Etapa": ["Original", "Después de limpieza"],
-    "Registros": [data.shape[0], data_codificada.shape[0]],
-    "Columnas": [data.shape[1], data_codificada.shape[1]],
-    "Faltantes totales": [data.isna().sum().sum(), data_codificada.isna().sum().sum()]
-})
-
-resumen
-```
-
-**Key**
- Resumen genera limpieza de datos.
-
-El conjunto original contenía 2930 registros y 82 variables, con un total de 15 749 valores faltantes.  
-Tras el proceso de imputación, eliminación de outliers, transformación logarítmica y codificación de variables, el dataset final quedó compuesto por 2768 observaciones y 222 variables, sin valores ausentes.
+Se eligen 9 variables predictoras, teniendo en cuenta una **alta correlación con la variable de respuesta**, **baja correlación entre ellas** (para evitar redundancia en el modelo) y **sentido práctico**.
 
