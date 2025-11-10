@@ -1,0 +1,9 @@
+format: jb-book
+root: notebooks/00-repro
+chapters:
+  - file: notebooks/01-introduccion
+  - file: notebooks/02-exploracion
+  - file: notebooks/03-modelado
+  - file: notebooks/04-diagnostico
+  - file: notebooks/05-metodos-robustos
+  - file: notebooks/06-conclusiones
