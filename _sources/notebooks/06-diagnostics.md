@@ -1,3 +1,9 @@
+---
+jupytext:
+  formats: md:myst
+  text_representation: {extension: .md, format_name: myst}
+kernelspec: {name: python3, display_name: Python 3}
+---
 # Capítulo 4 · Diagnóstico del modelo
 
 > **Overview**: Evaluar supuestos (linealidad, homocedasticidad, normalidad de residuos, influencia) y proponer correcciones.
