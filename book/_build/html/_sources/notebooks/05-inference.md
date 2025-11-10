@@ -4,99 +4,114 @@ jupytext:
   text_representation: {extension: .md, format_name: myst}
 kernelspec: {name: python3, display_name: Python 3}
 ---
-# Capítulo 5: Inferencia y grados de libertad
+# C5 · Inferencia de Parámetros
+## Overview
+Se realiza **inferencia**: intervalos de confianza, pruebas de hipótesis sobre coeficientes y ajuste global del modelo. Se reportan supuestos y su impacto en la validez inferencial.
 ```{code-cell} ipython3
 from pathlib import Path
-DATA_PATH = Path("../data/AmesHousing_codificada.csv")  # relativo a book/notebooks/
-assert DATA_PATH.is_file(), "No se encontró '../data/AmesHousing_codificada.csv'"
+import pandas as pd
+
+# Definir ruta de datos relativa al capítulo (ejecutado desde book/notebooks/)
+DATA_PATH = Path("../data/AmesHousing_sin_outliers.csv")
+assert DATA_PATH.is_file(), f"No se encontró '{DATA_PATH}'"
 print("Usando CSV:", DATA_PATH.resolve())
+
+# Lectura canónica a reutilizar en el capítulo
+df = pd.read_csv(DATA_PATH)
+df.shape
 ```
+# Capítulo 5: Inferencia y grados de libertad
 
+### 5.1 Grados de libertad
 
----
+En regresión lineal, sea:
 
-## **1️⃣ Definición de grados de libertad**
+- $n$ = número de observaciones  
+- $k$ = número de variables predictoras (sin contar el intercepto)
 
-En un modelo lineal con $n$ observaciones y $k$ variables explicativas:
-
-$$
-Df_{Model} = k, \quad Df_{Residuals} = n - k - 1
-$$
-
-- $Df_{Model}$: número de parámetros estimados (sin contar el intercepto).  
-- $Df_{Residuals}$: grados de libertad asociados a los errores o residuos.
-
----
-
-## **2️⃣ Errores estándar y valores p**
-
-El **error estándar** de cada coeficiente $\hat{\beta}_j$ mide la precisión de su estimación y se calcula como:
+Se definen:
 
 $$
-SE(\hat{\beta}_j) = \sqrt{\sigma^2 (X^\top X)^{-1}_{jj}}
+\text{Df}_{\text{model}} = k
 $$
-
-donde:
-
-- $\sigma^2 = \frac{SSE}{n - k - 1}$ es la varianza residual estimada.  
-- $(X^\top X)^{-1}_{jj}$ es el elemento $j$-ésimo de la diagonal de la matriz inversa.
-
-El **estadístico t** se define como:
+**Ecuación 4.1.2.** Grados de libertad del modelo.
 
 $$
-t_j = \frac{\hat{\beta}_j}{SE(\hat{\beta}_j)}
+\text{Df}_{\text{model}} = 9
 $$
 
-y el **valor p** se obtiene comparando este estadístico con una distribución t de Student con $Df_{Residuals}$ grados de libertad.
-
----
-
-## **3️⃣ Interpretación de la tabla de coeficientes**
-
-Los resultados del modelo incluyen:
-
-| Parámetro | Descripción |
-|------------|--------------|
-| **coef** | Estimación del parámetro $\hat{\beta}_j$ |
-| **std err** | Error estándar del estimador |
-| **t** | Estadístico de prueba |
-| **P>|t|** | Valor p de la hipótesis $H_0: \beta_j = 0$ |
-| **[0.025, 0.975]** | Intervalo de confianza al 95% |
-
----
-
-## **4️⃣ Significancia y efecto práctico**
-
-- Si $p < 0.05$: se **rechaza $H_0$** y la variable es **estadísticamente significativa**.  
-- La **magnitud** del coeficiente indica su **efecto práctico**: cuánto cambia $y$ ante un cambio unitario en esa variable, manteniendo las demás constantes.
-
-Por ejemplo:
-- Un aumento de 1 punto en `OverallQual` puede incrementar el precio promedio en miles de dólares.
-- `GrLivArea` tiene un efecto proporcional: cada metro adicional eleva el valor de la vivienda.
-
----
-
-## **5️⃣ Resumen conceptual**
+Representa la cantidad de información utilizada para estimar los $k$ coeficientes.
 
 $$
-\hat{\beta}_j \pm t_{\alpha/2, Df_{Residuals}} \times SE(\hat{\beta}_j)
+\text{Df}_{\text{residual}} = n - k - 1
+$$
+**Ecuación 4.1.2.** Grados de libertad de los residuos.
+
+$$
+\text{Df}_{\text{residual}} = 2768 - 9 - 1
 $$
 
-Este intervalo permite construir intervalos de confianza al 95% para cada parámetro, mostrando el rango plausible donde se encuentra el valor real de $\beta_j$.
+$$
+\text{Df}_{\text{residual}} = 2758
+$$
+
+Representa los grados de libertad restantes después de ajustar el modelo.
+
+### 5.2 Errores estándar
+
+En un modelo de regresión lineal, los **errores estándar de los coeficientes** miden la incertidumbre asociada a cada estimador $\hat{\beta}_j$.  
+En otras palabras, nos indican cuánto esperaríamos que varíen los coeficientes si repitiéramos el experimento con nuevas muestras del mismo tamaño. Coeficientes con errores estándar grandes son menos precisos y más sensibles al muestreo.
+
+La suma de cuadrados de los residuos se define como:
+
+$$
+SS_{\text{Res}} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+$$
+
+**Ecuación 5.1.1.** Suma de cuadrados de los residuos.
+
+Esta cantidad representa la **variabilidad de `y` no explicada por el modelo**.
+
+La varianza de los errores se estima dividiendo $SS_{\text{Res}}$ por los grados de libertad de los residuos ($\text{Df}_{\text{residual}}$):
+
+$$
+\hat{\sigma}^2 = \frac{SS_{\text{Res}}}{\text{Df}_{\text{residual}}}
+$$
+
+**Ecuación 5.1.2.** Estimación de la varianza de los errores.
+
+La matriz de varianzas-covarianzas de los coeficientes se calcula como:
+
+$$
+\text{Var}(\hat{\beta}) = \hat{\sigma}^2 (X^\top X)^{-1}
+$$
+
+**Ecuación 5.1.3.** Matriz de varianzas-covarianzas de los coeficientes.
+
+Finalmente, el **error estándar** de cada coeficiente $\hat{\beta}_j$ se obtiene tomando la raíz cuadrada de la diagonal correspondiente:
+
+$$
+SE(\hat{\beta}_j) = \sqrt{[\text{Var}(\hat{\beta})]_{jj}}
+$$
+
+**Ecuación 5.1.4.** Error estándar de los coeficientes.
+
 ```{code-cell} ipython3
 import pandas as pd
+import numpy as np
 import statsmodels.api as sm
 
-# Usar el dataset limpio
 df = pd.read_csv(DATA_PATH)
-vars_modelo = ['Overall Qual','Gr Liv Area','Garage Cars','Garage Area','Total Bsmt SF','1st Flr SF','Year Built','Year Remod/Add','Full Bath','Garage Yr Blt','TotRms AbvGrd','Fireplaces','Mas Vnr Area','BsmtFin SF 1']
+vars_modelo = [
+    'Overall Qual', 'Gr Liv Area', 'Garage Cars',
+    'Total Bsmt SF', '1st Flr SF', 'Full Bath',
+    'Year Built', 'Fireplaces', 'Lot Area'
+]
 
-# Modelo OLS
 X_sm = sm.add_constant(df[vars_modelo])
-y = df["SalePrice"]
+y = df["SalePrice_log"]
 modelo = sm.OLS(y, X_sm).fit()
 
-# Resumen de inferencia
 tabla_inferencia = modelo.summary2().tables[1]
 tabla_inferencia = tabla_inferencia.rename(columns={
     'Coef.': 'coef',
@@ -104,6 +119,81 @@ tabla_inferencia = tabla_inferencia.rename(columns={
     'P>|t|': 'p-value'
 })
 
-# Mostrar tabla
+mean_price = np.exp(df["SalePrice_log"]).mean()
+tabla_inferencia["coef"] = tabla_inferencia["coef"] * mean_price
+
+tabla_inferencia
+
+n = df.shape[0]
+print(n)
+```
+
+### 5.3 Valores P
+
+Consecuentemente, los **valores p** permiten evaluar la significancia estadística de cada coeficiente $\hat{\beta}_j$.  
+En otras palabras, nos indican la probabilidad de obtener un coeficiente tan extremo como el observado si, en realidad, el coeficiente fuera cero (hipótesis nula $H_0: \beta_j = 0$).
+
+Para calcular el valor p, primero se construye el **estadístico t** de cada coeficiente:
+
+$$
+t_j = \frac{\hat{\beta}_j}{SE(\hat{\beta}_j)}
+$$
+
+**Ecuación 5.3.1.** Estadístico t de los coeficientes.
+
+Bajo la hipótesis nula $H_0: \beta_j = 0$, este estadístico sigue una distribución t con $\text{Df}_{\text{residual}} = n - k - 1$ grados de libertad.
+
+Luego, el valor p se obtiene como:
+
+$$
+p_j = 2 \cdot P(T > |t_j|)
+$$
+
+**Ecuación 5.3.2.** Valor p bilateral, donde $T \sim t_{\text{Df}_{\text{residual}}}$.
+
+Un valor p pequeño (típicamente menor a 0.05) indica que hay evidencia suficiente para rechazar la hipótesis nula, es decir, que el coeficiente es significativamente distinto de cero, con lo cual se podría afirmar que existe una relación lineal.
+
+Un valor p grande sugiere que no hay evidencia suficiente para afirmar que el coeficiente difiere de cero, sugiriendo así la inexistencia de una relación lineal entre la variable predictora y la de respuesta.
+
+```{code-cell} ipython3
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+
+pd.set_option('display.float_format', '{:.2f}'.format)
+np.set_printoptions(suppress=True, precision=2)
+
+df = pd.read_csv(DATA_PATH)
+vars_modelo = [
+    'Overall Qual', 'Gr Liv Area', 'Garage Cars',
+    'Total Bsmt SF', '1st Flr SF', 'Full Bath',
+    'Year Built', 'Fireplaces', 'Lot Area'
+]
+
+X_sm = sm.add_constant(df[vars_modelo])
+y = df["SalePrice_log"]
+modelo = sm.OLS(y, X_sm).fit()
+
+tabla_inferencia = modelo.summary2().tables[1]
+tabla_inferencia = tabla_inferencia.rename(columns={
+    'Coef.': 'coef',
+    'Std.Err.': 'std err',
+    'P>|t|': 'p-value'
+})
+
+mean_price = np.exp(df["SalePrice_log"]).mean()
+tabla_inferencia["coef"] = tabla_inferencia["coef"] * mean_price
+
 tabla_inferencia
 ```
+
+**Tabla 5.3.1.** Inferencia estadística del modelo 1.
+
+Coeficientes con **errores estándar** muy pequeños, como los de `Overall Qual`, `Gr Liv Area` o `Year Built`, indican que estas estimaciones son bastante precisas. Por el contrario, un coeficiente con error estándar relativamente más grande, como `Full Bath` o `Garage Cars`, refleja mayor incertidumbre en la estimación de su efecto sobre el precio de la vivienda.  
+
+**Valores p** menores que 0.05 se consideran significativos, indicando que los coeficientes son distintos de 0. En este modelo, la mayoría de las variables cumplen este criterio, de forma que contribuyen significativamente a explicar `SalePrice`. Por el contrario, `1st Flr SF` y `Full Bath` tienen valores p mayores a 0.05, sugiriendo que su efecto podría no ser relevante al controlar por los demás predictores.
+
+## Takeaways
+- Intervalos y p-valores dependen de supuestos de homocedasticidad y normalidad de errores.
+- Los efectos significativos son coherentes con el EDA, reforzando validez del modelo.
+- Se reconoce el riesgo de error tipo I por múltiples comparaciones.

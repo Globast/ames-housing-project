@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Capítulo 5: Inferencia y grados de libertad &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>C5 · Inferencia de Parámetros &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -177,16 +177,14 @@
 <li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">Capítulo 2: Descripción y limpieza del dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03-eda.html">Capítulo 3: Análisis exploratorio (EDA)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 5: Inferencia y grados de libertad</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">C5 · Inferencia de Parámetros</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7: Remedios y métodos robustos</a></li>
-
-
-
-
-
 <li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="11-conclusions.html">Capítulo 6 · Conclusiones y trabajo futuro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-monte-carlo.html">Capitulo 09. Montecarlo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-interpretation.html">Capitulo 10. Interpretacion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-conclusions.html">Capítulo 11 · Conclusiones y trabajo futuro</a></li>
 </ul>
 
     </div>
@@ -325,7 +323,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Capítulo 5: Inferencia y grados de libertad</h1>
+    <h1>C5 · Inferencia de Parámetros</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -335,12 +333,19 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-de-grados-de-libertad"><strong>1️⃣ Definición de grados de libertad</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar-y-valores-p"><strong>2️⃣ Errores estándar y valores p</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-la-tabla-de-coeficientes"><strong>3️⃣ Interpretación de la tabla de coeficientes</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#significancia-y-efecto-practico"><strong>4️⃣ Significancia y efecto práctico</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-conceptual"><strong>5️⃣ Resumen conceptual</strong></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">C5 · Inferencia de Parámetros</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#capitulo-5-inferencia-y-grados-de-libertad">Capítulo 5: Inferencia y grados de libertad</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">5.1 Grados de libertad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">5.2 Errores estándar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">5.3 Valores P</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
+</ul>
+</li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -351,122 +356,119 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="capitulo-5-inferencia-y-grados-de-libertad">
-<h1>Capítulo 5: Inferencia y grados de libertad<a class="headerlink" href="#capitulo-5-inferencia-y-grados-de-libertad" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="c5-inferencia-de-parametros">
+<h1>C5 · Inferencia de Parámetros<a class="headerlink" href="#c5-inferencia-de-parametros" title="Link to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>Se realiza <strong>inferencia</strong>: intervalos de confianza, pruebas de hipótesis sobre coeficientes y ajuste global del modelo. Se reportan supuestos y su impacto en la validez inferencial.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/AmesHousing_codificada.csv&quot;</span><span class="p">)</span>  <span class="c1"># relativo a book/notebooks/</span>
-<span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="s2">&quot;No se encontró &#39;../data/AmesHousing_codificada.csv&#39;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Definir ruta de datos relativa al capítulo (ejecutado desde book/notebooks/)</span>
+<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/AmesHousing_sin_outliers.csv&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;No se encontró &#39;</span><span class="si">{</span><span class="n">DATA_PATH</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usando CSV:&quot;</span><span class="p">,</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
+
+<span class="c1"># Lectura canónica a reutilizar en el capítulo</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Usando CSV: /workspaces/ames-housing-project/book/data/AmesHousing_codificada.csv
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Usando CSV: /workspaces/ames-housing-project/book/data/AmesHousing_sin_outliers.csv
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2768, 83)
 </pre></div>
 </div>
 </div>
 </div>
-<hr class="docutils" />
-<section id="definicion-de-grados-de-libertad">
-<h2><strong>1️⃣ Definición de grados de libertad</strong><a class="headerlink" href="#definicion-de-grados-de-libertad" title="Link to this heading">#</a></h2>
-<p>En un modelo lineal con <span class="math notranslate nohighlight">\(n\)</span> observaciones y <span class="math notranslate nohighlight">\(k\)</span> variables explicativas:</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="capitulo-5-inferencia-y-grados-de-libertad">
+<h1>Capítulo 5: Inferencia y grados de libertad<a class="headerlink" href="#capitulo-5-inferencia-y-grados-de-libertad" title="Link to this heading">#</a></h1>
+<section id="grados-de-libertad">
+<h2>5.1 Grados de libertad<a class="headerlink" href="#grados-de-libertad" title="Link to this heading">#</a></h2>
+<p>En regresión lineal, sea:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(n\)</span> = número de observaciones</p></li>
+<li><p><span class="math notranslate nohighlight">\(k\)</span> = número de variables predictoras (sin contar el intercepto)</p></li>
+</ul>
+<p>Se definen:</p>
 <div class="math notranslate nohighlight">
 \[
-Df_{Model} = k, \quad Df_{Residuals} = n - k - 1
+\text{Df}_{\text{model}} = k
 \]</div>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(Df_{Model}\)</span>: número de parámetros estimados (sin contar el intercepto).</p></li>
-<li><p><span class="math notranslate nohighlight">\(Df_{Residuals}\)</span>: grados de libertad asociados a los errores o residuos.</p></li>
-</ul>
-</section>
-<hr class="docutils" />
-<section id="errores-estandar-y-valores-p">
-<h2><strong>2️⃣ Errores estándar y valores p</strong><a class="headerlink" href="#errores-estandar-y-valores-p" title="Link to this heading">#</a></h2>
-<p>El <strong>error estándar</strong> de cada coeficiente <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span> mide la precisión de su estimación y se calcula como:</p>
+<p><strong>Ecuación 4.1.2.</strong> Grados de libertad del modelo.</p>
 <div class="math notranslate nohighlight">
 \[
-SE(\hat{\beta}_j) = \sqrt{\sigma^2 (X^\top X)^{-1}_{jj}}
+\text{Df}_{\text{model}} = 9
 \]</div>
-<p>donde:</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\sigma^2 = \frac{SSE}{n - k - 1}\)</span> es la varianza residual estimada.</p></li>
-<li><p><span class="math notranslate nohighlight">\((X^\top X)^{-1}_{jj}\)</span> es el elemento <span class="math notranslate nohighlight">\(j\)</span>-ésimo de la diagonal de la matriz inversa.</p></li>
-</ul>
-<p>El <strong>estadístico t</strong> se define como:</p>
+<p>Representa la cantidad de información utilizada para estimar los <span class="math notranslate nohighlight">\(k\)</span> coeficientes.</p>
 <div class="math notranslate nohighlight">
 \[
-t_j = \frac{\hat{\beta}_j}{SE(\hat{\beta}_j)}
+\text{Df}_{\text{residual}} = n - k - 1
 \]</div>
-<p>y el <strong>valor p</strong> se obtiene comparando este estadístico con una distribución t de Student con <span class="math notranslate nohighlight">\(Df_{Residuals}\)</span> grados de libertad.</p>
-</section>
-<hr class="docutils" />
-<section id="interpretacion-de-la-tabla-de-coeficientes">
-<h2><strong>3️⃣ Interpretación de la tabla de coeficientes</strong><a class="headerlink" href="#interpretacion-de-la-tabla-de-coeficientes" title="Link to this heading">#</a></h2>
-<p>Los resultados del modelo incluyen:</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Parámetro</p></th>
-<th class="head"><p>Descripción</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><strong>coef</strong></p></td>
-<td><p>Estimación del parámetro <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>std err</strong></p></td>
-<td><p>Error estándar del estimador</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>t</strong></p></td>
-<td><p>Estadístico de prueba</p></td>
-</tr>
-<tr class="row-odd"><td><p>**P&gt;</p></td>
-<td><p>t</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>[0.025, 0.975]</strong></p></td>
-<td><p>Intervalo de confianza al 95%</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<hr class="docutils" />
-<section id="significancia-y-efecto-practico">
-<h2><strong>4️⃣ Significancia y efecto práctico</strong><a class="headerlink" href="#significancia-y-efecto-practico" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Si <span class="math notranslate nohighlight">\(p &lt; 0.05\)</span>: se <strong>rechaza <span class="math notranslate nohighlight">\(H_0\)</span></strong> y la variable es <strong>estadísticamente significativa</strong>.</p></li>
-<li><p>La <strong>magnitud</strong> del coeficiente indica su <strong>efecto práctico</strong>: cuánto cambia <span class="math notranslate nohighlight">\(y\)</span> ante un cambio unitario en esa variable, manteniendo las demás constantes.</p></li>
-</ul>
-<p>Por ejemplo:</p>
-<ul class="simple">
-<li><p>Un aumento de 1 punto en <code class="docutils literal notranslate"><span class="pre">OverallQual</span></code> puede incrementar el precio promedio en miles de dólares.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">GrLivArea</span></code> tiene un efecto proporcional: cada metro adicional eleva el valor de la vivienda.</p></li>
-</ul>
-</section>
-<hr class="docutils" />
-<section id="resumen-conceptual">
-<h2><strong>5️⃣ Resumen conceptual</strong><a class="headerlink" href="#resumen-conceptual" title="Link to this heading">#</a></h2>
+<p><strong>Ecuación 4.1.2.</strong> Grados de libertad de los residuos.</p>
 <div class="math notranslate nohighlight">
 \[
-\hat{\beta}_j \pm t_{\alpha/2, Df_{Residuals}} \times SE(\hat{\beta}_j)
+\text{Df}_{\text{residual}} = 2768 - 9 - 1
 \]</div>
-<p>Este intervalo permite construir intervalos de confianza al 95% para cada parámetro, mostrando el rango plausible donde se encuentra el valor real de <span class="math notranslate nohighlight">\(\beta_j\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Df}_{\text{residual}} = 2758
+\]</div>
+<p>Representa los grados de libertad restantes después de ajustar el modelo.</p>
+</section>
+<section id="errores-estandar">
+<h2>5.2 Errores estándar<a class="headerlink" href="#errores-estandar" title="Link to this heading">#</a></h2>
+<p>En un modelo de regresión lineal, los <strong>errores estándar de los coeficientes</strong> miden la incertidumbre asociada a cada estimador <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span>.<br />
+En otras palabras, nos indican cuánto esperaríamos que varíen los coeficientes si repitiéramos el experimento con nuevas muestras del mismo tamaño. Coeficientes con errores estándar grandes son menos precisos y más sensibles al muestreo.</p>
+<p>La suma de cuadrados de los residuos se define como:</p>
+<div class="math notranslate nohighlight">
+\[
+SS_{\text{Res}} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+\]</div>
+<p><strong>Ecuación 5.1.1.</strong> Suma de cuadrados de los residuos.</p>
+<p>Esta cantidad representa la <strong>variabilidad de <code class="docutils literal notranslate"><span class="pre">y</span></code> no explicada por el modelo</strong>.</p>
+<p>La varianza de los errores se estima dividiendo <span class="math notranslate nohighlight">\(SS_{\text{Res}}\)</span> por los grados de libertad de los residuos (<span class="math notranslate nohighlight">\(\text{Df}_{\text{residual}}\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{\sigma}^2 = \frac{SS_{\text{Res}}}{\text{Df}_{\text{residual}}}
+\]</div>
+<p><strong>Ecuación 5.1.2.</strong> Estimación de la varianza de los errores.</p>
+<p>La matriz de varianzas-covarianzas de los coeficientes se calcula como:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Var}(\hat{\beta}) = \hat{\sigma}^2 (X^\top X)^{-1}
+\]</div>
+<p><strong>Ecuación 5.1.3.</strong> Matriz de varianzas-covarianzas de los coeficientes.</p>
+<p>Finalmente, el <strong>error estándar</strong> de cada coeficiente <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span> se obtiene tomando la raíz cuadrada de la diagonal correspondiente:</p>
+<div class="math notranslate nohighlight">
+\[
+SE(\hat{\beta}_j) = \sqrt{[\text{Var}(\hat{\beta})]_{jj}}
+\]</div>
+<p><strong>Ecuación 5.1.4.</strong> Error estándar de los coeficientes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
 
-<span class="c1"># Usar el dataset limpio</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
-<span class="n">vars_modelo</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span><span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Area&#39;</span><span class="p">,</span><span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span><span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span><span class="s1">&#39;Year Built&#39;</span><span class="p">,</span><span class="s1">&#39;Year Remod/Add&#39;</span><span class="p">,</span><span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Yr Blt&#39;</span><span class="p">,</span><span class="s1">&#39;TotRms AbvGrd&#39;</span><span class="p">,</span><span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span><span class="s1">&#39;Mas Vnr Area&#39;</span><span class="p">,</span><span class="s1">&#39;BsmtFin SF 1&#39;</span><span class="p">]</span>
+<span class="n">vars_modelo</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span> <span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span> <span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span> <span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Year Built&#39;</span><span class="p">,</span> <span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span> <span class="s1">&#39;Lot Area&#39;</span>
+<span class="p">]</span>
 
-<span class="c1"># Modelo OLS</span>
 <span class="n">X_sm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">vars_modelo</span><span class="p">])</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;SalePrice&quot;</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;SalePrice_log&quot;</span><span class="p">]</span>
 <span class="n">modelo</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X_sm</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
-<span class="c1"># Resumen de inferencia</span>
 <span class="n">tabla_inferencia</span> <span class="o">=</span> <span class="n">modelo</span><span class="o">.</span><span class="n">summary2</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">tabla_inferencia</span> <span class="o">=</span> <span class="n">tabla_inferencia</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
     <span class="s1">&#39;Coef.&#39;</span><span class="p">:</span> <span class="s1">&#39;coef&#39;</span><span class="p">,</span>
@@ -474,178 +476,101 @@ t_j = \frac{\hat{\beta}_j}{SE(\hat{\beta}_j)}
     <span class="s1">&#39;P&gt;|t|&#39;</span><span class="p">:</span> <span class="s1">&#39;p-value&#39;</span>
 <span class="p">})</span>
 
-<span class="c1"># Mostrar tabla</span>
+<span class="n">mean_price</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;SalePrice_log&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">tabla_inferencia</span><span class="p">[</span><span class="s2">&quot;coef&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tabla_inferencia</span><span class="p">[</span><span class="s2">&quot;coef&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mean_price</span>
+
 <span class="n">tabla_inferencia</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="n">vars_modelo</span> <span class="o">=</span> <span class="p">[</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span> <span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span> <span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span> <span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span>     <span class="s1">&#39;Year Built&#39;</span><span class="p">,</span> <span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span> <span class="s1">&#39;Lot Area&#39;</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="p">]</span>
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>coef</th>
-      <th>std err</th>
-      <th>t</th>
-      <th>p-value</th>
-      <th>[0.025</th>
-      <th>0.975]</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>const</th>
-      <td>-1.321130e+06</td>
-      <td>64588.715168</td>
-      <td>-20.454506</td>
-      <td>1.107914e-86</td>
-      <td>-1.447777e+06</td>
-      <td>-1.194483e+06</td>
-    </tr>
-    <tr>
-      <th>Overall Qual</th>
-      <td>1.574852e+04</td>
-      <td>587.433210</td>
-      <td>26.809040</td>
-      <td>7.179209e-141</td>
-      <td>1.459667e+04</td>
-      <td>1.690037e+04</td>
-    </tr>
-    <tr>
-      <th>Gr Liv Area</th>
-      <td>4.856682e+01</td>
-      <td>2.341722</td>
-      <td>20.739785</td>
-      <td>6.732686e-89</td>
-      <td>4.397511e+01</td>
-      <td>5.315853e+01</td>
-    </tr>
-    <tr>
-      <th>Garage Cars</th>
-      <td>1.644127e+03</td>
-      <td>1558.156737</td>
-      <td>1.055175</td>
-      <td>2.914381e-01</td>
-      <td>-1.411147e+03</td>
-      <td>4.699402e+03</td>
-    </tr>
-    <tr>
-      <th>Garage Area</th>
-      <td>3.159232e+01</td>
-      <td>5.480444</td>
-      <td>5.764553</td>
-      <td>9.097526e-09</td>
-      <td>2.084612e+01</td>
-      <td>4.233851e+01</td>
-    </tr>
-    <tr>
-      <th>Total Bsmt SF</th>
-      <td>1.895102e+01</td>
-      <td>2.212417</td>
-      <td>8.565754</td>
-      <td>1.758644e-17</td>
-      <td>1.461286e+01</td>
-      <td>2.328919e+01</td>
-    </tr>
-    <tr>
-      <th>1st Flr SF</th>
-      <td>8.418598e+00</td>
-      <td>2.458300</td>
-      <td>3.424561</td>
-      <td>6.248038e-04</td>
-      <td>3.598300e+00</td>
-      <td>1.323890e+01</td>
-    </tr>
-    <tr>
-      <th>Year Built</th>
-      <td>1.955349e+02</td>
-      <td>30.369530</td>
-      <td>6.438522</td>
-      <td>1.418450e-10</td>
-      <td>1.359855e+02</td>
-      <td>2.550842e+02</td>
-    </tr>
-    <tr>
-      <th>Year Remod/Add</th>
-      <td>3.747123e+02</td>
-      <td>32.084298</td>
-      <td>11.678995</td>
-      <td>8.581986e-31</td>
-      <td>3.118006e+02</td>
-      <td>4.376241e+02</td>
-    </tr>
-    <tr>
-      <th>Full Bath</th>
-      <td>-4.656733e+03</td>
-      <td>1352.657854</td>
-      <td>-3.442654</td>
-      <td>5.846324e-04</td>
-      <td>-7.309060e+03</td>
-      <td>-2.004406e+03</td>
-    </tr>
-    <tr>
-      <th>Garage Yr Blt</th>
-      <td>7.366806e+01</td>
-      <td>34.002648</td>
-      <td>2.166539</td>
-      <td>3.035556e-02</td>
-      <td>6.994782e+00</td>
-      <td>1.403413e+02</td>
-    </tr>
-    <tr>
-      <th>TotRms AbvGrd</th>
-      <td>2.886616e+02</td>
-      <td>580.441545</td>
-      <td>0.497314</td>
-      <td>6.190074e-01</td>
-      <td>-8.494833e+02</td>
-      <td>1.426807e+03</td>
-    </tr>
-    <tr>
-      <th>Fireplaces</th>
-      <td>6.370958e+03</td>
-      <td>925.790491</td>
-      <td>6.881642</td>
-      <td>7.297828e-12</td>
-      <td>4.555644e+03</td>
-      <td>8.186272e+03</td>
-    </tr>
-    <tr>
-      <th>Mas Vnr Area</th>
-      <td>1.571183e+01</td>
-      <td>3.362966</td>
-      <td>4.672014</td>
-      <td>3.125889e-06</td>
-      <td>9.117634e+00</td>
-      <td>2.230602e+01</td>
-    </tr>
-    <tr>
-      <th>BsmtFin SF 1</th>
-      <td>2.138201e+01</td>
-      <td>1.347658</td>
-      <td>15.866045</td>
-      <td>2.585200e-54</td>
-      <td>1.873949e+01</td>
-      <td>2.402453e+01</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;statsmodels&#39;
+</pre></div>
 </div>
+</div>
+</div>
+</section>
+<section id="valores-p">
+<h2>5.3 Valores P<a class="headerlink" href="#valores-p" title="Link to this heading">#</a></h2>
+<p>Consecuentemente, los <strong>valores p</strong> permiten evaluar la significancia estadística de cada coeficiente <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span>.<br />
+En otras palabras, nos indican la probabilidad de obtener un coeficiente tan extremo como el observado si, en realidad, el coeficiente fuera cero (hipótesis nula <span class="math notranslate nohighlight">\(H_0: \beta_j = 0\)</span>).</p>
+<p>Para calcular el valor p, primero se construye el <strong>estadístico t</strong> de cada coeficiente:</p>
+<div class="math notranslate nohighlight">
+\[
+t_j = \frac{\hat{\beta}_j}{SE(\hat{\beta}_j)}
+\]</div>
+<p><strong>Ecuación 5.3.1.</strong> Estadístico t de los coeficientes.</p>
+<p>Bajo la hipótesis nula <span class="math notranslate nohighlight">\(H_0: \beta_j = 0\)</span>, este estadístico sigue una distribución t con <span class="math notranslate nohighlight">\(\text{Df}_{\text{residual}} = n - k - 1\)</span> grados de libertad.</p>
+<p>Luego, el valor p se obtiene como:</p>
+<div class="math notranslate nohighlight">
+\[
+p_j = 2 \cdot P(T &gt; |t_j|)
+\]</div>
+<p><strong>Ecuación 5.3.2.</strong> Valor p bilateral, donde <span class="math notranslate nohighlight">\(T \sim t_{\text{Df}_{\text{residual}}}\)</span>.</p>
+<p>Un valor p pequeño (típicamente menor a 0.05) indica que hay evidencia suficiente para rechazar la hipótesis nula, es decir, que el coeficiente es significativamente distinto de cero, con lo cual se podría afirmar que existe una relación lineal.</p>
+<p>Un valor p grande sugiere que no hay evidencia suficiente para afirmar que el coeficiente difiere de cero, sugiriendo así la inexistencia de una relación lineal entre la variable predictora y la de respuesta.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.float_format&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">suppress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+<span class="n">vars_modelo</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span> <span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span> <span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span> <span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Year Built&#39;</span><span class="p">,</span> <span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span> <span class="s1">&#39;Lot Area&#39;</span>
+<span class="p">]</span>
+
+<span class="n">X_sm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">vars_modelo</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;SalePrice_log&quot;</span><span class="p">]</span>
+<span class="n">modelo</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X_sm</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="n">tabla_inferencia</span> <span class="o">=</span> <span class="n">modelo</span><span class="o">.</span><span class="n">summary2</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">tabla_inferencia</span> <span class="o">=</span> <span class="n">tabla_inferencia</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;Coef.&#39;</span><span class="p">:</span> <span class="s1">&#39;coef&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Std.Err.&#39;</span><span class="p">:</span> <span class="s1">&#39;std err&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;P&gt;|t|&#39;</span><span class="p">:</span> <span class="s1">&#39;p-value&#39;</span>
+<span class="p">})</span>
+
+<span class="n">mean_price</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;SalePrice_log&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">tabla_inferencia</span><span class="p">[</span><span class="s2">&quot;coef&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tabla_inferencia</span><span class="p">[</span><span class="s2">&quot;coef&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mean_price</span>
+
+<span class="n">tabla_inferencia</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Tabla 5.3.1.</strong> Inferencia estadística del modelo 1.</p>
+<p>Coeficientes con <strong>errores estándar</strong> muy pequeños, como los de <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code> o <code class="docutils literal notranslate"><span class="pre">Year</span> <span class="pre">Built</span></code>, indican que estas estimaciones son bastante precisas. Por el contrario, un coeficiente con error estándar relativamente más grande, como <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> o <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code>, refleja mayor incertidumbre en la estimación de su efecto sobre el precio de la vivienda.</p>
+<p><strong>Valores p</strong> menores que 0.05 se consideran significativos, indicando que los coeficientes son distintos de 0. En este modelo, la mayoría de las variables cumplen este criterio, de forma que contribuyen significativamente a explicar <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>. Por el contrario, <code class="docutils literal notranslate"><span class="pre">1st</span> <span class="pre">Flr</span> <span class="pre">SF</span></code> y <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> tienen valores p mayores a 0.05, sugiriendo que su efecto podría no ser relevante al controlar por los demás predictores.</p>
+</section>
+<section id="takeaways">
+<h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Intervalos y p-valores dependen de supuestos de homocedasticidad y normalidad de errores.</p></li>
+<li><p>Los efectos significativos son coherentes con el EDA, reforzando validez del modelo.</p></li>
+<li><p>Se reconoce el riesgo de error tipo I por múltiples comparaciones.</p></li>
+</ul>
 </section>
 </section>
 
@@ -713,12 +638,19 @@ t_j = \frac{\hat{\beta}_j}{SE(\hat{\beta}_j)}
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-de-grados-de-libertad"><strong>1️⃣ Definición de grados de libertad</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar-y-valores-p"><strong>2️⃣ Errores estándar y valores p</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-la-tabla-de-coeficientes"><strong>3️⃣ Interpretación de la tabla de coeficientes</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#significancia-y-efecto-practico"><strong>4️⃣ Significancia y efecto práctico</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-conceptual"><strong>5️⃣ Resumen conceptual</strong></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">C5 · Inferencia de Parámetros</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#capitulo-5-inferencia-y-grados-de-libertad">Capítulo 5: Inferencia y grados de libertad</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">5.1 Grados de libertad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">5.2 Errores estándar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">5.3 Valores P</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
+</ul>
+</li>
+</ul>
+
   </nav></div>
 
 </div></div>

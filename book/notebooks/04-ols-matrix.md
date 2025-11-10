@@ -6,14 +6,23 @@ kernelspec: {name: python3, display_name: Python 3}
 ---
 # Capítulo 4: Formulación matricial del modelo OLS
 
+## Overview
+Se formula y ajusta un modelo OLS usando álgebra matricial. Se presentan las ecuaciones clave (normal equations) y se verifica la equivalencia con APIs de alto nivel.
 ```{code-cell} ipython3
 from pathlib import Path
-DATA_PATH = Path("../data/data/AmesHousing_codificada.csv")  # relativo a book/notebooks/
-assert DATA_PATH.is_file(), "No se encontró '../data/data/AmesHousing_codificada.csv'"
-print("Usando CSV:", DATA_PATH.resolve())
-```
+import pandas as pd
 
+# Definir ruta de datos relativa al capítulo (ejecutado desde book/notebooks/)
+DATA_PATH = Path("../data/AmesHousing_sin_outliers.csv")
+assert DATA_PATH.is_file(), f"No se encontró '{DATA_PATH}'"
+print("Usando CSV:", DATA_PATH.resolve())
+
+# Lectura canónica a reutilizar en el capítulo
+df = pd.read_csv(DATA_PATH)
+df.shape
+```
 ### 4.1 Definición del modelo
+
 El modelo de regresión lineal puede expresarse de forma matricial como:
 
 $$
@@ -37,6 +46,7 @@ $$
 $$
 
 **Ecuación 4.1.3.** Estimadores de mínimos cuadrados.
+
 ```{code-cell} ipython3
 import numpy as np
 import pandas as pd
@@ -72,9 +82,17 @@ tabla_comparacion = pd.DataFrame({
 
 display(tabla_comparacion)
 ```
+
 **Tabla 4.1.1.** Formulación matricial vs. Statsmodels.
+
 Se construye un modelo de regresión lineal para predecir `SalePrice` a partir de nueve variables predictoras. 
 
 Primero se calculan los coeficientes manualmente usando la formulación matricial de OLS, y luego se ajusta el mismo modelo con `statsmodels` para verificar los resultados. Se observan los mismos coeficientes.
 
 Cada coeficiente indica cuánto se espera que cambie el `SalePrice` por un incremento de una unidad en la variable correspondiente, manteniendo constantes las demás variables. Por ejemplo, el coeficiente de `Overall Qual` es aproximadamente 17 686. Esto significa que, en promedio, por cada punto adicional en la calificación general de la casa, se espera que el precio de venta aumente unos 17 686 dólares, manteniendo constantes las otras variables del modelo.
+
+## Takeaways
+- La solución matricial \(\hat{\beta}=(X^TX)^{-1}X^Ty\) coincide con la obtenida vía librerías.
+- El condicionamiento de \(X^TX\) anticipa problemas de varianza de coeficientes.
+- Se sientan bases para contrastes de hipótesis.
+

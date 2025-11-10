@@ -1,4 +1,4 @@
-# Capítulo 6 · Conclusiones y trabajo futuro
+# Capítulo 11 · Conclusiones y trabajo futuro
 
 > **Overview**: Sintetizar hallazgos clave y su relevancia práctica.
 

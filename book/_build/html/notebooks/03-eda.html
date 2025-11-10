@@ -175,16 +175,14 @@
 <li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">Capítulo 2: Descripción y limpieza del dataset</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 3: Análisis exploratorio (EDA)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-inference.html">C5 · Inferencia de Parámetros</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7: Remedios y métodos robustos</a></li>
-
-
-
-
-
 <li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="11-conclusions.html">Capítulo 6 · Conclusiones y trabajo futuro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-monte-carlo.html">Capitulo 09. Montecarlo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-interpretation.html">Capitulo 10. Interpretacion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-conclusions.html">Capítulo 11 · Conclusiones y trabajo futuro</a></li>
 </ul>
 
     </div>
@@ -333,9 +331,13 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.1 Distribución de la variable respuesta</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.2 Correlaciones entre variables numéricas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.3 Relaciones de variables categóricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.1 Distribución de la variable respuesta</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.2 Correlaciones entre variables numéricas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.3 Relaciones de variables categóricas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
             </nav>
         </div>
@@ -349,23 +351,37 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-3-analisis-exploratorio-eda">
 <h1>Capítulo 3: Análisis exploratorio (EDA)<a class="headerlink" href="#capitulo-3-analisis-exploratorio-eda" title="Link to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>Incluye distribución de variables, relaciones bivariadas y detección preliminar de colinealidad.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/AmesHousing_codificada.csv&quot;</span><span class="p">)</span>  <span class="c1"># relativo a book/notebooks/</span>
-<span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="s2">&quot;No se encontró &#39;../data/data/AmesHousing_codificada.csv&#39;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Definir ruta de datos relativa al capítulo (ejecutado desde book/notebooks/)</span>
+<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/AmesHousing_sin_outliers.csv&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;No se encontró &#39;</span><span class="si">{</span><span class="n">DATA_PATH</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usando CSV:&quot;</span><span class="p">,</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
+
+<span class="c1"># Lectura canónica a reutilizar en el capítulo</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Usando CSV: /workspaces/ames-housing-project/book/data/AmesHousing_codificada.csv
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Usando CSV: /workspaces/ames-housing-project/book/data/AmesHousing_sin_outliers.csv
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2768, 83)
 </pre></div>
 </div>
 </div>
 </div>
 <section id="distribucion-de-la-variable-respuesta">
-<h2>3.1 Distribución de la variable respuesta<a class="headerlink" href="#distribucion-de-la-variable-respuesta" title="Link to this heading">#</a></h2>
+<h3>3.1 Distribución de la variable respuesta<a class="headerlink" href="#distribucion-de-la-variable-respuesta" title="Link to this heading">#</a></h3>
+<p><strong>Figura 3.1.</strong> Visualización generada por el código siguiente. Ver interpretación posterior.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -401,10 +417,12 @@ document.write(`
 <img alt="../_images/151fe09cd8405c7b4f1b2fcec263710a8e6972e0e56c0f531cce8e86b8fd6d90.png" src="../_images/151fe09cd8405c7b4f1b2fcec263710a8e6972e0e56c0f531cce8e86b8fd6d90.png" />
 </div>
 </div>
-<p><strong>Figura 3.1.1.</strong> Histogramas y boxplots de SalePrice y SalePrice_log.
-La tabla muestra la distribución de la variable de respuesta <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> antes y después de aplicar la transformación logarítmica.</p>
+<p><em>Interpretación (Figura 3.1).</em> Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.</p>
+<p><strong>Figura 3.1.1.</strong> Histogramas y boxplots de SalePrice y SalePrice_log.</p>
+<p>La tabla muestra la distribución de la variable de respuesta <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> antes y después de aplicar la transformación logarítmica.</p>
 <p>La distribución original (panel superior) presenta una <strong>asimetría positiva marcada</strong>, con una cola larga hacia la derecha y presencia de varios valores atípicos.</p>
 <p>Tras aplicar la transformación logarítmica (<a class="reference internal" href="#eq-2-2-2"><span class="xref myst">Ecuación 2.2.2</span></a>), la variable <code class="docutils literal notranslate"><span class="pre">SalePrice_log</span></code> adquiere una dispersión más homogénea y reducción significativa de los outliers.</p>
+<p><strong>Figura 3.2.</strong> Visualización generada por el código siguiente. Ver interpretación posterior.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
@@ -430,12 +448,16 @@ La tabla muestra la distribución de la variable de respuesta <code class="docut
 <img alt="../_images/3b006aacc5e4f549b21211d6504f715f1244e299f1c33624698de68ac2dd3266.png" src="../_images/3b006aacc5e4f549b21211d6504f715f1244e299f1c33624698de68ac2dd3266.png" />
 </div>
 </div>
-<p><strong>Figura 3.1.2.</strong> Diagramas de dispersión Gr Liv Area vs. SalePrice.
-Se compara la relación entre el <strong>precio de venta</strong> (<code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>) y el <strong>área habitable</strong> (<code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>) antes y después de la transformación logarítmica (<a class="reference internal" href="#eq-2-2-2"><span class="xref myst">Ecuación 2.2.2</span></a>) aplicada a la variable respuesta.</p>
+<p><em>Interpretación (Figura 3.2).</em> Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.</p>
+<p><strong>Figura 3.1.2.</strong> Diagramas de dispersión Gr Liv Area vs. SalePrice.</p>
+<p>Se compara la relación entre el <strong>precio de venta</strong> (<code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>) y el <strong>área habitable</strong> (<code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>) antes y después de la transformación logarítmica (<a class="reference internal" href="#eq-2-2-2"><span class="xref myst">Ecuación 2.2.2</span></a>) aplicada a la variable respuesta.</p>
 <p>Inicialmente se observa una <strong>dispersión notable en los valores altos</strong>. Tras aplicar la transformación, el patrón muestra una <strong>relación más lineal y estable</strong>, reduciendo la asimetría y atenuando la influencia de valores extremos.</p>
 </section>
 <section id="correlaciones-entre-variables-numericas">
-<h2>3.2 Correlaciones entre variables numéricas<a class="headerlink" href="#correlaciones-entre-variables-numericas" title="Link to this heading">#</a></h2>
+<h3>3.2 Correlaciones entre variables numéricas<a class="headerlink" href="#correlaciones-entre-variables-numericas" title="Link to this heading">#</a></h3>
+<p><strong>Tabla 3.1.</strong> Vista/tabulación relevante del conjunto de datos. Se discute en el texto.</p>
+<p><em>Comentario:</em> Esta tabla resume aspectos clave para el capítulo; ver discusión inmediata.</p>
+<p><strong>Figura 3.3.</strong> Visualización generada por el código siguiente. Ver interpretación posterior.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
@@ -456,9 +478,11 @@ Se compara la relación entre el <strong>precio de venta</strong> (<code class="
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/d145c201f2d5c8c8494476ced236d5a84c61c5c4f7c274d120066b595bc49536.png" src="../_images/d145c201f2d5c8c8494476ced236d5a84c61c5c4f7c274d120066b595bc49536.png" />
+<img alt="../_images/eb92ccc778302cb5ebae0142b61aa9551929cf4db7ffd9101030bd7a2b4fc032.png" src="../_images/eb92ccc778302cb5ebae0142b61aa9551929cf4db7ffd9101030bd7a2b4fc032.png" />
 </div>
 </div>
+<p><em>Interpretación (Figura 3.3).</em> Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.</p>
+<p><em>Interpretación (Tabla 3.1).</em> Comentar métricas clave (mediana, dispersión, conteos) y su impacto en el modelado.</p>
 <p><strong>Figura 3.2.1.</strong> Heatmap de correlaciones.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -474,9 +498,6 @@ Se compara la relación entre el <strong>precio de venta</strong> (<code class="
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SalePrice         1.000000
 Overall Qual      0.813010
 Gr Liv Area       0.708015
-Exter Qual        0.701131
-Bsmt Qual         0.682960
-Kitchen Qual      0.669821
 Garage Cars       0.669806
 Garage Area       0.655235
 Total Bsmt SF     0.628824
@@ -486,17 +507,21 @@ Full Bath         0.575246
 Year Remod/Add    0.568559
 Garage Yr Blt     0.545785
 TotRms AbvGrd     0.488745
+Fireplaces        0.449794
+Mas Vnr Area      0.437840
+BsmtFin SF 1      0.378305
 Name: SalePrice, dtype: float64
 </pre></div>
 </div>
 </div>
 </div>
-<p><strong>Tabla 3.2.1.</strong> Correlaciones principales con SalePrice.
-Variables como <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>, <code class="docutils literal notranslate"><span class="pre">Exter</span> <span class="pre">Qual</span></code> y <code class="docutils literal notranslate"><span class="pre">Bsmt</span> <span class="pre">Qual</span></code> tienen una correlación alta con la variable de respuesta (<code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>), por lo que son candidatas a elegirse para el modelo.</p>
+<p><strong>Tabla 3.2.1.</strong> Correlaciones principales con SalePrice.</p>
+<p>Variables como <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>, <code class="docutils literal notranslate"><span class="pre">Exter</span> <span class="pre">Qual</span></code> y <code class="docutils literal notranslate"><span class="pre">Bsmt</span> <span class="pre">Qual</span></code> tienen una correlación alta con la variable de respuesta (<code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>), por lo que son candidatas a elegirse para el modelo.</p>
 <p>Sin embargo, variables como <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code> y <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Area</span></code> tienen una correlación alta entre sí, de modo que puede no ser necesario incluir ambas.</p>
 </section>
 <section id="relaciones-de-variables-categoricas">
-<h2>3.3 Relaciones de variables categóricas<a class="headerlink" href="#relaciones-de-variables-categoricas" title="Link to this heading">#</a></h2>
+<h3>3.3 Relaciones de variables categóricas<a class="headerlink" href="#relaciones-de-variables-categoricas" title="Link to this heading">#</a></h3>
+<p><strong>Figura 3.4.</strong> Visualización generada por el código siguiente. Ver interpretación posterior.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
@@ -526,100 +551,15 @@ Variables como <code class="docutils literal notranslate"><span class="pre">Over
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">line</span> <span class="mi">4</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
-<span class="ne">----&gt; </span><span class="mi">4</span> <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;Neighborhood&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;SalePrice&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;SalePrice por vecindario (Neighborhood)&quot;</span><span class="p">)</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/seaborn/categorical.py:1597,</span> in <span class="ni">boxplot</span><span class="nt">(data, x, y, hue, order, hue_order, orient, color, palette, saturation, fill, dodge, width, gap, whis, linecolor, linewidth, fliersize, hue_norm, native_scale, log_scale, formatter, legend, ax, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1589</span> <span class="k">def</span><span class="w"> </span><span class="nf">boxplot</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1590</span>     <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hue_order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1591</span>     <span class="n">orient</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">saturation</span><span class="o">=</span><span class="mf">.75</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>   <span class="mi">1594</span>     <span class="n">legend</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-<span class="g g-Whitespace">   </span><span class="mi">1595</span> <span class="p">):</span>
-<span class="ne">-&gt; </span><span class="mi">1597</span>     <span class="n">p</span> <span class="o">=</span> <span class="n">_CategoricalPlotter</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1598</span>         <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1599</span>         <span class="n">variables</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="n">hue</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1600</span>         <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1601</span>         <span class="n">orient</span><span class="o">=</span><span class="n">orient</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1602</span>         <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1603</span>         <span class="n">legend</span><span class="o">=</span><span class="n">legend</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1604</span>     <span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1606</span>     <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1607</span>         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/seaborn/categorical.py:67,</span> in <span class="ni">_CategoricalPlotter.__init__</span><span class="nt">(self, data, variables, order, orient, require_numeric, color, legend)</span>
-<span class="g g-Whitespace">     </span><span class="mi">56</span> <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">57</span>     <span class="bp">self</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">58</span>     <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>     <span class="mi">64</span>     <span class="n">legend</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">65</span> <span class="p">):</span>
-<span class="ne">---&gt; </span><span class="mi">67</span>     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">69</span>     <span class="c1"># This method takes care of some bookkeeping that is necessary because the</span>
-<span class="g g-Whitespace">     </span><span class="mi">70</span>     <span class="c1"># original categorical plots (prior to the 2021 refactor) had some rules that</span>
-<span class="g g-Whitespace">     </span><span class="mi">71</span>     <span class="c1"># don&#39;t fit exactly into VectorPlotter logic. It may be wise to have a second</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>     <span class="mi">76</span>     <span class="c1"># default VectorPlotter rules. If we do decide to make orient part of the</span>
-<span class="g g-Whitespace">     </span><span class="mi">77</span>     <span class="c1"># _base variable assignment, we&#39;ll want to figure out how to express that.</span>
-<span class="g g-Whitespace">     </span><span class="mi">78</span>     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_format</span> <span class="o">==</span> <span class="s2">&quot;wide&quot;</span> <span class="ow">and</span> <span class="n">orient</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]:</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/seaborn/_base.py:634,</span> in <span class="ni">VectorPlotter.__init__</span><span class="nt">(self, data, variables)</span>
-<span class="g g-Whitespace">    </span><span class="mi">629</span> <span class="c1"># var_ordered is relevant only for categorical axis variables, and may</span>
-<span class="g g-Whitespace">    </span><span class="mi">630</span> <span class="c1"># be better handled by an internal axis information object that tracks</span>
-<span class="g g-Whitespace">    </span><span class="mi">631</span> <span class="c1"># such information and is set up by the scale_* methods. The analogous</span>
-<span class="g g-Whitespace">    </span><span class="mi">632</span> <span class="c1"># information for numeric axes would be information about log scales.</span>
-<span class="g g-Whitespace">    </span><span class="mi">633</span> <span class="bp">self</span><span class="o">.</span><span class="n">_var_ordered</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>  <span class="c1"># alt., used DefaultDict</span>
-<span class="ne">--&gt; </span><span class="mi">634</span> <span class="bp">self</span><span class="o">.</span><span class="n">assign_variables</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">636</span> <span class="c1"># TODO Lots of tests assume that these are called to initialize the</span>
-<span class="g g-Whitespace">    </span><span class="mi">637</span> <span class="c1"># mappings to default values on class initialization. I&#39;d prefer to</span>
-<span class="g g-Whitespace">    </span><span class="mi">638</span> <span class="c1"># move away from that and only have a mapping when explicitly called.</span>
-<span class="g g-Whitespace">    </span><span class="mi">639</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;hue&quot;</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="s2">&quot;style&quot;</span><span class="p">]:</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/seaborn/_base.py:679,</span> in <span class="ni">VectorPlotter.assign_variables</span><span class="nt">(self, data, variables)</span>
-<span class="g g-Whitespace">    </span><span class="mi">674</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">675</span>     <span class="c1"># When dealing with long-form input, use the newer PlotData</span>
-<span class="g g-Whitespace">    </span><span class="mi">676</span>     <span class="c1"># object (internal but introduced for the objects interface)</span>
-<span class="g g-Whitespace">    </span><span class="mi">677</span>     <span class="c1"># to centralize / standardize data consumption logic.</span>
-<span class="g g-Whitespace">    </span><span class="mi">678</span>     <span class="bp">self</span><span class="o">.</span><span class="n">input_format</span> <span class="o">=</span> <span class="s2">&quot;long&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">679</span>     <span class="n">plot_data</span> <span class="o">=</span> <span class="n">PlotData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">680</span>     <span class="n">frame</span> <span class="o">=</span> <span class="n">plot_data</span><span class="o">.</span><span class="n">frame</span>
-<span class="g g-Whitespace">    </span><span class="mi">681</span>     <span class="n">names</span> <span class="o">=</span> <span class="n">plot_data</span><span class="o">.</span><span class="n">names</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/seaborn/_core/data.py:58,</span> in <span class="ni">PlotData.__init__</span><span class="nt">(self, data, variables)</span>
-<span class="g g-Whitespace">     </span><span class="mi">51</span> <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">52</span>     <span class="bp">self</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">53</span>     <span class="n">data</span><span class="p">:</span> <span class="n">DataSource</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">54</span>     <span class="n">variables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">VariableSpec</span><span class="p">],</span>
-<span class="g g-Whitespace">     </span><span class="mi">55</span> <span class="p">):</span>
-<span class="g g-Whitespace">     </span><span class="mi">57</span>     <span class="n">data</span> <span class="o">=</span> <span class="n">handle_data_source</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">58</span>     <span class="n">frame</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_assign_variables</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">60</span>     <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span>
-<span class="g g-Whitespace">     </span><span class="mi">61</span>     <span class="bp">self</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="n">names</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/seaborn/_core/data.py:232,</span> in <span class="ni">PlotData._assign_variables</span><span class="nt">(self, data, variables)</span>
-<span class="g g-Whitespace">    </span><span class="mi">230</span>     <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">231</span>         <span class="n">err</span> <span class="o">+=</span> <span class="s2">&quot;An entry with this name does not appear in `data`.&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">232</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">234</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">235</span> 
-<span class="g g-Whitespace">    </span><span class="mi">236</span>     <span class="c1"># Otherwise, assume the value somehow represents data</span>
-<span class="g g-Whitespace">    </span><span class="mi">237</span> 
-<span class="g g-Whitespace">    </span><span class="mi">238</span>     <span class="c1"># Ignore empty data structures</span>
-<span class="g g-Whitespace">    </span><span class="mi">239</span>     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">Sized</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-
-<span class="ne">ValueError</span>: Could not interpret value `Neighborhood` for `x`. An entry with this name does not appear in `data`.
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 1200x500 with 0 Axes&gt;
-</pre></div>
+<img alt="../_images/4a562df436b7ee6530f80fa032c5011731108380c08bf351836116527a141e9a.png" src="../_images/4a562df436b7ee6530f80fa032c5011731108380c08bf351836116527a141e9a.png" />
+<img alt="../_images/c9e6892d52fa7b0f08d587a79270d07221b9da77c31218d61981f669d4781ccc.png" src="../_images/c9e6892d52fa7b0f08d587a79270d07221b9da77c31218d61981f669d4781ccc.png" />
+<img alt="../_images/20e5fe121110c0176579a38fc9a7f4bf2c3fe1720cf87bdb966b664df7cce607.png" src="../_images/20e5fe121110c0176579a38fc9a7f4bf2c3fe1720cf87bdb966b664df7cce607.png" />
+<img alt="../_images/30d7efe99aea99e42fd461f69297fe3031f36873f67922461856dc235ebdb69f.png" src="../_images/30d7efe99aea99e42fd461f69297fe3031f36873f67922461856dc235ebdb69f.png" />
 </div>
 </div>
-</div>
-<p><strong>Tabla 3.3.1.</strong> Boxplots de SalePrice y SalePrice_log vs. Neighborhood y Overall Qual.
-De acuerdo con los diagramas de caja y bigote, parece haber una relación entre <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> y variables categóricas como <code class="docutils literal notranslate"><span class="pre">Neighborhood</span></code> y <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>.</p>
+<p><em>Interpretación (Figura 3.4).</em> Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.</p>
+<p><strong>Tabla 3.3.1.</strong> Boxplots de SalePrice y SalePrice_log vs. Neighborhood y Overall Qual.</p>
+<p>De acuerdo con los diagramas de caja y bigote, parece haber una relación entre <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> y variables categóricas como <code class="docutils literal notranslate"><span class="pre">Neighborhood</span></code> y <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>.</p>
 <p>Además, se notan diferencias entre la variable de respuesta original (<code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>) y la transformada logarítmicamente (<code class="docutils literal notranslate"><span class="pre">SalePrice_log</span></code>).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -641,8 +581,31 @@ De acuerdo con los diagramas de caja y bigote, parece haber una relación entre 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Variables candidatas seleccionadas:
+- Overall Qual
+- Gr Liv Area
+- Garage Cars
+- Total Bsmt SF
+- 1st Flr SF
+- Full Bath
+- Year Built
+- Fireplaces
+- Lot Area
+</pre></div>
+</div>
+</div>
 </div>
 <p>Se eligen 9 variables predictoras, teniendo en cuenta una <strong>alta correlación con la variable de respuesta</strong>, <strong>baja correlación entre ellas</strong> (para evitar redundancia en el modelo) y <strong>sentido práctico</strong>.</p>
+</section>
+</section>
+<section id="takeaways">
+<h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Las distribuciones sugieren posibles transformaciones para linealidad/normalidad.</p></li>
+<li><p>Se identifican variables con fuerte asociación a la respuesta (útiles para el modelo base).</p></li>
+<li><p>Se detectan indicios de colinealidad que se confirman en C6.</p></li>
+</ul>
 </section>
 </section>
 
@@ -710,9 +673,13 @@ De acuerdo con los diagramas de caja y bigote, parece haber una relación entre 
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.1 Distribución de la variable respuesta</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.2 Correlaciones entre variables numéricas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.3 Relaciones de variables categóricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.1 Distribución de la variable respuesta</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.2 Correlaciones entre variables numéricas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.3 Relaciones de variables categóricas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
   </nav></div>
 

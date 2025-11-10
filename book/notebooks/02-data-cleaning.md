@@ -6,19 +6,22 @@ kernelspec: {name: python3, display_name: Python 3}
 ---
 # Capítulo 2: Descripción y limpieza del dataset
 
-**Notebook original:** Capítulo 2: Descripción y limpieza del dataset
+## Overview
+En este capítulo se parte del CSV original **ames_housing.csv**, se realiza limpieza, codificación de variables categóricas y tratamiento de outliers. La salida produce **AmesHousing_codificada.csv** y **AmesHousing_sin_outliers.csv**. Se documentan las decisiones para garantizar reproducibilidad y coherencia para capítulos posteriores.
 
-**Librerías usadas:** numpy, pandas, warnings
-
-**Lectura de datos detectada en el .ipynb:** ../data/AmesHousing.csv
+## 2.1 Carga del dataset
 
 ```{code-cell} ipython3
 from pathlib import Path
-DATA_PATH = Path("../data/ames_housing.csv")  # relativo a book/notebooks/
-assert DATA_PATH.is_file(), "No se encontró '../data/ames_housing.csv'"
+import pandas as pd
+
+# Definir ruta de datos relativa al capítulo 
+DATA_PATH = Path("../data/ames_housing.csv")
+assert DATA_PATH.is_file(), f"No se encontró '{DATA_PATH}'"
 print("Usando CSV:", DATA_PATH.resolve())
 ```
-### 2.1 Carga del dataset
+
+Esta tabla muestra las primeras observaciones del dataset original, permitiendo verificar la correcta carga de los datos y la estructura general de las variables.
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -26,13 +29,7 @@ import numpy as np
 
 data = pd.read_csv(DATA_PATH)
 display(data.head())
-```
 
-**Tabla 2.1.1.** Conjunto de datos *Ames Housing*.
-
-Esta tabla muestra las primeras observaciones del dataset original, permitiendo verificar la correcta carga de los datos y la estructura general de las variables.
-
-```{code-cell} ipython3
 fuente = "Ames Housing Dataset (De Cock, 2011) — Iowa State University"
 tamano = data.shape[0]
 n_variables = data.shape[1]
@@ -43,8 +40,10 @@ print(f"Tamaño: {tamano} registros")
 print(f"Número de variables: {n_variables}")
 print(f"Licencia: {licencia}")
 ```
+**Tabla 2.1.1** Vista/tabulación relevante del conjunto de datos *Ames Housing*. 
 
-**Tabla 2.1.2.** Metadatos *Ames Housing*.
+## 2.2 Tratamiento de datos faltantes
+Se calcula el porcentaje de faltantes por variable
 
 ```{code-cell} ipython3
 faltantes = data.isna().mean() * 100
@@ -63,7 +62,7 @@ tabla_faltantes = (
 tabla_faltantes.head(20)
 ```
 
-**Tabla 2.1.3.** Valores faltantes por variable.
+**Tabla 2.2.1** Porcentaje de Valores faltantes por variable.
 
 El tratamiento de valores faltantes se realizó de forma diferenciada según el tipo de variable.  
 Para las **variables numéricas**, se imputó la **mediana**, una medida robusta frente a valores extremos.  
@@ -79,6 +78,8 @@ x_{ij}^{*} =
 \end{cases}
 $$
 
+**Ecuación 2.1.1.** Regla imputación faltantes.
+
 ```{code-cell} ipython3
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -92,6 +93,8 @@ for col in num_cols:
 cat_cols = data_limpia.select_dtypes(exclude=np.number).columns
 for col in cat_cols:
     data_limpia[col].fillna(data_limpia[col].mode()[0], inplace=True)
+
+
 ```
 
 ### 2.2 Tratamiento de outliers
@@ -104,7 +107,7 @@ $$
 |z_i| = \left| \frac{x_i - \bar{x}}{s} \right| > 3
 $$
 
-**Ecuación 2.2.1.** Outlier 3Z.
+**Ecuación 2.2.2.** Outlier 3Z.
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -148,11 +151,11 @@ $$
 Y' = \log(1 + Y)
 $$
 
-**Ecuación 2.2.2.** Transformación logarítmica. <a id="eq-2-2-2"></a>
+**Ecuación 2.2.3.** Transformación logarítmica. <a id="eq-2-2-2"></a>
 
 ```{code-cell} ipython3
 data_sin_outliers["SalePrice_log"] = np.log1p(data_sin_outliers["SalePrice"])
-data_sin_outliers.to_csv("../data/AmesHousing_sin_outliers.csv", sep =",", index=False)
+data_sin_outliers.to_csv("../data/DATA_PATH.name", sep =",", index=False)
 ```
 
 ### 2.3 Codificación de variables categóricas
@@ -191,7 +194,7 @@ data_ordinal["Functional"] = data_ordinal["Functional"].map(map_functional)
 
 data_codificada = pd.get_dummies(data_ordinal, drop_first=True)
 
-data_codificada.to_csv("../data/AmesHousing_codificada.csv", sep =",", index=False)
+data_codificada.to_csv("../data/DATA_PATH.name", sep =",", index=False)
 
 n_ordinales = len(cols_calidad) + 3  # las de cols_calidad + Pool QC, Bsmt Exposure, Functional
 
@@ -222,9 +225,13 @@ resumen = pd.DataFrame({
 resumen
 ```
 
-**Key**
- Resumen genera limpieza de datos.
+**Tabla 2.3.2.** Resumen genera limpieza de datos.
 
-El conjunto original contenía 2930 registros y 82 variables, con un total de 15 749 valores faltantes.  
-Tras el proceso de imputación, eliminación de outliers, transformación logarítmica y codificación de variables, el dataset final quedó compuesto por 2768 observaciones y 222 variables, sin valores ausentes.
+El conjunto original contenía **2930 registros y 82 variables**, con un total de **15 749 valores faltantes**.  
+Tras el proceso de imputación, eliminación de outliers, transformación logarítmica y codificación de variables, el dataset final quedó compuesto por **2768 observaciones y 222 variables**, sin valores ausentes.
+
+## Takeaways
+- El pipeline deja dos salidas canónicas: *AmesHousing_codificada.csv* y *AmesHousing_sin_outliers.csv*.
+- Las transformaciones son **deterministas** y documentadas para reproducibilidad.
+- Las decisiones sobre outliers afectan la estabilidad de coeficientes en capítulos posteriores.
 
