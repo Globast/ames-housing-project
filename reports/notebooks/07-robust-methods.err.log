@@ -6,7 +6,7 @@ RuntimeError: no running event loop
 During handling of the above exception, another exception occurred:
 
 Traceback (most recent call last):
-  File "/usr/local/python/3.12.1/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+  File "/home/codespace/.python/current/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
     executenb(
   File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 1319, in execute
     return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
@@ -14,7 +14,7 @@ Traceback (most recent call last):
   File "/home/codespace/.local/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 158, in wrapped
     return loop.run_until_complete(inner)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/python/3.12.1/lib/python3.12/asyncio/base_events.py", line 684, in run_until_complete
+  File "/home/codespace/.python/current/lib/python3.12/asyncio/base_events.py", line 684, in run_until_complete
     return future.result()
            ^^^^^^^^^^^^^^^
   File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
@@ -25,41 +25,79 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-from sklearn.utils import resample
-B = 1000
-coef_boot = np.zeros((B, X.shape[1]))
+import statsmodels.api as sm
+import pandas as pd
 
-for i in range(B):
-    X_resample, y_resample = resample(X, y)
-    model_bs = sm.OLS(y_resample, X_resample).fit()
-    coef_boot[i, :] = model_bs.params
+pd.set_option('display.float_format', '{:.6f}'.format)
 
-# Estadísticas bootstrap
-coef_mean = coef_boot.mean(axis=0)
-coef_se = coef_boot.std(axis=0)
-ic_lower = np.percentile(coef_boot, 2.5, axis=0)
-ic_upper = np.percentile(coef_boot, 97.5, axis=0)
+data_modelo_base = pd.read_csv(DATA_PATH)
 
-bootstrap_df = pd.DataFrame({
-    'Coef_mean': coef_mean,
-    'SE_bootstrap': coef_se,
-    'IC_2.5%': ic_lower,
-    'IC_97.5%': ic_upper
-}, index=X.columns)
+data_modelo_base = data_modelo_base[['SalePrice_log', 'Overall Qual', 'Gr Liv Area', 
+                                     'Garage Cars', 'Total Bsmt SF', '1st Flr SF', 
+                                     'Full Bath', 'Year Built', 'Fireplaces', 'Lot Area']]
+X = data_modelo_base[['Overall Qual', 'Gr Liv Area', 'Garage Cars', 'Total Bsmt SF',
+                      '1st Flr SF', 'Full Bath', 'Year Built', 'Fireplaces', 'Lot Area']]
+y = data_modelo_base[['SalePrice_log']]
 
-bootstrap_df.to_csv('boostrap_df.csv', sep=",", index = False)
-bootstrap_df
+X = sm.add_constant(X)
+
+modelo_base = sm.OLS(y, X).fit()
+
+resultados_HC0 = modelo_base.get_robustcov_results(cov_type='HC0')
+resultados_HC1 = modelo_base.get_robustcov_results(cov_type='HC1')
+resultados_HC2 = modelo_base.get_robustcov_results(cov_type='HC2')
+resultados_HC3 = modelo_base.get_robustcov_results(cov_type='HC3')
+
+def get_confint_df(result, var_names):
+    ci = result.conf_int()
+    if isinstance(ci, pd.DataFrame):
+        ci = ci.loc[var_names]
+    else:
+        ci = pd.DataFrame(ci, columns=["lower", "upper"], index=var_names)
+    return ci
+
+variables = modelo_base.params.index
+
+se_df = pd.DataFrame({
+    "OLS": modelo_base.bse,
+    "HC0": resultados_HC0.bse,
+    "HC1": resultados_HC1.bse,
+    "HC2": resultados_HC2.bse,
+    "HC3": resultados_HC3.bse,
+})
+se_df.index.name = "Variable"
+
+ic_ols = get_confint_df(modelo_base, variables)
+ic_hc0 = get_confint_df(resultados_HC0, variables)
+ic_hc1 = get_confint_df(resultados_HC1, variables)
+ic_hc2 = get_confint_df(resultados_HC2, variables)
+ic_hc3 = get_confint_df(resultados_HC3, variables)
+
+ic_df = pd.DataFrame({
+    "OLS_lower": ic_ols.iloc[:,0],
+    "OLS_upper": ic_ols.iloc[:,1],
+    "HC0_lower": ic_hc0.iloc[:,0],
+    "HC0_upper": ic_hc0.iloc[:,1],
+    "HC1_lower": ic_hc1.iloc[:,0],
+    "HC1_upper": ic_hc1.iloc[:,1],
+    "HC2_lower": ic_hc2.iloc[:,0],
+    "HC2_upper": ic_hc2.iloc[:,1],
+    "HC3_lower": ic_hc3.iloc[:,0],
+    "HC3_upper": ic_hc3.iloc[:,1],
+})
+ic_df.index = variables
+ic_df.index.name = "Variable"
+
+display(se_df.style.format("{:.6f}"))
 ------------------
 
 
 [31m---------------------------------------------------------------------------[39m
-[31mNameError[39m                                 Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[4][39m[32m, line 3[39m
-[32m      1[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01msklearn[39;00m[34;01m.[39;00m[34;01mutils[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m resample
-[32m      2[39m B = [32m1000[39m
-[32m----> [39m[32m3[39m coef_boot = [43mnp[49m.zeros((B, X.shape[[32m1[39m]))
-[32m      5[39m [38;5;28;01mfor[39;00m i [38;5;129;01min[39;00m [38;5;28mrange[39m(B):
-[32m      6[39m     X_resample, y_resample = resample(X, y)
+[31mModuleNotFoundError[39m                       Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[2][39m[32m, line 1[39m
+[32m----> [39m[32m1[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mstatsmodels[39;00m[34;01m.[39;00m[34;01mapi[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01msm[39;00m
+[32m      2[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mpandas[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mpd[39;00m
+[32m      4[39m pd.set_option([33m'[39m[33mdisplay.float_format[39m[33m'[39m, [33m'[39m[38;5;132;01m{:.6f}[39;00m[33m'[39m.format)
 
-[31mNameError[39m: name 'np' is not defined
+[31mModuleNotFoundError[39m: No module named 'statsmodels'
 

@@ -57,11 +57,13 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/06-diagnostics';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Capítulo 7: Remedios y métodos robustos" href="07-robust-methods.html" />
-    <link rel="prev" title="Capítulo 5: Inferencia y grados de libertad" href="05-inference.html" />
+    <link rel="prev" title="C5 · Inferencia de Parámetros" href="05-inference.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -175,17 +177,13 @@
 <li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">Capítulo 2: Descripción y limpieza del dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03-eda.html">Capítulo 3: Análisis exploratorio (EDA)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-inference.html">C5 · Inferencia de Parámetros</a></li>
+
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 6: Diagnóstico de supuestos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7: Remedios y métodos robustos</a></li>
-
-
-
-
-
 <li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-monte-carlo.html">MOntecarlo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10-interpretation.html">Interpretacion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-monte-carlo.html">Capitulo 09. Montecarlo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-interpretation.html">Capitulo 10. Interpretacion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="11-conclusions.html">Capítulo 11 · Conclusiones y trabajo futuro</a></li>
 </ul>
 
@@ -335,6 +333,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linealidad-y-normalidad">6.1 Linealidad y normalidad</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#homocedasticidad-autocorrelacion-y-multicolinealidad">6.2 Homocedasticidad, autocorrelación y multicolinealidad</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
             </nav>
@@ -349,12 +352,22 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-6-diagnostico-de-supuestos">
 <h1>Capítulo 6: Diagnóstico de supuestos<a class="headerlink" href="#capitulo-6-diagnostico-de-supuestos" title="Link to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>Se llevan a cabo <strong>diagnósticos</strong>: residuos, heterocedasticidad, normalidad, influencia y multicolinealidad. Cada figura/tablas se discute con recomendaciones.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/AmesHousing_codificada.csv&quot;</span><span class="p">)</span>  <span class="c1"># relativo a book/notebooks/</span>
-<span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="s2">&quot;No se encontró &#39;../data/AmesHousing_codificada.csv&#39;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Definir ruta de datos relativa al capítulo (ejecutado desde book/notebooks/)</span>
+<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/AmesHousing_codificada.csv&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;No se encontró &#39;</span><span class="si">{</span><span class="n">DATA_PATH</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usando CSV:&quot;</span><span class="p">,</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
+
+<span class="c1"># Lectura canónica a reutilizar en el capítulo</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 </div>
 </div>
@@ -362,96 +375,49 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Usando CSV: /workspaces/ames-housing-project/book/data/AmesHousing_codificada.csv
 </pre></div>
 </div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2768, 222)
+</pre></div>
 </div>
 </div>
+</div>
+<section id="linealidad-y-normalidad">
+<h3>6.1 Linealidad y normalidad<a class="headerlink" href="#linealidad-y-normalidad" title="Link to this heading">#</a></h3>
+<p>El supuesto de <strong>linealidad</strong> indica que la relación entre las variables predictoras y la respuesta es aproximadamente lineal. Representado en la ecuación de regresión lineal (<a class="reference internal" href="#ecuacion-411-regresion-lineal"><span class="xref myst">Ecuación 4.1.1</span></a>), se evalúa con un gráfico de residuales vs valores ajustados; una dispersión aleatoria alrededor de cero sin patrones sugiere que se cumple, desviaciones sugieren una relación no lineal o la necesidad de alguna transformación.</p>
+<p>La <strong>normalidad de los residuos</strong> implica que <span class="math notranslate nohighlight">\(\varepsilon \sim N(0, \sigma^2)\)</span>.
+<strong>Ecuación 6.1.1.</strong> Normalidad de los residuos.</p>
+<p>Se verifica con un QQ-plot, comparando los residuos con los cuantiles teóricos de una normal. Si los puntos siguen la línea, el supuesto se cumple; desviaciones pueden afectar la validez de intervalos y pruebas de hipótesis.</p>
+<p><strong>Figura 6.1.</strong> Visualización generada por el código siguiente. Ver interpretación posterior.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_modelo_final</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
 
-<span class="n">data_modelo_final</span> <span class="o">=</span> <span class="n">data_modelo_final</span><span class="p">[[</span><span class="s1">&#39;SalePrice&#39;</span><span class="p">,</span><span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span><span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Area&#39;</span><span class="p">,</span><span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span><span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span><span class="s1">&#39;Year Built&#39;</span><span class="p">,</span><span class="s1">&#39;Year Remod/Add&#39;</span><span class="p">,</span><span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Yr Blt&#39;</span><span class="p">,</span><span class="s1">&#39;TotRms AbvGrd&#39;</span><span class="p">,</span><span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span><span class="s1">&#39;Mas Vnr Area&#39;</span><span class="p">,</span><span class="s1">&#39;BsmtFin SF 1&#39;</span><span class="p">]]</span>
+<span class="n">data_modelo_final</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+<span class="n">data_modelo_final</span> <span class="o">=</span> <span class="n">data_modelo_final</span><span class="p">[</span>
+    <span class="p">[</span><span class="s1">&#39;SalePrice_log&#39;</span><span class="p">,</span> <span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span> <span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span> <span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span> <span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span> <span class="s1">&#39;Year Built&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span> <span class="s1">&#39;Lot Area&#39;</span><span class="p">]</span>
+<span class="p">]</span>
 
-<span class="c1"># Separar variable dependiente e independientes</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">data_modelo_final</span><span class="p">[[</span><span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span><span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Area&#39;</span><span class="p">,</span><span class="s1">&#39;Year Built&#39;</span><span class="p">,</span><span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span><span class="s1">&#39;Year Remod/Add&#39;</span><span class="p">,</span><span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span><span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Yr Blt&#39;</span><span class="p">,</span><span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span><span class="s1">&#39;TotRms AbvGrd&#39;</span><span class="p">]]</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">data_modelo_final</span><span class="p">[[</span><span class="s1">&#39;SalePrice&#39;</span><span class="p">]]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data_modelo_final</span><span class="p">[</span>
+    <span class="p">[</span><span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span> <span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span> <span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span> <span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;Year Built&#39;</span><span class="p">,</span> <span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span> <span class="s1">&#39;Lot Area&#39;</span><span class="p">]</span>
+<span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data_modelo_final</span><span class="p">[[</span><span class="s1">&#39;SalePrice_log&#39;</span><span class="p">]]</span>
 
-<span class="c1"># Agregar la constante (intercepto)</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
-<span class="c1"># Crear el modelo_final</span>
 <span class="n">modelo_final</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
-
-<span class="c1"># Ajustar (fit)</span>
 <span class="n">resultados</span> <span class="o">=</span> <span class="n">modelo_final</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
-<span class="c1"># Imprimir resumen</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                            OLS Regression Results                            
-==============================================================================
-Dep. Variable:              SalePrice   R-squared:                       0.845
-Model:                            OLS   Adj. R-squared:                  0.845
-Method:                 Least Squares   F-statistic:                     1255.
-Date:                Mon, 10 Nov 2025   Prob (F-statistic):               0.00
-Time:                        04:14:31   Log-Likelihood:                -32098.
-No. Observations:                2768   AIC:                         6.422e+04
-Df Residuals:                    2755   BIC:                         6.430e+04
-Df Model:                          12                                         
-Covariance Type:            nonrobust                                         
-==================================================================================
-                     coef    std err          t      P&gt;|t|      [0.025      0.975]
-----------------------------------------------------------------------------------
-const          -1.388e+06   6.77e+04    -20.497      0.000   -1.52e+06   -1.26e+06
-Overall Qual    1.548e+04    612.228     25.282      0.000    1.43e+04    1.67e+04
-Gr Liv Area       50.9544      2.445     20.841      0.000      46.160      55.748
-Garage Cars      865.8764   1636.248      0.529      0.597   -2342.520    4074.273
-Garage Area       38.4294      5.743      6.692      0.000      27.169      49.690
-Year Built       266.8266     31.535      8.461      0.000     204.991     328.662
-Total Bsmt SF     27.1376      2.264     11.988      0.000      22.699      31.576
-Year Remod/Add   357.9672     33.590     10.657      0.000     292.103     423.831
-1st Flr SF        10.6326      2.576      4.127      0.000       5.581      15.684
-Full Bath      -7030.8661   1412.992     -4.976      0.000   -9801.496   -4260.236
-Garage Yr Blt     55.9347     35.708      1.566      0.117     -14.083     125.952
-Fireplaces      8865.1262    960.246      9.232      0.000    6982.251    1.07e+04
-TotRms AbvGrd   -825.2572    605.818     -1.362      0.173   -2013.160     362.646
-==============================================================================
-Omnibus:                      245.293   Durbin-Watson:                   1.590
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):              936.365
-Skew:                           0.377   Prob(JB):                    4.69e-204
-Kurtosis:                       5.748   Cond. No.                     5.49e+05
-==============================================================================
-
-Notes:
-[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-[2] The condition number is large, 5.49e+05. This might indicate that there are
-strong multicollinearity or other numerical problems.
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.stats.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sms</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.outliers_influence</span><span class="w"> </span><span class="kn">import</span> <span class="n">variance_inflation_factor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
 
-<span class="c1"># === 1️⃣ Linealidad ===</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">resultados</span><span class="o">.</span><span class="n">fittedvalues</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>
@@ -460,125 +426,106 @@ strong multicollinearity or other numerical problems.
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Residuales&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<span class="c1"># === 2️⃣ Homocedasticidad ===</span>
-<span class="n">bp_test</span> <span class="o">=</span> <span class="n">sms</span><span class="o">.</span><span class="n">het_breuschpagan</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">)</span>
-<span class="n">white_test</span> <span class="o">=</span> <span class="n">sms</span><span class="o">.</span><span class="n">het_white</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">)</span>
-
-<span class="n">bp_pvalue</span> <span class="o">=</span> <span class="n">bp_test</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">white_pvalue</span> <span class="o">=</span> <span class="n">white_test</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🟩 Homocedasticidad:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Breusch–Pagan p-value: </span><span class="si">{</span><span class="n">bp_pvalue</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;White p-value: </span><span class="si">{</span><span class="n">white_pvalue</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">bp_pvalue</span> <span class="o">&gt;</span> <span class="mf">0.05</span> <span class="ow">and</span> <span class="n">white_pvalue</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ No hay evidencia de heterocedasticidad.&quot;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Posible heterocedasticidad detectada.&quot;</span><span class="p">)</span>
-
-<span class="c1"># === 3️⃣ Normalidad ===</span>
 <span class="n">sm</span><span class="o">.</span><span class="n">qqplot</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;45&quot;</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Normalidad: QQ-plot de los residuos&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="n">shapiro_test</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">shapiro</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🟩 Normalidad:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shapiro-Wilk p-value: </span><span class="si">{</span><span class="n">shapiro_test</span><span class="o">.</span><span class="n">pvalue</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">shapiro_test</span><span class="o">.</span><span class="n">pvalue</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Los residuos parecen normales.&quot;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Los residuos no son perfectamente normales.&quot;</span><span class="p">)</span>
-
-<span class="c1"># === 4️⃣ Autocorrelación ===</span>
-<span class="n">dw</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stattools</span><span class="o">.</span><span class="n">durbin_watson</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🟩 Autocorrelación:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Durbin–Watson: </span><span class="si">{</span><span class="n">dw</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="mf">1.5</span> <span class="o">&lt;</span> <span class="n">dw</span> <span class="o">&lt;</span> <span class="mf">2.5</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ No hay autocorrelación significativa.&quot;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Posible autocorrelación en los residuos.&quot;</span><span class="p">)</span>
-
-<span class="c1"># === 5️⃣ Multicolinealidad ===</span>
-<span class="n">vif_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-<span class="n">vif_data</span><span class="p">[</span><span class="s2">&quot;Variable&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog_names</span>
-<span class="n">vif_data</span><span class="p">[</span><span class="s2">&quot;VIF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">variance_inflation_factor</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🟩 Multicolinealidad (VIF):&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">vif_data</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ VIF &lt; 5 indica multicolinealidad aceptable.&quot;</span><span class="p">)</span>
-
-<span class="c1"># === 6️⃣ Resumen interpretativo ===</span>
-<span class="n">resumen</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s2">&quot;Supuesto&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Linealidad&quot;</span><span class="p">,</span> <span class="s2">&quot;Homocedasticidad&quot;</span><span class="p">,</span> <span class="s2">&quot;Normalidad&quot;</span><span class="p">,</span> <span class="s2">&quot;Autocorrelación&quot;</span><span class="p">,</span> <span class="s2">&quot;Multicolinealidad&quot;</span><span class="p">],</span>
-    <span class="s2">&quot;Método&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Residual vs Fitted&quot;</span><span class="p">,</span> <span class="s2">&quot;Breusch–Pagan / White&quot;</span><span class="p">,</span> <span class="s2">&quot;QQ-plot / Shapiro&quot;</span><span class="p">,</span> <span class="s2">&quot;Durbin–Watson&quot;</span><span class="p">,</span> <span class="s2">&quot;VIF&quot;</span><span class="p">],</span>
-    <span class="s2">&quot;Criterio esperado&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;Distribución aleatoria alrededor de 0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;p &gt; 0.05 → ok&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Puntos ~ línea / p &gt; 0.05 → ok&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;~2 → ok&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;&lt;5 → aceptable&quot;</span>
-    <span class="p">]</span>
-<span class="p">})</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📋 Resumen esperado:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">resumen</span><span class="o">.</span><span class="n">to_markdown</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a219f57286e699ac50ab951228b920523a34c843488e446b81feaeec35503c04.png" src="../_images/a219f57286e699ac50ab951228b920523a34c843488e446b81feaeec35503c04.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>🟩 Homocedasticidad:
-Breusch–Pagan p-value: 0.0000
-White p-value: 0.0000
-⚠️ Posible heterocedasticidad detectada.
-</pre></div>
-</div>
-<img alt="../_images/02e2d9529fbc6dfd876e6378ca00e0a2bf8f4cd1178fcdfeccbcddd22308fd3a.png" src="../_images/02e2d9529fbc6dfd876e6378ca00e0a2bf8f4cd1178fcdfeccbcddd22308fd3a.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>🟩 Normalidad:
-Shapiro-Wilk p-value: 0.0000
-⚠️ Los residuos no son perfectamente normales.
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">data_modelo_final</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">data_modelo_final</span> <span class="o">=</span> <span class="n">data_modelo_final</span><span class="p">[</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="p">[</span><span class="s1">&#39;SalePrice_log&#39;</span><span class="p">,</span> <span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span> <span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span> <span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span>      <span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span> <span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span> <span class="s1">&#39;Year Built&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>      <span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span> <span class="s1">&#39;Lot Area&#39;</span><span class="p">]</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="p">]</span>
 
-🟩 Autocorrelación:
-Durbin–Watson: 1.59
-✅ No hay autocorrelación significativa.
-
-🟩 Multicolinealidad (VIF):
-          Variable           VIF
-0            const  18276.768957
-1     Overall Qual      2.676051
-2      Gr Liv Area      4.561283
-3      Garage Cars      5.686113
-4      Garage Area      5.260232
-5       Year Built      3.538977
-6    Total Bsmt SF      3.065366
-7   Year Remod/Add      1.965601
-8       1st Flr SF      3.061355
-9        Full Bath      2.208047
-10   Garage Yr Blt      3.141189
-11      Fireplaces      1.359936
-12   TotRms AbvGrd      2.970047
-
-✅ VIF &lt; 5 indica multicolinealidad aceptable.
-
-📋 Resumen esperado:
-| Supuesto          | Método                | Criterio esperado                     |
-|:------------------|:----------------------|:--------------------------------------|
-| Linealidad        | Residual vs Fitted    | Distribución aleatoria alrededor de 0 |
-| Homocedasticidad  | Breusch–Pagan / White | p &gt; 0.05 → ok                         |
-| Normalidad        | QQ-plot / Shapiro     | Puntos ~ línea / p &gt; 0.05 → ok        |
-| Autocorrelación   | Durbin–Watson         | ~2 → ok                               |
-| Multicolinealidad | VIF                   | &lt;5 → aceptable                        |
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;statsmodels&#39;
 </pre></div>
 </div>
 </div>
 </div>
+<p><em>Interpretación (Figura 6.1).</em> Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.</p>
+<p><strong>Figura 6.1.1.</strong> Linealidad y normalidad del modelo 1.</p>
+<p>En cuanto a la linealidad, la mayoría de los residuales se distribuyen de manera aleatoria alrededor de 0, lo que indica que el modelo captura correctamente la tendencia general. Sin embargo, se observan algunos valores extremos a lo largo del eje x, incluyendo un residual notablemente por debajo de los demás.</p>
+<p>El QQ-plot muestra que a partir de aproximadamente -2 los datos siguen de manera bastante cercana la línea de referencia. Para valores menores a -2, los residuales se curvan hacia abajo y se desvían de la línea, lo que sugiere cierta no normalidad en los extremos. Esto puede afectar la validez de los intervalos de confianza y de las pruebas de significancia, aunque el ajuste de los coeficientes sigue siendo consistente bajo mínimos cuadrados.</p>
+</section>
+<section id="homocedasticidad-autocorrelacion-y-multicolinealidad">
+<h3>6.2 Homocedasticidad, autocorrelación y multicolinealidad<a class="headerlink" href="#homocedasticidad-autocorrelacion-y-multicolinealidad" title="Link to this heading">#</a></h3>
+<p>La <strong>homocedasticidad</strong> indica que la varianza de los errores debe ser constante a lo largo de todos los valores de las variables predictoras. Se suele evaluar mediante pruebas como Breusch–Pagan o White. Su incumplimiento puede conducir a errores estándar incorrectos y, por lo tanto, a inferencias poco confiables sobre los coeficientes. Matemáticamente, se espera que:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Var}(\varepsilon_i) = \sigma^2, \quad \forall i
+\]</div>
+<p><strong>Ecuación 6.2.1.</strong> Varianza de errores.<a id="ecuacion-621-varianza-errores"></a></p>
+<p>La <strong>autocorrelación</strong> implica que los errores de observaciones consecutivas no deben estar correlacionados. Se interpreta a menudo con la estadística de Durbin–Watson, donde valores cercanos a 2 indican ausencia de autocorrelación. La presencia de autocorrelación puede inflar la significancia aparente de los coeficientes y afectar la precisión de las predicciones. Formalmente:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Cov}(\varepsilon_i, \varepsilon_j) = 0, \quad i \neq j
+\]</div>
+<p><strong>Ecuación 6.2.2.</strong> Covarianza entre errores.</p>
+<p>La <strong>multicolinealidad</strong> ocurre cuando dos o más predictores están fuertemente correlacionados, dificultando estimar sus efectos individuales. Se puede observar usando la <strong>matriz de correlaciones</strong> de los predictores.</p>
+<div class="math notranslate nohighlight">
+\[
+r_{jk} = \frac{\text{Cov}(X_j, X_k)}{\sigma_{X_j} \, \sigma_{X_k}}
+\]</div>
+<p><strong>Ecuación 6.2.3.</strong> Matriz de correlaciones.</p>
+<p>Valores <span class="math notranslate nohighlight">\(\left| r_{jk} \right|\)</span> cercanos a 1 indican fuerte correlación, es decir, posible multicolinealidad. Además, se puede cuantificar mediante el <strong>VIF (Variance Inflation Factor)</strong>; un VIF mayor a 5 suele indicar una correlación problemática.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bp_test</span> <span class="o">=</span> <span class="n">sms</span><span class="o">.</span><span class="n">het_breuschpagan</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">)</span>
+<span class="n">white_test</span> <span class="o">=</span> <span class="n">sms</span><span class="o">.</span><span class="n">het_white</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">)</span>
+<span class="n">bp_pvalue</span> <span class="o">=</span> <span class="n">bp_test</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">white_pvalue</span> <span class="o">=</span> <span class="n">white_test</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">dw</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stattools</span><span class="o">.</span><span class="n">durbin_watson</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">)</span>
+
+<span class="n">vif_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">vif_data</span><span class="p">[</span><span class="s2">&quot;Variable&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog_names</span>
+<span class="n">vif_data</span><span class="p">[</span><span class="s2">&quot;VIF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">variance_inflation_factor</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> 
+                   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+
+<span class="n">tabla_supuestos</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;Supuesto&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Homocedasticidad&quot;</span><span class="p">,</span> <span class="s2">&quot;Autocorrelación&quot;</span><span class="p">,</span> <span class="s2">&quot;Multicolinealidad&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;Método&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Breusch–Pagan / White&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Durbin–Watson&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;VIF&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;Valor observado&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="sa">f</span><span class="s2">&quot;BP p=</span><span class="si">{</span><span class="n">bp_pvalue</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, White p=</span><span class="si">{</span><span class="n">white_pvalue</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;DW=</span><span class="si">{</span><span class="n">dw</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">vif_data</span><span class="p">[</span><span class="s1">&#39;Variable&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">vif_data</span><span class="p">[</span><span class="s1">&#39;VIF&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vif_data</span><span class="p">))])</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;Interpretación esperada&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;p &gt; 0.05 → no heterocedasticidad&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;~2 → no autocorrelación&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&lt;5 → aceptable&quot;</span>
+    <span class="p">]</span>
+<span class="p">})</span>
+
+<span class="n">tabla_supuestos</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Tabla 6.2.1.</strong> Homocedasticidad, autocorrelación y multicolinealidad del modelo 1.</p>
+<p>Los resultados de las pruebas de Breusch–Pagan y White muestran valores p iguales a 0.0000, indicando evidencia clara de heterocedasticidad. Esto significa que la variabilidad de los residuos no es constante a lo largo de los valores ajustados, lo cual podría afectar la confiabilidad de los intervalos de confianza y los errores estándar.</p>
+<p>El estadístico de Durbin–Watson es 1.79, lo que se encuentra dentro del rango de 1.5 a 2. Por lo tanto, no se observa autocorrelación significativa entre los residuos, y el supuesto de independencia se cumple razonablemente.</p>
+<p>Con respecto a la multicolinealidad, todos los valores de VIF de los predictores son menores a 5, lo que indica que no hay problemas importantes de colinealidad en el modelo.</p>
+</section>
+</section>
 <section id="takeaways">
 <h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
-<p>Síntesis de aprendizajes y decisiones reproducibles del notebook:</p>
 <ul class="simple">
-<li><p>MyST/Jupytext requiere el encabezado YAML al inicio del archivo.</p></li>
-<li><p>Todas las celdas ejecutables usan bloques <code class="docutils literal notranslate"><span class="pre">{code-cell}</span> <span class="pre">ipython3</span></code> en la columna 0.</p></li>
-<li><p>Definimos <code class="docutils literal notranslate"><span class="pre">DATA_PATH</span></code> una sola vez y unificamos el nombre del CSV a <code class="docutils literal notranslate"><span class="pre">ames_housing_clean.csv</span></code>.</p></li>
-<li><p>Evitamos rutas absolutas (p. ej., <code class="docutils literal notranslate"><span class="pre">/workspaces/...</span></code>) para compatibilidad con Codespaces y GitHub Pages.</p></li>
-<li><p>Mensajes narrativos con <code class="docutils literal notranslate"><span class="pre">print()</span></code> fueron pasados a Markdown fuera de cajita.</p></li>
+<li><p>Patrones en residuos guían transformaciones o selección de variables.</p></li>
+<li><p>Se evidencia si hay heterocedasticidad (motivando errores estándar robustos).</p></li>
+<li><p>La influencia (Cook’s distance/DFBETAs) orienta decisiones sobre puntos anómalos.</p></li>
 </ul>
 </section>
 </section>
@@ -619,7 +566,7 @@ Durbin–Watson: 1.59
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Capítulo 5: Inferencia y grados de libertad</p>
+        <p class="prev-next-title">C5 · Inferencia de Parámetros</p>
       </div>
     </a>
     <a class="right-next"
@@ -647,6 +594,11 @@ Durbin–Watson: 1.59
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linealidad-y-normalidad">6.1 Linealidad y normalidad</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#homocedasticidad-autocorrelacion-y-multicolinealidad">6.2 Homocedasticidad, autocorrelación y multicolinealidad</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
   </nav></div>

@@ -62,7 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/04-ols-matrix';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Capítulo 5: Inferencia y grados de libertad" href="05-inference.html" />
+    <link rel="next" title="C5 · Inferencia de Parámetros" href="05-inference.html" />
     <link rel="prev" title="Capítulo 3: Análisis exploratorio (EDA)" href="03-eda.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -177,17 +177,13 @@
 <li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">Capítulo 2: Descripción y limpieza del dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03-eda.html">Capítulo 3: Análisis exploratorio (EDA)</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 4: Formulación matricial del modelo OLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-inference.html">C5 · Inferencia de Parámetros</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7: Remedios y métodos robustos</a></li>
-
-
-
-
-
 <li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-monte-carlo.html">MOntecarlo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10-interpretation.html">Interpretacion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-monte-carlo.html">Capitulo 09. Montecarlo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-interpretation.html">Capitulo 10. Interpretacion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="11-conclusions.html">Capítulo 11 · Conclusiones y trabajo futuro</a></li>
 </ul>
 
@@ -337,7 +333,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1 Definición del modelo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1 Definición del modelo</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
             </nav>
         </div>
@@ -351,31 +351,36 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-4-formulacion-matricial-del-modelo-ols">
 <h1>Capítulo 4: Formulación matricial del modelo OLS<a class="headerlink" href="#capitulo-4-formulacion-matricial-del-modelo-ols" title="Link to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>Se formula y ajusta un modelo OLS usando álgebra matricial. Se presentan las ecuaciones clave (normal equations) y se verifica la equivalencia con APIs de alto nivel.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/data/AmesHousing_codificada.csv&quot;</span><span class="p">)</span>  <span class="c1"># relativo a book/notebooks/</span>
-<span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="s2">&quot;No se encontró &#39;../data/data/AmesHousing_codificada.csv&#39;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Definir ruta de datos relativa al capítulo (ejecutado desde book/notebooks/)</span>
+<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/AmesHousing_sin_outliers.csv&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;No se encontró &#39;</span><span class="si">{</span><span class="n">DATA_PATH</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usando CSV:&quot;</span><span class="p">,</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
+
+<span class="c1"># Lectura canónica a reutilizar en el capítulo</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AssertionError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/data/AmesHousing_codificada.csv&quot;</span><span class="p">)</span>  <span class="c1"># relativo a book/notebooks/</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="s2">&quot;No se encontró &#39;../data/data/AmesHousing_codificada.csv&#39;&quot;</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usando CSV:&quot;</span><span class="p">,</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
-
-<span class="ne">AssertionError</span>: No se encontró &#39;../data/data/AmesHousing_codificada.csv&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Usando CSV: /workspaces/ames-housing-project/book/data/AmesHousing_sin_outliers.csv
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2768, 83)
 </pre></div>
 </div>
 </div>
 </div>
 <section id="definicion-del-modelo">
-<h2>4.1 Definición del modelo<a class="headerlink" href="#definicion-del-modelo" title="Link to this heading">#</a></h2>
+<h3>4.1 Definición del modelo<a class="headerlink" href="#definicion-del-modelo" title="Link to this heading">#</a></h3>
 <p>El modelo de regresión lineal puede expresarse de forma matricial como:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -432,11 +437,38 @@ S(\beta) = (Y - X\beta)^\top (Y - X\beta)
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="n">vars_modelo</span> <span class="o">=</span> <span class="p">[</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span> <span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span> <span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span>     <span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span> <span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span>     <span class="s1">&#39;Year Built&#39;</span><span class="p">,</span> <span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span> <span class="s1">&#39;Lot Area&#39;</span>
+<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="p">]</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;statsmodels&#39;
+</pre></div>
 </div>
-<p><strong>Tabla 4.1.1.</strong> Formulación matricial vs. Statsmodels.
-Se construye un modelo de regresión lineal para predecir <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> a partir de nueve variables predictoras.</p>
+</div>
+</div>
+<p><strong>Tabla 4.1.1.</strong> Formulación matricial vs. Statsmodels.</p>
+<p>Se construye un modelo de regresión lineal para predecir <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> a partir de nueve variables predictoras.</p>
 <p>Primero se calculan los coeficientes manualmente usando la formulación matricial de OLS, y luego se ajusta el mismo modelo con <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> para verificar los resultados. Se observan los mismos coeficientes.</p>
 <p>Cada coeficiente indica cuánto se espera que cambie el <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> por un incremento de una unidad en la variable correspondiente, manteniendo constantes las demás variables. Por ejemplo, el coeficiente de <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code> es aproximadamente 17 686. Esto significa que, en promedio, por cada punto adicional en la calificación general de la casa, se espera que el precio de venta aumente unos 17 686 dólares, manteniendo constantes las otras variables del modelo.</p>
+</section>
+</section>
+<section id="takeaways">
+<h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>La solución matricial (\hat{\beta}=(X^TX)^{-1}X^Ty) coincide con la obtenida vía librerías.</p></li>
+<li><p>El condicionamiento de (X^TX) anticipa problemas de varianza de coeficientes.</p></li>
+<li><p>Se sientan bases para contrastes de hipótesis.</p></li>
+</ul>
 </section>
 </section>
 
@@ -484,7 +516,7 @@ Se construye un modelo de regresión lineal para predecir <code class="docutils 
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Capítulo 5: Inferencia y grados de libertad</p>
+        <p class="prev-next-title">C5 · Inferencia de Parámetros</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -504,7 +536,11 @@ Se construye un modelo de regresión lineal para predecir <code class="docutils 
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1 Definición del modelo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1 Definición del modelo</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
   </nav></div>
 
