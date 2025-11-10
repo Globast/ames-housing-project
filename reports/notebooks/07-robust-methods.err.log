@@ -27,89 +27,35 @@ nbclient.exceptions.CellExecutionError: An error occurred while executing the fo
 ------------------
 import pandas as pd
 
-# Si bootstrap_df no está en memoria, intenta cargarlo desde BOOT_CSV_PATH
-try:
-    bootstrap_df  # noqa: F821
-except NameError:
-    try:
-        bootstrap_df = pd.read_csv(BOOT_CSV_PATH)
-        print("Cargado bootstrap_df desde:", BOOT_CSV_PATH)
-    except Exception as e:
-        print("Aviso: no se pudo cargar bootstrap_df automáticamente:", e)
+coef_ols = modelo_base.params         
+se_ols = modelo_base.bse               
 
-# Series y CI de OLS
-coef_ols = modelo_base.params
-se_ols   = modelo_base.bse
-ci_ols   = modelo_base.conf_int()
-ic_ols_width = ci_ols.iloc[:, 1] - ci_ols.iloc[:, 0]
+se_hc3 = resultados_HC3.bse            
 
-# HC3
-se_hc3   = resultados_HC3.bse
-ci_hc3   = resultados_HC3.conf_int()
-ic_hc3_width = ci_hc3.iloc[:, 1] - ci_hc3.iloc[:, 0]
+coef_boot_mean = bootstrap_df['Coef_mean']  
+se_boot = bootstrap_df['SE_bootstrap']  
 
-# Normaliza bootstrap_df: índice por nombre de término si existe
-if isinstance(bootstrap_df, pd.DataFrame):
-    name_cols = [c for c in bootstrap_df.columns if c.lower() in ("term", "variable", "coef_name", "feature")]
-    if name_cols:
-        bootstrap_df = bootstrap_df.set_index(name_cols[0])
+ic_ols = modelo_base.conf_int().iloc[:,1] - modelo_base.conf_int().iloc[:,0]
 
-    # Mapeo de columnas esperadas (ajústalo si tus nombres difieren)
-    col_mean = "Coef_mean"
-    col_se   = "SE_bootstrap"
-    col_l    = "IC_2.5%"
-    col_u    = "IC_97.5%"
+ic_hc3 = resultados_HC3.conf_int()[:,1] - resultados_HC3.conf_int()[:,0]
 
-    # Series desde bootstrap
-    coef_boot_mean = bootstrap_df[col_mean] if col_mean in bootstrap_df.columns else pd.Series(dtype=float)
-    se_boot        = bootstrap_df[col_se]   if col_se   in bootstrap_df.columns else pd.Series(dtype=float)
-    if {col_l, col_u}.issubset(bootstrap_df.columns):
-        ic_boot_width = bootstrap_df[col_u] - bootstrap_df[col_l]
-    else:
-        ic_boot_width = pd.Series(dtype=float)
+ic_boot = bootstrap_df['IC_97.5%'] - bootstrap_df['IC_2.5%']
 
-    # Alinea con el orden de coef_ols
-    coef_boot_mean = coef_boot_mean.reindex(coef_ols.index)
-    se_boot        = se_boot.reindex(coef_ols.index)
-    ic_boot_width  = ic_boot_width.reindex(coef_ols.index)
-else:
-    coef_boot_mean = pd.Series(dtype=float, index=coef_ols.index)
-    se_boot        = pd.Series(dtype=float, index=coef_ols.index)
-    ic_boot_width  = pd.Series(dtype=float, index=coef_ols.index)
-
-# DataFrame comparativo
-comparative_df = pd.DataFrame({
-    "Coef_OLS": coef_ols,
-    "Coef_Bootstrap": coef_boot_mean,
-    "SE_OLS": se_ols,
-    "SE_HC3": se_hc3.reindex(coef_ols.index),
-    "SE_Bootstrap": se_boot,
-    "IC_width_OLS": ic_ols_width,
-    "IC_width_HC3": ic_hc3_width.reindex(coef_ols.index),
-    "IC_width_Bootstrap": ic_boot_width,
-})
-
-# Subconjuntos útiles
-coef_df = comparative_df[["Coef_OLS", "Coef_Bootstrap"]]
-se_df   = comparative_df[["SE_OLS", "SE_HC3", "SE_Bootstrap"]]
-ic_df   = comparative_df[["IC_width_OLS", "IC_width_HC3", "IC_width_Bootstrap"]]
-
-# Vista rápida
-comparative_df.head()
+coef_df = comparative_df[['Coef_OLS', 'Coef_Bootstrap']]
+se_df = comparative_df[['SE_OLS', 'SE_HC3', 'SE_Bootstrap']]
+ic_df = comparative_df[['IC_width_OLS', 'IC_width_HC3', 'IC_width_Bootstrap']]
+coef_df
 ------------------
 
------ stdout -----
-Cargado bootstrap_df desde: ../data/bootstrap_results.csv
-------------------
 
 [31m---------------------------------------------------------------------------[39m
 [31mNameError[39m                                 Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[3][39m[32m, line 14[39m
-[32m     11[39m         [38;5;28mprint[39m([33m"[39m[33mAviso: no se pudo cargar bootstrap_df automáticamente:[39m[33m"[39m, e)
-[32m     13[39m [38;5;66;03m# Series y CI de OLS[39;00m
-[32m---> [39m[32m14[39m coef_ols = [43mmodelo_base[49m.params
-[32m     15[39m se_ols   = modelo_base.bse
-[32m     16[39m ci_ols   = modelo_base.conf_int()
+[36mCell[39m[36m [39m[32mIn[9][39m[32m, line 17[39m
+[32m     13[39m ic_hc3 = resultados_HC3.conf_int()[:,[32m1[39m] - resultados_HC3.conf_int()[:,[32m0[39m]
+[32m     15[39m ic_boot = bootstrap_df[[33m'[39m[33mIC_97.5[39m[33m%[39m[33m'[39m] - bootstrap_df[[33m'[39m[33mIC_2.5[39m[33m%[39m[33m'[39m]
+[32m---> [39m[32m17[39m coef_df = [43mcomparative_df[49m[[[33m'[39m[33mCoef_OLS[39m[33m'[39m, [33m'[39m[33mCoef_Bootstrap[39m[33m'[39m]]
+[32m     18[39m se_df = comparative_df[[[33m'[39m[33mSE_OLS[39m[33m'[39m, [33m'[39m[33mSE_HC3[39m[33m'[39m, [33m'[39m[33mSE_Bootstrap[39m[33m'[39m]]
+[32m     19[39m ic_df = comparative_df[[[33m'[39m[33mIC_width_OLS[39m[33m'[39m, [33m'[39m[33mIC_width_HC3[39m[33m'[39m, [33m'[39m[33mIC_width_Bootstrap[39m[33m'[39m]]
 
-[31mNameError[39m: name 'modelo_base' is not defined
+[31mNameError[39m: name 'comparative_df' is not defined
 

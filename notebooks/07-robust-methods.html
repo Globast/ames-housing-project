@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -474,100 +474,6 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-
-<span class="c1"># Si bootstrap_df no está en memoria, intenta cargarlo desde BOOT_CSV_PATH</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">bootstrap_df</span>  <span class="c1"># noqa: F821</span>
-<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">bootstrap_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">BOOT_CSV_PATH</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cargado bootstrap_df desde:&quot;</span><span class="p">,</span> <span class="n">BOOT_CSV_PATH</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aviso: no se pudo cargar bootstrap_df automáticamente:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-
-<span class="c1"># Series y CI de OLS</span>
-<span class="n">coef_ols</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span>
-<span class="n">se_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">bse</span>
-<span class="n">ci_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>
-<span class="n">ic_ols_width</span> <span class="o">=</span> <span class="n">ci_ols</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ci_ols</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
-
-<span class="c1"># HC3</span>
-<span class="n">se_hc3</span>   <span class="o">=</span> <span class="n">resultados_HC3</span><span class="o">.</span><span class="n">bse</span>
-<span class="n">ci_hc3</span>   <span class="o">=</span> <span class="n">resultados_HC3</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>
-<span class="n">ic_hc3_width</span> <span class="o">=</span> <span class="n">ci_hc3</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ci_hc3</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
-
-<span class="c1"># Normaliza bootstrap_df: índice por nombre de término si existe</span>
-<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bootstrap_df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-    <span class="n">name_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;term&quot;</span><span class="p">,</span> <span class="s2">&quot;variable&quot;</span><span class="p">,</span> <span class="s2">&quot;coef_name&quot;</span><span class="p">,</span> <span class="s2">&quot;feature&quot;</span><span class="p">)]</span>
-    <span class="k">if</span> <span class="n">name_cols</span><span class="p">:</span>
-        <span class="n">bootstrap_df</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">name_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
-    <span class="c1"># Mapeo de columnas esperadas (ajústalo si tus nombres difieren)</span>
-    <span class="n">col_mean</span> <span class="o">=</span> <span class="s2">&quot;Coef_mean&quot;</span>
-    <span class="n">col_se</span>   <span class="o">=</span> <span class="s2">&quot;SE_bootstrap&quot;</span>
-    <span class="n">col_l</span>    <span class="o">=</span> <span class="s2">&quot;IC_2.5%&quot;</span>
-    <span class="n">col_u</span>    <span class="o">=</span> <span class="s2">&quot;IC_97.5%&quot;</span>
-
-    <span class="c1"># Series desde bootstrap</span>
-    <span class="n">coef_boot_mean</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="n">col_mean</span><span class="p">]</span> <span class="k">if</span> <span class="n">col_mean</span> <span class="ow">in</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="n">se_boot</span>        <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="n">col_se</span><span class="p">]</span>   <span class="k">if</span> <span class="n">col_se</span>   <span class="ow">in</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">{</span><span class="n">col_l</span><span class="p">,</span> <span class="n">col_u</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">bootstrap_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
-        <span class="n">ic_boot_width</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="n">col_u</span><span class="p">]</span> <span class="o">-</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="n">col_l</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">ic_boot_width</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-
-    <span class="c1"># Alinea con el orden de coef_ols</span>
-    <span class="n">coef_boot_mean</span> <span class="o">=</span> <span class="n">coef_boot_mean</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-    <span class="n">se_boot</span>        <span class="o">=</span> <span class="n">se_boot</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-    <span class="n">ic_boot_width</span>  <span class="o">=</span> <span class="n">ic_boot_width</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">coef_boot_mean</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-    <span class="n">se_boot</span>        <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-    <span class="n">ic_boot_width</span>  <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-
-<span class="c1"># DataFrame comparativo</span>
-<span class="n">comparative_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s2">&quot;Coef_OLS&quot;</span><span class="p">:</span> <span class="n">coef_ols</span><span class="p">,</span>
-    <span class="s2">&quot;Coef_Bootstrap&quot;</span><span class="p">:</span> <span class="n">coef_boot_mean</span><span class="p">,</span>
-    <span class="s2">&quot;SE_OLS&quot;</span><span class="p">:</span> <span class="n">se_ols</span><span class="p">,</span>
-    <span class="s2">&quot;SE_HC3&quot;</span><span class="p">:</span> <span class="n">se_hc3</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
-    <span class="s2">&quot;SE_Bootstrap&quot;</span><span class="p">:</span> <span class="n">se_boot</span><span class="p">,</span>
-    <span class="s2">&quot;IC_width_OLS&quot;</span><span class="p">:</span> <span class="n">ic_ols_width</span><span class="p">,</span>
-    <span class="s2">&quot;IC_width_HC3&quot;</span><span class="p">:</span> <span class="n">ic_hc3_width</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
-    <span class="s2">&quot;IC_width_Bootstrap&quot;</span><span class="p">:</span> <span class="n">ic_boot_width</span><span class="p">,</span>
-<span class="p">})</span>
-
-<span class="c1"># Subconjuntos útiles</span>
-<span class="n">coef_df</span> <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s2">&quot;Coef_OLS&quot;</span><span class="p">,</span> <span class="s2">&quot;Coef_Bootstrap&quot;</span><span class="p">]]</span>
-<span class="n">se_df</span>   <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s2">&quot;SE_OLS&quot;</span><span class="p">,</span> <span class="s2">&quot;SE_HC3&quot;</span><span class="p">,</span> <span class="s2">&quot;SE_Bootstrap&quot;</span><span class="p">]]</span>
-<span class="n">ic_df</span>   <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s2">&quot;IC_width_OLS&quot;</span><span class="p">,</span> <span class="s2">&quot;IC_width_HC3&quot;</span><span class="p">,</span> <span class="s2">&quot;IC_width_Bootstrap&quot;</span><span class="p">]]</span>
-
-<span class="c1"># Vista rápida</span>
-<span class="n">comparative_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cargado bootstrap_df desde: ../data/bootstrap_results.csv
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">14</span>
-<span class="g g-Whitespace">     </span><span class="mi">11</span>         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aviso: no se pudo cargar bootstrap_df automáticamente:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">13</span> <span class="c1"># Series y CI de OLS</span>
-<span class="ne">---&gt; </span><span class="mi">14</span> <span class="n">coef_ols</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span>
-<span class="g g-Whitespace">     </span><span class="mi">15</span> <span class="n">se_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">bse</span>
-<span class="g g-Whitespace">     </span><span class="mi">16</span> <span class="n">ci_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>
-
-<span class="ne">NameError</span>: name &#39;modelo_base&#39; is not defined
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
@@ -579,6 +485,14 @@ document.write(`
 <span class="c1"># Lectura canónica a reutilizar en el capítulo</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Usando CSV base: /workspaces/ames-housing-project/book/data/AmesHousing_codificada.csv
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2768, 222)
 </pre></div>
 </div>
 </div>
@@ -652,6 +566,112 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style type="text/css">
+</style>
+<table id="T_7d843">
+  <thead>
+    <tr>
+      <th class="blank level0" >&nbsp;</th>
+      <th id="T_7d843_level0_col0" class="col_heading level0 col0" >OLS</th>
+      <th id="T_7d843_level0_col1" class="col_heading level0 col1" >HC0</th>
+      <th id="T_7d843_level0_col2" class="col_heading level0 col2" >HC1</th>
+      <th id="T_7d843_level0_col3" class="col_heading level0 col3" >HC2</th>
+      <th id="T_7d843_level0_col4" class="col_heading level0 col4" >HC3</th>
+    </tr>
+    <tr>
+      <th class="index_name level0" >Variable</th>
+      <th class="blank col0" >&nbsp;</th>
+      <th class="blank col1" >&nbsp;</th>
+      <th class="blank col2" >&nbsp;</th>
+      <th class="blank col3" >&nbsp;</th>
+      <th class="blank col4" >&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_7d843_level0_row0" class="row_heading level0 row0" >const</th>
+      <td id="T_7d843_row0_col0" class="data row0 col0" >0.253443</td>
+      <td id="T_7d843_row0_col1" class="data row0 col1" >0.289644</td>
+      <td id="T_7d843_row0_col2" class="data row0 col2" >0.290168</td>
+      <td id="T_7d843_row0_col3" class="data row0 col3" >0.290559</td>
+      <td id="T_7d843_row0_col4" class="data row0 col4" >0.291480</td>
+    </tr>
+    <tr>
+      <th id="T_7d843_level0_row1" class="row_heading level0 row1" >Overall Qual</th>
+      <td id="T_7d843_row1_col0" class="data row1 col0" >0.003334</td>
+      <td id="T_7d843_row1_col1" class="data row1 col1" >0.004443</td>
+      <td id="T_7d843_row1_col2" class="data row1 col2" >0.004451</td>
+      <td id="T_7d843_row1_col3" class="data row1 col3" >0.004459</td>
+      <td id="T_7d843_row1_col4" class="data row1 col4" >0.004474</td>
+    </tr>
+    <tr>
+      <th id="T_7d843_level0_row2" class="row_heading level0 row2" >Gr Liv Area</th>
+      <td id="T_7d843_row2_col0" class="data row2 col0" >0.000010</td>
+      <td id="T_7d843_row2_col1" class="data row2 col1" >0.000010</td>
+      <td id="T_7d843_row2_col2" class="data row2 col2" >0.000010</td>
+      <td id="T_7d843_row2_col3" class="data row2 col3" >0.000010</td>
+      <td id="T_7d843_row2_col4" class="data row2 col4" >0.000011</td>
+    </tr>
+    <tr>
+      <th id="T_7d843_level0_row3" class="row_heading level0 row3" >Garage Cars</th>
+      <td id="T_7d843_row3_col0" class="data row3 col0" >0.005301</td>
+      <td id="T_7d843_row3_col1" class="data row3 col1" >0.006828</td>
+      <td id="T_7d843_row3_col2" class="data row3 col2" >0.006841</td>
+      <td id="T_7d843_row3_col3" class="data row3 col3" >0.006851</td>
+      <td id="T_7d843_row3_col4" class="data row3 col4" >0.006874</td>
+    </tr>
+    <tr>
+      <th id="T_7d843_level0_row4" class="row_heading level0 row4" >Total Bsmt SF</th>
+      <td id="T_7d843_row4_col0" class="data row4 col0" >0.000013</td>
+      <td id="T_7d843_row4_col1" class="data row4 col1" >0.000015</td>
+      <td id="T_7d843_row4_col2" class="data row4 col2" >0.000015</td>
+      <td id="T_7d843_row4_col3" class="data row4 col3" >0.000015</td>
+      <td id="T_7d843_row4_col4" class="data row4 col4" >0.000015</td>
+    </tr>
+    <tr>
+      <th id="T_7d843_level0_row5" class="row_heading level0 row5" >1st Flr SF</th>
+      <td id="T_7d843_row5_col0" class="data row5 col0" >0.000014</td>
+      <td id="T_7d843_row5_col1" class="data row5 col1" >0.000016</td>
+      <td id="T_7d843_row5_col2" class="data row5 col2" >0.000016</td>
+      <td id="T_7d843_row5_col3" class="data row5 col3" >0.000016</td>
+      <td id="T_7d843_row5_col4" class="data row5 col4" >0.000016</td>
+    </tr>
+    <tr>
+      <th id="T_7d843_level0_row6" class="row_heading level0 row6" >Full Bath</th>
+      <td id="T_7d843_row6_col0" class="data row6 col0" >0.007656</td>
+      <td id="T_7d843_row6_col1" class="data row6 col1" >0.008385</td>
+      <td id="T_7d843_row6_col2" class="data row6 col2" >0.008400</td>
+      <td id="T_7d843_row6_col3" class="data row6 col3" >0.008412</td>
+      <td id="T_7d843_row6_col4" class="data row6 col4" >0.008439</td>
+    </tr>
+    <tr>
+      <th id="T_7d843_level0_row7" class="row_heading level0 row7" >Year Built</th>
+      <td id="T_7d843_row7_col0" class="data row7 col0" >0.000134</td>
+      <td id="T_7d843_row7_col1" class="data row7 col1" >0.000151</td>
+      <td id="T_7d843_row7_col2" class="data row7 col2" >0.000151</td>
+      <td id="T_7d843_row7_col3" class="data row7 col3" >0.000151</td>
+      <td id="T_7d843_row7_col4" class="data row7 col4" >0.000152</td>
+    </tr>
+    <tr>
+      <th id="T_7d843_level0_row8" class="row_heading level0 row8" >Fireplaces</th>
+      <td id="T_7d843_row8_col0" class="data row8 col0" >0.005274</td>
+      <td id="T_7d843_row8_col1" class="data row8 col1" >0.005640</td>
+      <td id="T_7d843_row8_col2" class="data row8 col2" >0.005650</td>
+      <td id="T_7d843_row8_col3" class="data row8 col3" >0.005658</td>
+      <td id="T_7d843_row8_col4" class="data row8 col4" >0.005676</td>
+    </tr>
+    <tr>
+      <th id="T_7d843_level0_row9" class="row_heading level0 row9" >Lot Area</th>
+      <td id="T_7d843_row9_col0" class="data row9 col0" >0.000001</td>
+      <td id="T_7d843_row9_col1" class="data row9 col1" >0.000001</td>
+      <td id="T_7d843_row9_col2" class="data row9 col2" >0.000001</td>
+      <td id="T_7d843_row9_col3" class="data row9 col3" >0.000001</td>
+      <td id="T_7d843_row9_col4" class="data row9 col4" >0.000001</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -659,6 +679,172 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style type="text/css">
+</style>
+<table id="T_2063a">
+  <thead>
+    <tr>
+      <th class="blank level0" >&nbsp;</th>
+      <th id="T_2063a_level0_col0" class="col_heading level0 col0" >OLS_lower</th>
+      <th id="T_2063a_level0_col1" class="col_heading level0 col1" >OLS_upper</th>
+      <th id="T_2063a_level0_col2" class="col_heading level0 col2" >HC0_lower</th>
+      <th id="T_2063a_level0_col3" class="col_heading level0 col3" >HC0_upper</th>
+      <th id="T_2063a_level0_col4" class="col_heading level0 col4" >HC1_lower</th>
+      <th id="T_2063a_level0_col5" class="col_heading level0 col5" >HC1_upper</th>
+      <th id="T_2063a_level0_col6" class="col_heading level0 col6" >HC2_lower</th>
+      <th id="T_2063a_level0_col7" class="col_heading level0 col7" >HC2_upper</th>
+      <th id="T_2063a_level0_col8" class="col_heading level0 col8" >HC3_lower</th>
+      <th id="T_2063a_level0_col9" class="col_heading level0 col9" >HC3_upper</th>
+    </tr>
+    <tr>
+      <th class="index_name level0" >Variable</th>
+      <th class="blank col0" >&nbsp;</th>
+      <th class="blank col1" >&nbsp;</th>
+      <th class="blank col2" >&nbsp;</th>
+      <th class="blank col3" >&nbsp;</th>
+      <th class="blank col4" >&nbsp;</th>
+      <th class="blank col5" >&nbsp;</th>
+      <th class="blank col6" >&nbsp;</th>
+      <th class="blank col7" >&nbsp;</th>
+      <th class="blank col8" >&nbsp;</th>
+      <th class="blank col9" >&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_2063a_level0_row0" class="row_heading level0 row0" >const</th>
+      <td id="T_2063a_row0_col0" class="data row0 col0" >4.749133</td>
+      <td id="T_2063a_row0_col1" class="data row0 col1" >5.743047</td>
+      <td id="T_2063a_row0_col2" class="data row0 col2" >4.678149</td>
+      <td id="T_2063a_row0_col3" class="data row0 col3" >5.814030</td>
+      <td id="T_2063a_row0_col4" class="data row0 col4" >4.677121</td>
+      <td id="T_2063a_row0_col5" class="data row0 col5" >5.815059</td>
+      <td id="T_2063a_row0_col6" class="data row0 col6" >4.676355</td>
+      <td id="T_2063a_row0_col7" class="data row0 col7" >5.815825</td>
+      <td id="T_2063a_row0_col8" class="data row0 col8" >4.674550</td>
+      <td id="T_2063a_row0_col9" class="data row0 col9" >5.817630</td>
+    </tr>
+    <tr>
+      <th id="T_2063a_level0_row1" class="row_heading level0 row1" >Overall Qual</th>
+      <td id="T_2063a_row1_col0" class="data row1 col0" >0.095133</td>
+      <td id="T_2063a_row1_col1" class="data row1 col1" >0.108206</td>
+      <td id="T_2063a_row1_col2" class="data row1 col2" >0.092957</td>
+      <td id="T_2063a_row1_col3" class="data row1 col3" >0.110382</td>
+      <td id="T_2063a_row1_col4" class="data row1 col4" >0.092942</td>
+      <td id="T_2063a_row1_col5" class="data row1 col5" >0.110397</td>
+      <td id="T_2063a_row1_col6" class="data row1 col6" >0.092927</td>
+      <td id="T_2063a_row1_col7" class="data row1 col7" >0.110412</td>
+      <td id="T_2063a_row1_col8" class="data row1 col8" >0.092897</td>
+      <td id="T_2063a_row1_col9" class="data row1 col9" >0.110442</td>
+    </tr>
+    <tr>
+      <th id="T_2063a_level0_row2" class="row_heading level0 row2" >Gr Liv Area</th>
+      <td id="T_2063a_row2_col0" class="data row2 col0" >0.000220</td>
+      <td id="T_2063a_row2_col1" class="data row2 col1" >0.000259</td>
+      <td id="T_2063a_row2_col2" class="data row2 col2" >0.000219</td>
+      <td id="T_2063a_row2_col3" class="data row2 col3" >0.000260</td>
+      <td id="T_2063a_row2_col4" class="data row2 col4" >0.000219</td>
+      <td id="T_2063a_row2_col5" class="data row2 col5" >0.000260</td>
+      <td id="T_2063a_row2_col6" class="data row2 col6" >0.000219</td>
+      <td id="T_2063a_row2_col7" class="data row2 col7" >0.000260</td>
+      <td id="T_2063a_row2_col8" class="data row2 col8" >0.000219</td>
+      <td id="T_2063a_row2_col9" class="data row2 col9" >0.000260</td>
+    </tr>
+    <tr>
+      <th id="T_2063a_level0_row3" class="row_heading level0 row3" >Garage Cars</th>
+      <td id="T_2063a_row3_col0" class="data row3 col0" >0.038647</td>
+      <td id="T_2063a_row3_col1" class="data row3 col1" >0.059434</td>
+      <td id="T_2063a_row3_col2" class="data row3 col2" >0.035652</td>
+      <td id="T_2063a_row3_col3" class="data row3 col3" >0.062430</td>
+      <td id="T_2063a_row3_col4" class="data row3 col4" >0.035627</td>
+      <td id="T_2063a_row3_col5" class="data row3 col5" >0.062454</td>
+      <td id="T_2063a_row3_col6" class="data row3 col6" >0.035607</td>
+      <td id="T_2063a_row3_col7" class="data row3 col7" >0.062475</td>
+      <td id="T_2063a_row3_col8" class="data row3 col8" >0.035561</td>
+      <td id="T_2063a_row3_col9" class="data row3 col9" >0.062520</td>
+    </tr>
+    <tr>
+      <th id="T_2063a_level0_row4" class="row_heading level0 row4" >Total Bsmt SF</th>
+      <td id="T_2063a_row4_col0" class="data row4 col0" >0.000129</td>
+      <td id="T_2063a_row4_col1" class="data row4 col1" >0.000178</td>
+      <td id="T_2063a_row4_col2" class="data row4 col2" >0.000125</td>
+      <td id="T_2063a_row4_col3" class="data row4 col3" >0.000182</td>
+      <td id="T_2063a_row4_col4" class="data row4 col4" >0.000125</td>
+      <td id="T_2063a_row4_col5" class="data row4 col5" >0.000182</td>
+      <td id="T_2063a_row4_col6" class="data row4 col6" >0.000125</td>
+      <td id="T_2063a_row4_col7" class="data row4 col7" >0.000182</td>
+      <td id="T_2063a_row4_col8" class="data row4 col8" >0.000125</td>
+      <td id="T_2063a_row4_col9" class="data row4 col9" >0.000183</td>
+    </tr>
+    <tr>
+      <th id="T_2063a_level0_row5" class="row_heading level0 row5" >1st Flr SF</th>
+      <td id="T_2063a_row5_col0" class="data row5 col0" >-0.000026</td>
+      <td id="T_2063a_row5_col1" class="data row5 col1" >0.000031</td>
+      <td id="T_2063a_row5_col2" class="data row5 col2" >-0.000028</td>
+      <td id="T_2063a_row5_col3" class="data row5 col3" >0.000033</td>
+      <td id="T_2063a_row5_col4" class="data row5 col4" >-0.000028</td>
+      <td id="T_2063a_row5_col5" class="data row5 col5" >0.000033</td>
+      <td id="T_2063a_row5_col6" class="data row5 col6" >-0.000028</td>
+      <td id="T_2063a_row5_col7" class="data row5 col7" >0.000033</td>
+      <td id="T_2063a_row5_col8" class="data row5 col8" >-0.000028</td>
+      <td id="T_2063a_row5_col9" class="data row5 col9" >0.000033</td>
+    </tr>
+    <tr>
+      <th id="T_2063a_level0_row6" class="row_heading level0 row6" >Full Bath</th>
+      <td id="T_2063a_row6_col0" class="data row6 col0" >-0.028511</td>
+      <td id="T_2063a_row6_col1" class="data row6 col1" >0.001512</td>
+      <td id="T_2063a_row6_col2" class="data row6 col2" >-0.029940</td>
+      <td id="T_2063a_row6_col3" class="data row6 col3" >0.002941</td>
+      <td id="T_2063a_row6_col4" class="data row6 col4" >-0.029970</td>
+      <td id="T_2063a_row6_col5" class="data row6 col5" >0.002971</td>
+      <td id="T_2063a_row6_col6" class="data row6 col6" >-0.029993</td>
+      <td id="T_2063a_row6_col7" class="data row6 col7" >0.002994</td>
+      <td id="T_2063a_row6_col8" class="data row6 col8" >-0.030046</td>
+      <td id="T_2063a_row6_col9" class="data row6 col9" >0.003047</td>
+    </tr>
+    <tr>
+      <th id="T_2063a_level0_row7" class="row_heading level0 row7" >Year Built</th>
+      <td id="T_2063a_row7_col0" class="data row7 col0" >0.002500</td>
+      <td id="T_2063a_row7_col1" class="data row7 col1" >0.003024</td>
+      <td id="T_2063a_row7_col2" class="data row7 col2" >0.002467</td>
+      <td id="T_2063a_row7_col3" class="data row7 col3" >0.003058</td>
+      <td id="T_2063a_row7_col4" class="data row7 col4" >0.002466</td>
+      <td id="T_2063a_row7_col5" class="data row7 col5" >0.003058</td>
+      <td id="T_2063a_row7_col6" class="data row7 col6" >0.002466</td>
+      <td id="T_2063a_row7_col7" class="data row7 col7" >0.003059</td>
+      <td id="T_2063a_row7_col8" class="data row7 col8" >0.002465</td>
+      <td id="T_2063a_row7_col9" class="data row7 col9" >0.003060</td>
+    </tr>
+    <tr>
+      <th id="T_2063a_level0_row8" class="row_heading level0 row8" >Fireplaces</th>
+      <td id="T_2063a_row8_col0" class="data row8 col0" >0.035813</td>
+      <td id="T_2063a_row8_col1" class="data row8 col1" >0.056495</td>
+      <td id="T_2063a_row8_col2" class="data row8 col2" >0.035095</td>
+      <td id="T_2063a_row8_col3" class="data row8 col3" >0.057213</td>
+      <td id="T_2063a_row8_col4" class="data row8 col4" >0.035075</td>
+      <td id="T_2063a_row8_col5" class="data row8 col5" >0.057233</td>
+      <td id="T_2063a_row8_col6" class="data row8 col6" >0.035060</td>
+      <td id="T_2063a_row8_col7" class="data row8 col7" >0.057248</td>
+      <td id="T_2063a_row8_col8" class="data row8 col8" >0.035025</td>
+      <td id="T_2063a_row8_col9" class="data row8 col9" >0.057283</td>
+    </tr>
+    <tr>
+      <th id="T_2063a_level0_row9" class="row_heading level0 row9" >Lot Area</th>
+      <td id="T_2063a_row9_col0" class="data row9 col0" >0.000008</td>
+      <td id="T_2063a_row9_col1" class="data row9 col1" >0.000011</td>
+      <td id="T_2063a_row9_col2" class="data row9 col2" >0.000008</td>
+      <td id="T_2063a_row9_col3" class="data row9 col3" >0.000012</td>
+      <td id="T_2063a_row9_col4" class="data row9 col4" >0.000008</td>
+      <td id="T_2063a_row9_col5" class="data row9 col5" >0.000012</td>
+      <td id="T_2063a_row9_col6" class="data row9 col6" >0.000008</td>
+      <td id="T_2063a_row9_col7" class="data row9 col7" >0.000012</td>
+      <td id="T_2063a_row9_col8" class="data row9 col8" >0.000008</td>
+      <td id="T_2063a_row9_col9" class="data row9 col9" >0.000012</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -683,6 +869,94 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>OLS</th>
+      <th>RLM_Huber</th>
+      <th>RLM_Tukey</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>const</th>
+      <td>5.246090</td>
+      <td>5.554695</td>
+      <td>5.757333</td>
+    </tr>
+    <tr>
+      <th>Overall Qual</th>
+      <td>0.101670</td>
+      <td>0.093458</td>
+      <td>0.090582</td>
+    </tr>
+    <tr>
+      <th>Gr Liv Area</th>
+      <td>0.000240</td>
+      <td>0.000243</td>
+      <td>0.000245</td>
+    </tr>
+    <tr>
+      <th>Garage Cars</th>
+      <td>0.049041</td>
+      <td>0.055135</td>
+      <td>0.056782</td>
+    </tr>
+    <tr>
+      <th>Total Bsmt SF</th>
+      <td>0.000154</td>
+      <td>0.000169</td>
+      <td>0.000176</td>
+    </tr>
+    <tr>
+      <th>1st Flr SF</th>
+      <td>0.000003</td>
+      <td>-0.000008</td>
+      <td>-0.000013</td>
+    </tr>
+    <tr>
+      <th>Full Bath</th>
+      <td>-0.013499</td>
+      <td>-0.017119</td>
+      <td>-0.016548</td>
+    </tr>
+    <tr>
+      <th>Year Built</th>
+      <td>0.002762</td>
+      <td>0.002626</td>
+      <td>0.002528</td>
+    </tr>
+    <tr>
+      <th>Fireplaces</th>
+      <td>0.046154</td>
+      <td>0.040135</td>
+      <td>0.038912</td>
+    </tr>
+    <tr>
+      <th>Lot Area</th>
+      <td>0.000010</td>
+      <td>0.000011</td>
+      <td>0.000011</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -690,6 +964,89 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Huber_weights</th>
+      <th>Tukey_weights</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.000000</td>
+      <td>0.953644</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.000000</td>
+      <td>0.866662</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1.000000</td>
+      <td>0.970765</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.000000</td>
+      <td>0.922950</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.000000</td>
+      <td>0.962404</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2763</th>
+      <td>1.000000</td>
+      <td>0.986576</td>
+    </tr>
+    <tr>
+      <th>2764</th>
+      <td>1.000000</td>
+      <td>0.999931</td>
+    </tr>
+    <tr>
+      <th>2765</th>
+      <td>1.000000</td>
+      <td>0.974192</td>
+    </tr>
+    <tr>
+      <th>2766</th>
+      <td>1.000000</td>
+      <td>0.993637</td>
+    </tr>
+    <tr>
+      <th>2767</th>
+      <td>0.693427</td>
+      <td>0.679286</td>
+    </tr>
+  </tbody>
+</table>
+<p>2768 rows × 2 columns</p>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -723,6 +1080,105 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Coef_mean</th>
+      <th>SE_bootstrap</th>
+      <th>IC_2.5%</th>
+      <th>IC_97.5%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>const</th>
+      <td>5.261841</td>
+      <td>0.291890</td>
+      <td>4.661389</td>
+      <td>5.820900</td>
+    </tr>
+    <tr>
+      <th>Overall Qual</th>
+      <td>0.101568</td>
+      <td>0.004362</td>
+      <td>0.093179</td>
+      <td>0.110215</td>
+    </tr>
+    <tr>
+      <th>Gr Liv Area</th>
+      <td>0.000240</td>
+      <td>0.000010</td>
+      <td>0.000220</td>
+      <td>0.000259</td>
+    </tr>
+    <tr>
+      <th>Garage Cars</th>
+      <td>0.049309</td>
+      <td>0.006673</td>
+      <td>0.036073</td>
+      <td>0.061835</td>
+    </tr>
+    <tr>
+      <th>Total Bsmt SF</th>
+      <td>0.000155</td>
+      <td>0.000015</td>
+      <td>0.000124</td>
+      <td>0.000182</td>
+    </tr>
+    <tr>
+      <th>1st Flr SF</th>
+      <td>0.000002</td>
+      <td>0.000016</td>
+      <td>-0.000027</td>
+      <td>0.000032</td>
+    </tr>
+    <tr>
+      <th>Full Bath</th>
+      <td>-0.013420</td>
+      <td>0.008273</td>
+      <td>-0.029839</td>
+      <td>0.004007</td>
+    </tr>
+    <tr>
+      <th>Year Built</th>
+      <td>0.002754</td>
+      <td>0.000152</td>
+      <td>0.002458</td>
+      <td>0.003066</td>
+    </tr>
+    <tr>
+      <th>Fireplaces</th>
+      <td>0.046287</td>
+      <td>0.005614</td>
+      <td>0.034834</td>
+      <td>0.056839</td>
+    </tr>
+    <tr>
+      <th>Lot Area</th>
+      <td>0.000010</td>
+      <td>0.000001</td>
+      <td>0.000008</td>
+      <td>0.000012</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -746,6 +1202,20 @@ document.write(`
 <span class="n">se_df</span> <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s1">&#39;SE_OLS&#39;</span><span class="p">,</span> <span class="s1">&#39;SE_HC3&#39;</span><span class="p">,</span> <span class="s1">&#39;SE_Bootstrap&#39;</span><span class="p">]]</span>
 <span class="n">ic_df</span> <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s1">&#39;IC_width_OLS&#39;</span><span class="p">,</span> <span class="s1">&#39;IC_width_HC3&#39;</span><span class="p">,</span> <span class="s1">&#39;IC_width_Bootstrap&#39;</span><span class="p">]]</span>
 <span class="n">coef_df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">line</span> <span class="mi">17</span>
+<span class="g g-Whitespace">     </span><span class="mi">13</span> <span class="n">ic_hc3</span> <span class="o">=</span> <span class="n">resultados_HC3</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">resultados_HC3</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()[:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="g g-Whitespace">     </span><span class="mi">15</span> <span class="n">ic_boot</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="s1">&#39;IC_97.5%&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="s1">&#39;IC_2.5%&#39;</span><span class="p">]</span>
+<span class="ne">---&gt; </span><span class="mi">17</span> <span class="n">coef_df</span> <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s1">&#39;Coef_OLS&#39;</span><span class="p">,</span> <span class="s1">&#39;Coef_Bootstrap&#39;</span><span class="p">]]</span>
+<span class="g g-Whitespace">     </span><span class="mi">18</span> <span class="n">se_df</span> <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s1">&#39;SE_OLS&#39;</span><span class="p">,</span> <span class="s1">&#39;SE_HC3&#39;</span><span class="p">,</span> <span class="s1">&#39;SE_Bootstrap&#39;</span><span class="p">]]</span>
+<span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="n">ic_df</span> <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s1">&#39;IC_width_OLS&#39;</span><span class="p">,</span> <span class="s1">&#39;IC_width_HC3&#39;</span><span class="p">,</span> <span class="s1">&#39;IC_width_Bootstrap&#39;</span><span class="p">]]</span>
+
+<span class="ne">NameError</span>: name &#39;comparative_df&#39; is not defined
 </pre></div>
 </div>
 </div>
