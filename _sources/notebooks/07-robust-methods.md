@@ -4,23 +4,32 @@ jupytext:
   text_representation: {extension: .md, format_name: myst}
 kernelspec: {name: python3, display_name: Python 3}
 ---
-# Capítulo 7: Remedios y métodos robustos
+# Capítulo 7 — Remedios y métodos robustos
 
 ## Overview
-Se exploran estimadores robustos (Huber/RLM, Regresión Cuantílica) y procedimientos de validación. Incluye una sección de **Bootstrap** para evaluar la variabilidad de los estimadores y comparar OLS, errores estándar HC3 y percentiles bootstrap.
 
+En este capítulo se ajusta un modelo lineal OLS para **Ames Housing** y se comparan errores estándar y
+ancho de intervalos de confianza bajo OLS, correcciones robustas a la heterocedasticidad (HC0–HC3) y **bootstrap**.
+También se estiman modelos **RLM** (Huber y Tukey) para mitigar la influencia de outliers.
+Presentamos resultados en tablas y los discutimos, incluyendo recomendaciones prácticas.
+
+> Referencias internas: ver Tabla 7.1 (errores estándar comparados), Tabla 7.2 (anchos de IC),
+> Tabla 7.3 (coeficientes OLS vs. RLM), y Tabla 7.4 (resultados de bootstrap).
+
+## Configuración de rutas
 
 ```{code-cell} ipython3
 from pathlib import Path
-import pandas as pd
 
-DATA_PATH = Path("../data/AmesHousing_codificada.csv")
-assert DATA_PATH.is_file(), f"No se encontró '{DATA_PATH}'"
-print("Usando CSV base:", DATA_PATH.resolve())
+# Rutas deterministas: el capítulo se ejecuta desde la carpeta donde está este .md (p.ej. book/notebooks/)
+DATA_PATH = Path("../data/AmesHousing_codificada.csv")  # relativo a book/notebooks/
+BOOTSTRAP_OUT = Path("../data/bootstrap_df.csv")        # salida persistente en book/data/
 
-df = pd.read_csv(DATA_PATH)
-df.shape
+assert DATA_PATH.is_file(), "No se encontró '../data/AmesHousing_codificada.csv'"
+print("Usando CSV:", DATA_PATH.resolve())
+print("Archivo bootstrap se guardará en:", BOOTSTRAP_OUT.resolve())
 ```
+# Capítulo 7: Remedios y métodos robustos
 
 ### 7.1 Correcciones para heterocedasticidad
 
@@ -31,6 +40,73 @@ De acuerdo con el supuesto de homocedasticidad ([Ecuación 6.2.1](#ecuacion-621-
 - **HC2**: Considera los *leverage points* de cada observación, dando más peso a observaciones influyentes.  
 - **HC3**: Aproximación tipo *jackknife*, más conservadora y recomendada en muestras pequeñas por ofrecer errores estándar más cautelosos.
 
+```{code-cell} ipython3
+import statsmodels.api as sm
+import pandas as pd
+
+pd.set_option('display.float_format', '{:.6f}'.format)
+
+data_modelo_base = pd.read_csv(DATA_PATH)
+
+data_modelo_base = data_modelo_base[['SalePrice_log', 'Overall Qual', 'Gr Liv Area', 
+                                     'Garage Cars', 'Total Bsmt SF', '1st Flr SF', 
+                                     'Full Bath', 'Year Built', 'Fireplaces', 'Lot Area']]
+X = data_modelo_base[['Overall Qual', 'Gr Liv Area', 'Garage Cars', 'Total Bsmt SF',
+                      '1st Flr SF', 'Full Bath', 'Year Built', 'Fireplaces', 'Lot Area']]
+y = data_modelo_base[['SalePrice_log']]
+
+X = sm.add_constant(X)
+
+modelo_base = sm.OLS(y, X).fit()
+
+resultados_HC0 = modelo_base.get_robustcov_results(cov_type='HC0')
+resultados_HC1 = modelo_base.get_robustcov_results(cov_type='HC1')
+resultados_HC2 = modelo_base.get_robustcov_results(cov_type='HC2')
+resultados_HC3 = modelo_base.get_robustcov_results(cov_type='HC3')
+
+def get_confint_df(result, var_names):
+    ci = result.conf_int()
+    if isinstance(ci, pd.DataFrame):
+        ci = ci.loc[var_names]
+    else:
+        ci = pd.DataFrame(ci, columns=["lower", "upper"], index=var_names)
+    return ci
+
+variables = modelo_base.params.index
+
+se_df = pd.DataFrame({
+    "OLS": modelo_base.bse,
+    "HC0": resultados_HC0.bse,
+    "HC1": resultados_HC1.bse,
+    "HC2": resultados_HC2.bse,
+    "HC3": resultados_HC3.bse,
+})
+se_df.index.name = "Variable"
+
+ic_ols = get_confint_df(modelo_base, variables)
+ic_hc0 = get_confint_df(resultados_HC0, variables)
+ic_hc1 = get_confint_df(resultados_HC1, variables)
+ic_hc2 = get_confint_df(resultados_HC2, variables)
+ic_hc3 = get_confint_df(resultados_HC3, variables)
+
+ic_df = pd.DataFrame({
+    "OLS_lower": ic_ols.iloc[:,0],
+    "OLS_upper": ic_ols.iloc[:,1],
+    "HC0_lower": ic_hc0.iloc[:,0],
+    "HC0_upper": ic_hc0.iloc[:,1],
+    "HC1_lower": ic_hc1.iloc[:,0],
+    "HC1_upper": ic_hc1.iloc[:,1],
+    "HC2_lower": ic_hc2.iloc[:,0],
+    "HC2_upper": ic_hc2.iloc[:,1],
+    "HC3_lower": ic_hc3.iloc[:,0],
+    "HC3_upper": ic_hc3.iloc[:,1],
+})
+ic_df.index = variables
+ic_df.index.name = "Variable"
+
+display(se_df.style.format("{:.6f}"))
+```
+
 **Tabla 7.1.1.** Errores estándar OLS vs. HC0-HC3.
 
 Se observa que los errores estándar aumentan ligeramente cuando se aplican las correcciones HC, especialmente para variables como `Overall Qual`, `Garage Cars` y `Full Bath`. Esto indica que los estimadores OLS originales podrían subestimar la variabilidad de los coeficientes si existe heterocedasticidad.
@@ -38,6 +114,10 @@ Se observa que los errores estándar aumentan ligeramente cuando se aplican las 
 Por ejemplo, el coeficiente de `Overall Qual` tiene un error estándar de 0.00333 bajo OLS clásico, que se incrementa a 0.00447 bajo HC3, la corrección más conservadora. De manera similar, `Garage Cars` pasa de 0.00530 a 0.00687.  
 
 Las variables con cambios mínimos en los errores estándar (como `Gr Liv Area` o `Lot Area`) sugieren que su variabilidad está poco afectada por heterocedasticidad.
+
+```{code-cell} ipython3
+display(ic_df.style.format("{:.6f}"))
+```
 
 **Tabla 7.1.2.** Intervalos de confianza OLS vs. HC0-HC3.
 
@@ -78,6 +158,7 @@ $$
 **Ecuación 7.2.2.** Función de pérdida Tukey.
 
 Limita el impacto de observaciones lejanas sin eliminarlas completamente.
+
 ```{code-cell} ipython3
 import statsmodels.api as sm
 import pandas as pd
@@ -98,6 +179,7 @@ weights_df = pd.DataFrame({
 
 display(rlm_df)
 ```
+
 **Tabla 7.2.1.** Coeficientes OLS vs. RLM. *Valores en escala logarítmica.*
 
 Se observa que el intercepto (`const`) aumenta al usar modelos robustos, lo que refleja que los outliers tienden a sesgar hacia abajo la estimación en OLS. Por su parte, variables como `Overall Qual` y `Fireplaces` muestran coeficientes algo menores en modelos robustos, indicando que su efecto estaba ligeramente sobreestimado por la presencia de outliers. 
@@ -148,96 +230,52 @@ bootstrap_df = pd.DataFrame({
 bootstrap_df.to_csv('bootstrap_df.csv', sep=",", index=False)
 
 bootstrap_df
-
 ```
+
+
+**Tabla 7.4 — Resumen de bootstrap de coeficientes.** Esta tabla resume los resultados producidos por el código anterior.
+Discusión: compare magnitudes relativas. En presencia de heterocedasticidad,
+los SE HC3 suelen ser mayores que OLS. Si los IC se ensanchan (ver Tabla 7.2), las
+conclusiones sobre significancia pueden cambiar. Con bootstrap, valide la estabilidad
+de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
+
 
 **Tabla 7.3.1.** Resumen Bootstrap.
 
 Se observa que variables como `Overall Qual`, `Gr Liv Area`, `Garage Cars` y `Year Built` tienen coeficientes claramente distintos de cero, con intervalos de confianza estrechos y consistentes, lo que sugiere estimaciones robustas y estables. Por el contrario, `1st Flr SF` y `Full Bath` presentan intervalos que incluyen el cero, indicando que su efecto sobre la variable respuesta podría no ser significativo.
 
 ### 7.4 OLS vs. HC3 vs. Bootstrap
+
 ```{code-cell} ipython3
 import pandas as pd
-import numpy as np
 
-# Intentar cargar bootstrap_df si no está en memoria (usa la ruta canónica creada en 7.4)
-try:
-    bootstrap_df  # noqa: F821
-except NameError:
-    try:
-        bootstrap_df = pd.read_csv(BOOT_CSV_PATH)
-        print("Cargado bootstrap_df desde:", BOOT_CSV_PATH)
-    except Exception as e:
-        print("Aviso: no se pudo cargar bootstrap_df automáticamente:", e)
+coef_ols = modelo_base.params         
+se_ols = modelo_base.bse               
 
-# --- OLS (base) ---
-coef_ols = modelo_base.params                      # Serie (índice = nombres de coeficientes)
-se_ols   = modelo_base.bse                         # Serie
-ci_ols   = modelo_base.conf_int()                  # DataFrame [lower, upper]
-ic_ols_width = ci_ols.iloc[:, 1] - ci_ols.iloc[:, 0]
-if not isinstance(ic_ols_width, pd.Series):
-    ic_ols_width = pd.Series(ic_ols_width, index=coef_ols.index)
+se_hc3 = resultados_HC3.bse            
 
-# --- HC3 (robusta) ---
-# Algunos entornos devuelven arrays; conviértelos a Series/DataFrame y ALÍNEALOS al índice de coef_ols
-se_hc3_raw = getattr(resultados_HC3, "bse", None)
-if isinstance(se_hc3_raw, pd.Series):
-    se_hc3 = se_hc3_raw
-else:
-    se_hc3 = pd.Series(np.asarray(se_hc3_raw), index=coef_ols.index)
+coef_boot_mean = bootstrap_df['Coef_mean']  
+se_boot = bootstrap_df['SE_bootstrap']  
 
-ci_hc3_raw = resultados_HC3.conf_int()
-if isinstance(ci_hc3_raw, pd.DataFrame):
-    ic_hc3_width = ci_hc3_raw.iloc[:, 1] - ci_hc3_raw.iloc[:, 0]
-    if not isinstance(ic_hc3_width, pd.Series):
-        ic_hc3_width = pd.Series(ic_hc3_width, index=coef_ols.index)
-else:
-    arr = np.asarray(ci_hc3_raw)  # shape (p, 2)
-    ic_hc3_width = pd.Series(arr[:, 1] - arr[:, 0], index=coef_ols.index)
+ic_ols = modelo_base.conf_int().iloc[:,1] - modelo_base.conf_int().iloc[:,0]
 
-# --- Bootstrap ---
-# Normaliza bootstrap_df: deja el índice con los nombres de coeficientes y usa columnas esperadas
-if isinstance(bootstrap_df, pd.DataFrame):
-    name_cols = [c for c in bootstrap_df.columns if c.lower() in ("term", "variable", "coef_name", "feature")]
-    if name_cols:
-        bootstrap_df = bootstrap_df.set_index(name_cols[0])
-    elif len(bootstrap_df) == len(coef_ols) and bootstrap_df.index.dtype == "int64":
-        bootstrap_df.index = coef_ols.index  # alinea si coincide el tamaño
+ic_hc3 = resultados_HC3.conf_int()[:,1] - resultados_HC3.conf_int()[:,0]
 
-       col_mean = "Coef_mean"
-    col_se   = "SE_bootstrap"
-    col_l    = "IC_2.5%"
-    col_u    = "IC_97.5%"
+ic_boot = bootstrap_df['IC_97.5%'] - bootstrap_df['IC_2.5%']
 
-    coef_boot_mean = bootstrap_df[col_mean].reindex(coef_ols.index) if col_mean in bootstrap_df.columns else pd.Series(dtype=float, index=coef_ols.index)
-    se_boot        = bootstrap_df[col_se].reindex(coef_ols.index)   if col_se   in bootstrap_df.columns else pd.Series(dtype=float, index=coef_ols.index)
-    if {col_l, col_u}.issubset(bootstrap_df.columns):
-        ic_boot_width = (bootstrap_df[col_u] - bootstrap_df[col_l]).reindex(coef_ols.index)
-    else:
-        ic_boot_width = pd.Series(dtype=float, index=coef_ols.index)
-else:
-    coef_boot_mean = pd.Series(dtype=float, index=coef_ols.index)
-    se_boot        = pd.Series(dtype=float, index=coef_ols.index)
-    ic_boot_width  = pd.Series(dtype=float, index=coef_ols.index)
-
-# --- DataFrame comparativo y vistas ---
-comparative_df = pd.DataFrame({
-    "Coef_OLS": coef_ols,
-    "Coef_Bootstrap": coef_boot_mean,
-    "SE_OLS": se_ols,
-    "SE_HC3": se_hc3.reindex(coef_ols.index) if isinstance(se_hc3, pd.Series) else pd.Series(se_hc3, index=coef_ols.index),
-    "SE_Bootstrap": se_boot,
-    "IC_width_OLS": ic_ols_width.reindex(coef_ols.index) if isinstance(ic_ols_width, pd.Series) else pd.Series(ic_ols_width, index=coef_ols.index),
-    "IC_width_HC3": ic_hc3_width.reindex(coef_ols.index) if isinstance(ic_hc3_width, pd.Series) else pd.Series(ic_hc3_width, index=coef_ols.index),
-    "IC_width_Bootstrap": ic_boot_width,
-})
-
-coef_df = comparative_df[["Coef_OLS", "Coef_Bootstrap"]]
-se_df   = comparative_df[["SE_OLS", "SE_HC3", "SE_Bootstrap"]]
-ic_df   = comparative_df[["IC_width_OLS", "IC_width_HC3", "IC_width_Bootstrap"]]
-
+coef_df = comparative_df[['Coef_OLS', 'Coef_Bootstrap']]
+se_df = comparative_df[['SE_OLS', 'SE_HC3', 'SE_Bootstrap']]
+ic_df = comparative_df[['IC_width_OLS', 'IC_width_HC3', 'IC_width_Bootstrap']]
 coef_df
 ```
+
+
+**Tabla 7.0 — Coeficientes OLS vs. Bootstrap.** Esta tabla resume los resultados producidos por el código anterior.
+Discusión: compare magnitudes relativas. En presencia de heterocedasticidad,
+los SE HC3 suelen ser mayores que OLS. Si los IC se ensanchan (ver Tabla 7.2), las
+conclusiones sobre significancia pueden cambiar. Con bootstrap, valide la estabilidad
+de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
+
 
 **Tabla 7.4.1.** Coeficientes OLS vs. Bootstrap. *Valores en escala logarítmica.*
 
@@ -248,6 +286,15 @@ En particular, las variables como `Overall Qual`, `Gr Liv Area` y `Fireplaces` m
 ```{code-cell} ipython3
 se_df
 ```
+
+
+**Tabla 7.1 — Errores estándar comparados (OLS vs. HC0–HC3 vs. Bootstrap).** Esta tabla resume los resultados producidos por el código anterior.
+Discusión: compare magnitudes relativas. En presencia de heterocedasticidad,
+los SE HC3 suelen ser mayores que OLS. Si los IC se ensanchan (ver Tabla 7.2), las
+conclusiones sobre significancia pueden cambiar. Con bootstrap, valide la estabilidad
+de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
+
+
 **Tabla 7.4.2.** Errores estándar OLS vs. HC3 vs. Bootstrap.<a id="tabla-742-se-ols-hc3-boot"></a>
 
 Los errores estándar de OLS son generalmente menores que los obtenidos mediante HC3 o bootstrap, lo que sugiere que este modelo inicial podría subestimar la incertidumbre cuando hay heterocedasticidad presente o dependiendo de la muestra seleccionada.  
@@ -260,12 +307,35 @@ Es notable que las variables con errores estándar relativamente bajos (`Gr Liv 
 ic_df
 ```
 
+
+**Tabla 7.2 — Ancho de intervalos de confianza por método.** Esta tabla resume los resultados producidos por el código anterior.
+Discusión: compare magnitudes relativas. En presencia de heterocedasticidad,
+los SE HC3 suelen ser mayores que OLS. Si los IC se ensanchan (ver Tabla 7.2), las
+conclusiones sobre significancia pueden cambiar. Con bootstrap, valide la estabilidad
+de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
+
+
 **Tabla 7.4.3.** Amplitud intervalos de confianza OLS vs. HC3 vs. Bootstrap.
 
 Alineados con los errores estándar ([Tabla 7.4.2](#tabla-742-se-ols-hc3-boot)), los intervalos calculados con OLS son consistentemente más estrechos que los obtenidos con HC3 o bootstrap, llegando a la misma conclusión de que el OLS inicial es menos robusto.
 
+## Discusión y análisis
+
+**Sobre heterocedasticidad.** Si los errores estándar HC3 (o HC2) superan de manera consistente a los de OLS,
+esto sugiere varianza no constante. En tal caso, la inferencia debe basarse en versiones robustas (HC3 recomendado).
+Además, el **ancho de los IC** (Tabla 7.2) es un buen indicador del impacto en la precisión de la estimación.
+
+**Sobre RLM (Huber/Tukey).** Cuando existen outliers influyentes, RLM puede reducir su peso (ver Tabla 7.3 y, si corresponde,
+los pesos por observación). Cambios sustanciales en coeficientes o en su significancia, frente a OLS, ameritan diagnosticar
+casos influyentes y revisar la especificación.
+
+**Sobre bootstrap.** El bootstrap (Tabla 7.4) brinda una validación empírica de la variabilidad de los parámetros.
+Considere comparar los percentiles 2.5%/97.5% de bootstrap con los IC teóricos; discrepancias marcadas sugieren
+sensibilidad a supuestos o a la muestra.
 
 ## Takeaways
-- Los estimadores robustos reducen la sensibilidad a outliers e incumplimientos de supuestos.
-- El bootstrap permite estimar la variabilidad sin suposiciones paramétricas fuertes.
-- Comparar OLS, HC3 y Bootstrap prioriza inferencias estables cuando hay heterocedasticidad.
+
+1. **Inferencia robusta:** En presencia de heterocedasticidad, utilice **HC3** para SE e IC; valide conclusiones frente a OLS.
+2. **Diagnóstico de outliers:** Si RLM re-pondera fuertemente algunos casos, investigue esas observaciones (posibles errores o segmentos distintos).
+3. **Validación por remuestreo:** Use **bootstrap** para verificar estabilidad de coeficientes y anchos de IC.
+4. **Rutas deterministas:** Los datos se leen desde `DATA_PATH` y los resultados de bootstrap se guardan en `BOOTSTRAP_OUT` (book/data/).
