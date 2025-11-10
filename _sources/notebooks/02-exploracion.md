@@ -11,10 +11,9 @@ kernelspec: {name: python3, display_name: Python 3}
 
 
 ```{code-cell} ipython3
-# Ruta fija del CSV (compilas desde 'book/')
 from pathlib import Path
-DATA_PATH = Path("data/ames_housing.csv")
-assert DATA_PATH.is_file(), "No se encontró 'book/data/ames_housing.csv'"
+DATA_PATH = Path("../data/ames_housing.csv")  # relativo a book/notebooks/
+assert DATA_PATH.is_file(), "No se encontró '../data/ames_housing.csv'"
 print("Usando CSV:", DATA_PATH.resolve())
 ```
 ```{code-cell} ipython3
