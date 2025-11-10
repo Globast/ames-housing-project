@@ -27,14 +27,9 @@ parse:
 
 sphinx:
   config:
-    numfig: true
-    mathjax_config:
-      TeX:
-        equationNumbers:
-          autoNumber: "all"
-
-sphinx:
-  config:
+    numfig: true                  # numera Figuras/Tablas (si tienen caption)
     mathjax3_config:
       tex:
-        inlineMath: [["$", "$"], ["\\(", "\\)"]]
+        tags: 'all'               # numera TODAS las ecuaciones (no solo las AMS)
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+
