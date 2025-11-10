@@ -10,6 +10,5 @@ chapters:
   - file: notebooks/06-diagnostics
   - file: notebooks/07-robust-methods
   - file: notebooks/08-validation
-  - file: notebooks/09-monte-carlo
-  - file: notebooks/10-interpretation
-  - file: notebooks/11-conclusions
+  - file: notebooks/09-interpretation
+  - file: notebooks/10-conclusions

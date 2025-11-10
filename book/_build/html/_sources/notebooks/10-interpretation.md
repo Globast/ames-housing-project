@@ -1,1 +1,0 @@
-# Capitulo 10. Interpretacion
