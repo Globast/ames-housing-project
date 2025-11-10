@@ -50,7 +50,7 @@ coef_df
 
 [31m---------------------------------------------------------------------------[39m
 [31mNameError[39m                                 Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[7][39m[32m, line 17[39m
+[36mCell[39m[36m [39m[32mIn[9][39m[32m, line 17[39m
 [32m     13[39m ic_hc3 = resultados_HC3.conf_int()[:,[32m1[39m] - resultados_HC3.conf_int()[:,[32m0[39m]
 [32m     15[39m ic_boot = bootstrap_df[[33m'[39m[33mIC_97.5[39m[33m%[39m[33m'[39m] - bootstrap_df[[33m'[39m[33mIC_2.5[39m[33m%[39m[33m'[39m]
 [32m---> [39m[32m17[39m coef_df = [43mcomparative_df[49m[[[33m'[39m[33mCoef_OLS[39m[33m'[39m, [33m'[39m[33mCoef_Bootstrap[39m[33m'[39m]]
