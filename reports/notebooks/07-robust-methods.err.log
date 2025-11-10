@@ -25,108 +25,34 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-import pandas as pd
-import numpy as np
-
-# 0) Carga bootstrap_df si no existe (usando la ruta canónica BOOT_CSV_PATH)
-try:
-    bootstrap_df  # noqa: F821
-except NameError:
-    try:
-        bootstrap_df = pd.read_csv(BOOT_CSV_PATH)
-        print("Cargado bootstrap_df desde:", BOOT_CSV_PATH)
-    except Exception as e:
-        print("Aviso: no se pudo cargar bootstrap_df automáticamente:", e)
-
-# 1) OLS (base)
-coef_ols = modelo_base.params                    # pd.Series con índice = nombres de coeficientes
-se_ols   = modelo_base.bse                       # pd.Series
-ci_ols   = modelo_base.conf_int()                # pd.DataFrame [lower, upper]
-ic_ols_width = ci_ols.iloc[:, 1] - ci_ols.iloc[:, 0]
-if not isinstance(ic_ols_width, pd.Series):
-    ic_ols_width = pd.Series(ic_ols_width, index=coef_ols.index)
-
-# 2) HC3 (robusta)
-# En algunos entornos, bse/conf_int del objeto robusto devuelven arrays → conviértelos y ALÍNEALOS
-se_hc3_raw = getattr(resultados_HC3, "bse", None)
-if isinstance(se_hc3_raw, pd.Series):
-    se_hc3 = se_hc3_raw
-else:
-    se_hc3 = pd.Series(np.asarray(se_hc3_raw), index=coef_ols.index)
-
-ci_hc3_raw = resultados_HC3.conf_int()
-if isinstance(ci_hc3_raw, pd.DataFrame):
-    ic_hc3_width = ci_hc3_raw.iloc[:, 1] - ci_hc3_raw.iloc[:, 0]
-    if not isinstance(ic_hc3_width, pd.Series):
-        ic_hc3_width = pd.Series(ic_hc3_width, index=coef_ols.index)
-else:
-    arr = np.asarray(ci_hc3_raw)  # shape (p,2)
-    ic_hc3_width = pd.Series(arr[:, 1] - arr[:, 0], index=coef_ols.index)
-
-# 3) Bootstrap
-# Normaliza bootstrap_df para que su índice sean los nombres de coeficientes y haya columnas esperadas
-if isinstance(bootstrap_df, pd.DataFrame):
-    # Intenta detectar columna de nombres
-    name_cols = [c for c in bootstrap_df.columns if c.lower() in ("term", "variable", "coef_name", "feature")]
-    if name_cols:
-        bootstrap_df = bootstrap_df.set_index(name_cols[0])
-    elif len(bootstrap_df) == len(coef_ols) and bootstrap_df.index.dtype == "int64":
-        # Si el tamaño coincide y el índice es numérico, usa el índice de coef_ols
-        bootstrap_df.index = coef_ols.index
-
-    # Columnas esperadas (ajusta aquí si en tu CSV tienen otros nombres)
-    col_mean = "Coef_mean"
-    col_se   = "SE_bootstrap"
-    col_l    = "IC_2.5%"
-    col_u    = "IC_97.5%"
-
-    # Series desde bootstrap con reindex para alinear
-    coef_boot_mean = bootstrap_df[col_mean].reindex(coef_ols.index) if col_mean in bootstrap_df.columns else pd.Series(dtype=float, index=coef_ols.index)
-    se_boot        = bootstrap_df[col_se].reindex(coef_ols.index)   if col_se   in bootstrap_df.columns else pd.Series(dtype=float, index=coef_ols.index)
-
-    if {col_l, col_u}.issubset(bootstrap_df.columns):
-        ic_boot_width = (bootstrap_df[col_u] - bootstrap_df[col_l]).reindex(coef_ols.index)
-    else:
-        ic_boot_width = pd.Series(dtype=float, index=coef_ols.index)
-else:
-    # Fallback si bootstrap_df no es DataFrame
-    coef_boot_mean = pd.Series(dtype=float, index=coef_ols.index)
-    se_boot        = pd.Series(dtype=float, index=coef_ols.index)
-    ic_boot_width  = pd.Series(dtype=float, index=coef_ols.index)
-
-# 4) DataFrame comparativo (todo alineado por índice)
-comparative_df = pd.DataFrame({
-    "Coef_OLS": coef_ols,
-    "Coef_Bootstrap": coef_boot_mean,
-    "SE_OLS": se_ols,
-    "SE_HC3": se_hc3.reindex(coef_ols.index) if isinstance(se_hc3, pd.Series) else pd.Series(se_hc3, index=coef_ols.index),
-    "SE_Bootstrap": se_boot,
-    "IC_width_OLS": ic_ols_width.reindex(coef_ols.index) if isinstance(ic_ols_width, pd.Series) else pd.Series(ic_ols_width, index=coef_ols.index),
-    "IC_width_HC3": ic_hc3_width.reindex(coef_ols.index) if isinstance(ic_hc3_width, pd.Series) else pd.Series(ic_hc3_width, index=coef_ols.index),
-    "IC_width_Bootstrap": ic_boot_width,
+rlm_df = pd.DataFrame({
+    'OLS': modelo_base.params,
+    'RLM_Huber': rlm_huber.params,
+    'RLM_Tukey': rlm_tukey.params
 })
 
-# 5) Tablas finales
-coef_df = comparative_df[["Coef_OLS", "Coef_Bootstrap"]]
-se_df   = comparative_df[["SE_OLS", "SE_HC3", "SE_Bootstrap"]]
-ic_df   = comparative_df[["IC_width_OLS", "IC_width_HC3", "IC_width_Bootstrap"]]
+weights_df = pd.DataFrame({
+    'Huber_weights': rlm_huber.weights,
+    'Tukey_weights': rlm_tukey.weights
+})
 
-# Vista
-coef_df
+display(rlm_df)
 ------------------
 
------ stdout -----
-Aviso: no se pudo cargar bootstrap_df automáticamente: name 'BOOT_CSV_PATH' is not defined
-------------------
 
 [31m---------------------------------------------------------------------------[39m
 [31mNameError[39m                                 Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[2][39m[32m, line 15[39m
-[32m     12[39m         [38;5;28mprint[39m([33m"[39m[33mAviso: no se pudo cargar bootstrap_df automáticamente:[39m[33m"[39m, e)
-[32m     14[39m [38;5;66;03m# 1) OLS (base)[39;00m
-[32m---> [39m[32m15[39m coef_ols = [43mmodelo_base[49m.params                    [38;5;66;03m# pd.Series con índice = nombres de coeficientes[39;00m
-[32m     16[39m se_ols   = modelo_base.bse                       [38;5;66;03m# pd.Series[39;00m
-[32m     17[39m ci_ols   = modelo_base.conf_int()                [38;5;66;03m# pd.DataFrame [lower, upper][39;00m
+[36mCell[39m[36m [39m[32mIn[2][39m[32m, line 2[39m
+[32m      1[39m rlm_df = pd.DataFrame({
+[32m----> [39m[32m2[39m     [33m'[39m[33mOLS[39m[33m'[39m: [43mmodelo_base[49m.params,
+[32m      3[39m     [33m'[39m[33mRLM_Huber[39m[33m'[39m: rlm_huber.params,
+[32m      4[39m     [33m'[39m[33mRLM_Tukey[39m[33m'[39m: rlm_tukey.params
+[32m      5[39m })
+[32m      7[39m weights_df = pd.DataFrame({
+[32m      8[39m     [33m'[39m[33mHuber_weights[39m[33m'[39m: rlm_huber.weights,
+[32m      9[39m     [33m'[39m[33mTukey_weights[39m[33m'[39m: rlm_tukey.weights
+[32m     10[39m })
+[32m     12[39m display(rlm_df)
 
 [31mNameError[39m: name 'modelo_base' is not defined
 

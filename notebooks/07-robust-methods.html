@@ -339,7 +339,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-hc3-vs-bootstrap">7.4 OLS vs. HC3 vs. Bootstrap</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">7.4 OLS vs. HC3 vs. Bootstrap</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
             </nav>
@@ -428,9 +427,57 @@ document.write(`
 \end{split}\]</div>
 <p><strong>Ecuación 7.2.2.</strong> Función de pérdida Tukey.</p>
 <p>Limita el impacto de observaciones lejanas sin eliminarlas completamente.</p>
+<p>import statsmodels.api as sm
+import pandas as pd</p>
+<p>rlm_huber = sm.RLM(y, X, M=sm.robust.norms.HuberT()).fit()       # Función de pérdida Huber
+rlm_tukey = sm.RLM(y, X, M=sm.robust.norms.TukeyBiweight()).fit() # Función de pérdida Tukey Biweight</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rlm_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;OLS&#39;</span><span class="p">:</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+    <span class="s1">&#39;RLM_Huber&#39;</span><span class="p">:</span> <span class="n">rlm_huber</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+    <span class="s1">&#39;RLM_Tukey&#39;</span><span class="p">:</span> <span class="n">rlm_tukey</span><span class="o">.</span><span class="n">params</span>
+<span class="p">})</span>
+
+<span class="n">weights_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;Huber_weights&#39;</span><span class="p">:</span> <span class="n">rlm_huber</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span>
+    <span class="s1">&#39;Tukey_weights&#39;</span><span class="p">:</span> <span class="n">rlm_tukey</span><span class="o">.</span><span class="n">weights</span>
+<span class="p">})</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">rlm_df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">rlm_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="ne">----&gt; </span><span class="mi">2</span>     <span class="s1">&#39;OLS&#39;</span><span class="p">:</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="s1">&#39;RLM_Huber&#39;</span><span class="p">:</span> <span class="n">rlm_huber</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="s1">&#39;RLM_Tukey&#39;</span><span class="p">:</span> <span class="n">rlm_tukey</span><span class="o">.</span><span class="n">params</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="p">})</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="n">weights_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="s1">&#39;Huber_weights&#39;</span><span class="p">:</span> <span class="n">rlm_huber</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span>     <span class="s1">&#39;Tukey_weights&#39;</span><span class="p">:</span> <span class="n">rlm_tukey</span><span class="o">.</span><span class="n">weights</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="p">})</span>
+<span class="g g-Whitespace">     </span><span class="mi">12</span> <span class="n">display</span><span class="p">(</span><span class="n">rlm_df</span><span class="p">)</span>
+
+<span class="ne">NameError</span>: name &#39;modelo_base&#39; is not defined
+</pre></div>
+</div>
+</div>
+</div>
 <p><strong>Tabla 7.2.1.</strong> Coeficientes OLS vs. RLM. <em>Valores en escala logarítmica.</em></p>
 <p>Se observa que el intercepto (<code class="docutils literal notranslate"><span class="pre">const</span></code>) aumenta al usar modelos robustos, lo que refleja que los outliers tienden a sesgar hacia abajo la estimación en OLS. Por su parte, variables como <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code> y <code class="docutils literal notranslate"><span class="pre">Fireplaces</span></code> muestran coeficientes algo menores en modelos robustos, indicando que su efecto estaba ligeramente sobreestimado por la presencia de outliers.</p>
 <p>Para la mayoría de las demás variables (<code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>, <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code>, <code class="docutils literal notranslate"><span class="pre">Total</span> <span class="pre">Bsmt</span> <span class="pre">SF</span></code>, <code class="docutils literal notranslate"><span class="pre">Year</span> <span class="pre">Built</span></code>), las diferencias son pequeñas, lo que sugiere que los outliers no tienen un impacto fuerte en estas estimaciones.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">weights_df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <p><strong>Tabla 7.2.2.</strong> Pesos outliers Huber vs. Tukey.</p>
 <p>La mayoría de los pesos son cercanos a 1 en ambos modelos robustos, lo que indica que la mayoría de las observaciones se ajusta bien al modelo y tiene plena influencia en la estimación de los coeficientes.</p>
 <p>Sin embargo, algunas observaciones presentan pesos menores, como la última fila, con Huber = 0.69 y Tukey = 0.68, lo que refleja que su residuo es relativamente grande y su efecto en el ajuste se atenúa.</p>
@@ -439,30 +486,50 @@ document.write(`
 <section id="bootstrap">
 <h3>7.3 Bootstrap<a class="headerlink" href="#bootstrap" title="Link to this heading">#</a></h3>
 <p>El <strong>bootstrap</strong> es un método de remuestreo que permite estimar la variabilidad de los coeficientes de un modelo sin asumir una distribución específica de los errores. Consiste en generar múltiples muestras con reemplazo a partir de los datos originales y recalcular los estimadores para cada réplica, obteniendo así una <strong>distribución empírica</strong> de los coeficientes, a partir de la cual se calculan el error estándar y los intervalos de confianza.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">resample</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">B</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">coef_boot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">B</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="p">):</span>
+    <span class="n">X_resample</span><span class="p">,</span> <span class="n">y_resample</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">model_bs</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_resample</span><span class="p">,</span> <span class="n">X_resample</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">coef_boot</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">model_bs</span><span class="o">.</span><span class="n">params</span>
+
+<span class="n">coef_mean</span> <span class="o">=</span> <span class="n">coef_boot</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>        
+<span class="n">coef_se</span> <span class="o">=</span> <span class="n">coef_boot</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>                     
+<span class="n">ic_lower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">coef_boot</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>       
+<span class="n">ic_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">coef_boot</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  
+
+<span class="n">bootstrap_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;Coef_mean&#39;</span><span class="p">:</span> <span class="n">coef_mean</span><span class="p">,</span>
+    <span class="s1">&#39;SE_bootstrap&#39;</span><span class="p">:</span> <span class="n">coef_se</span><span class="p">,</span>
+    <span class="s1">&#39;IC_2.5%&#39;</span><span class="p">:</span> <span class="n">ic_lower</span><span class="p">,</span>
+    <span class="s1">&#39;IC_97.5%&#39;</span><span class="p">:</span> <span class="n">ic_upper</span>
+<span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="n">bootstrap_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;bootstrap_df.csv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">bootstrap_df</span>
+</pre></div>
+</div>
+</div>
+</div>
 <p><strong>Tabla 7.3.1.</strong> Resumen Bootstrap.</p>
 <p>Se observa que variables como <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>, <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code> y <code class="docutils literal notranslate"><span class="pre">Year</span> <span class="pre">Built</span></code> tienen coeficientes claramente distintos de cero, con intervalos de confianza estrechos y consistentes, lo que sugiere estimaciones robustas y estables. Por el contrario, <code class="docutils literal notranslate"><span class="pre">1st</span> <span class="pre">Flr</span> <span class="pre">SF</span></code> y <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> presentan intervalos que incluyen el cero, indicando que su efecto sobre la variable respuesta podría no ser significativo.</p>
 </section>
 <section id="ols-vs-hc3-vs-bootstrap">
 <h3>7.4 OLS vs. HC3 vs. Bootstrap<a class="headerlink" href="#ols-vs-hc3-vs-bootstrap" title="Link to this heading">#</a></h3>
-<p><strong>Tabla 7.4.1.</strong> Coeficientes OLS vs. Bootstrap. <em>Valores en escala logarítmica.</em></p>
-<p>Se observa que la estimación de los parámetros es muy estable frente al remuestreo, lo que sugiere que la muestra utilizada es suficientemente representativa y que los coeficientes no dependen excesivamente de observaciones individuales.</p>
-<p>En particular, las variables como <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code> y <code class="docutils literal notranslate"><span class="pre">Fireplaces</span></code> muestran coeficientes positivos consistentes en ambos métodos, confirmando su relación directa con el precio de la vivienda. Por su parte, <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> mantiene un coeficiente ligeramente negativo, indicando que, controlando por las demás variables, su efecto es mínimo.</p>
-<p><strong>Tabla 7.4.2.</strong> Errores estándar OLS vs. HC3 vs. Bootstrap.<a id="tabla-742-se-ols-hc3-boot"></a></p>
-<p>Los errores estándar de OLS son generalmente menores que los obtenidos mediante HC3 o bootstrap, lo que sugiere que este modelo inicial podría subestimar la incertidumbre cuando hay heterocedasticidad presente o dependiendo de la muestra seleccionada.</p>
-<p>El método HC3, diseñado para ser más conservador frente a heterocedasticidad y leverage points, produce errores estándar ligeramente mayores que OLS, especialmente para variables como <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code> y <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code>. El bootstrap refleja un patrón muy similar al de HC3, confirmando la estabilidad de las estimaciones.</p>
-<p>Es notable que las variables con errores estándar relativamente bajos (<code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>, <code class="docutils literal notranslate"><span class="pre">Lot</span> <span class="pre">Area</span></code>) están estimadas con gran precisión, mientras que aquellas con errores más altos (<code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code>, <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code>) presentan mayor incertidumbre en la estimación de su efecto sobre el precio de la vivienda.</p>
-<p><strong>Tabla 7.4.3.</strong> Amplitud intervalos de confianza OLS vs. HC3 vs. Bootstrap.</p>
-<p>Alineados con los errores estándar (<a class="reference internal" href="#tabla-742-se-ols-hc3-boot"><span class="xref myst">Tabla 7.4.2</span></a>), los intervalos calculados con OLS son consistentemente más estrechos que los obtenidos con HC3 o bootstrap, llegando a la misma conclusión de que el OLS inicial es menos robusto.</p>
-</section>
-</section>
-<section id="id1">
-<h2>7.4 OLS vs. HC3 vs. Bootstrap<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="c1"># 0) Carga bootstrap_df si no existe (usando la ruta canónica BOOT_CSV_PATH)</span>
+<span class="c1"># Intentar cargar bootstrap_df si no está en memoria (usa la ruta canónica creada en 7.4)</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">bootstrap_df</span>  <span class="c1"># noqa: F821</span>
 <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
@@ -472,16 +539,16 @@ document.write(`
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aviso: no se pudo cargar bootstrap_df automáticamente:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 
-<span class="c1"># 1) OLS (base)</span>
-<span class="n">coef_ols</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span>                    <span class="c1"># pd.Series con índice = nombres de coeficientes</span>
-<span class="n">se_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">bse</span>                       <span class="c1"># pd.Series</span>
-<span class="n">ci_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>                <span class="c1"># pd.DataFrame [lower, upper]</span>
+<span class="c1"># --- OLS (base) ---</span>
+<span class="n">coef_ols</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span>                      <span class="c1"># Serie (índice = nombres de coeficientes)</span>
+<span class="n">se_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">bse</span>                         <span class="c1"># Serie</span>
+<span class="n">ci_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>                  <span class="c1"># DataFrame [lower, upper]</span>
 <span class="n">ic_ols_width</span> <span class="o">=</span> <span class="n">ci_ols</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ci_ols</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ic_ols_width</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
     <span class="n">ic_ols_width</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ic_ols_width</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 
-<span class="c1"># 2) HC3 (robusta)</span>
-<span class="c1"># En algunos entornos, bse/conf_int del objeto robusto devuelven arrays → conviértelos y ALÍNEALOS</span>
+<span class="c1"># --- HC3 (robusta) ---</span>
+<span class="c1"># Algunos entornos devuelven arrays; conviértelos a Series/DataFrame y ALÍNEALOS al índice de coef_ols</span>
 <span class="n">se_hc3_raw</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">resultados_HC3</span><span class="p">,</span> <span class="s2">&quot;bse&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">se_hc3_raw</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
     <span class="n">se_hc3</span> <span class="o">=</span> <span class="n">se_hc3_raw</span>
@@ -494,41 +561,35 @@ document.write(`
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ic_hc3_width</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
         <span class="n">ic_hc3_width</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ic_hc3_width</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ci_hc3_raw</span><span class="p">)</span>  <span class="c1"># shape (p,2)</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ci_hc3_raw</span><span class="p">)</span>  <span class="c1"># shape (p, 2)</span>
     <span class="n">ic_hc3_width</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 
-<span class="c1"># 3) Bootstrap</span>
-<span class="c1"># Normaliza bootstrap_df para que su índice sean los nombres de coeficientes y haya columnas esperadas</span>
+<span class="c1"># --- Bootstrap ---</span>
+<span class="c1"># Normaliza bootstrap_df: deja el índice con los nombres de coeficientes y usa columnas esperadas</span>
 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bootstrap_df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-    <span class="c1"># Intenta detectar columna de nombres</span>
     <span class="n">name_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;term&quot;</span><span class="p">,</span> <span class="s2">&quot;variable&quot;</span><span class="p">,</span> <span class="s2">&quot;coef_name&quot;</span><span class="p">,</span> <span class="s2">&quot;feature&quot;</span><span class="p">)]</span>
     <span class="k">if</span> <span class="n">name_cols</span><span class="p">:</span>
         <span class="n">bootstrap_df</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">name_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">bootstrap_df</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">coef_ols</span><span class="p">)</span> <span class="ow">and</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;int64&quot;</span><span class="p">:</span>
-        <span class="c1"># Si el tamaño coincide y el índice es numérico, usa el índice de coef_ols</span>
-        <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span>  <span class="c1"># alinea si coincide el tamaño</span>
 
-    <span class="c1"># Columnas esperadas (ajusta aquí si en tu CSV tienen otros nombres)</span>
-    <span class="n">col_mean</span> <span class="o">=</span> <span class="s2">&quot;Coef_mean&quot;</span>
+       <span class="n">col_mean</span> <span class="o">=</span> <span class="s2">&quot;Coef_mean&quot;</span>
     <span class="n">col_se</span>   <span class="o">=</span> <span class="s2">&quot;SE_bootstrap&quot;</span>
     <span class="n">col_l</span>    <span class="o">=</span> <span class="s2">&quot;IC_2.5%&quot;</span>
     <span class="n">col_u</span>    <span class="o">=</span> <span class="s2">&quot;IC_97.5%&quot;</span>
 
-    <span class="c1"># Series desde bootstrap con reindex para alinear</span>
     <span class="n">coef_boot_mean</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="n">col_mean</span><span class="p">]</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">if</span> <span class="n">col_mean</span> <span class="ow">in</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
     <span class="n">se_boot</span>        <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="n">col_se</span><span class="p">]</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>   <span class="k">if</span> <span class="n">col_se</span>   <span class="ow">in</span> <span class="n">bootstrap_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-
     <span class="k">if</span> <span class="p">{</span><span class="n">col_l</span><span class="p">,</span> <span class="n">col_u</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">bootstrap_df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
         <span class="n">ic_boot_width</span> <span class="o">=</span> <span class="p">(</span><span class="n">bootstrap_df</span><span class="p">[</span><span class="n">col_u</span><span class="p">]</span> <span class="o">-</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="n">col_l</span><span class="p">])</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ic_boot_width</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="c1"># Fallback si bootstrap_df no es DataFrame</span>
     <span class="n">coef_boot_mean</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
     <span class="n">se_boot</span>        <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
     <span class="n">ic_boot_width</span>  <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">coef_ols</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 
-<span class="c1"># 4) DataFrame comparativo (todo alineado por índice)</span>
+<span class="c1"># --- DataFrame comparativo y vistas ---</span>
 <span class="n">comparative_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
     <span class="s2">&quot;Coef_OLS&quot;</span><span class="p">:</span> <span class="n">coef_ols</span><span class="p">,</span>
     <span class="s2">&quot;Coef_Bootstrap&quot;</span><span class="p">:</span> <span class="n">coef_boot_mean</span><span class="p">,</span>
@@ -540,34 +601,18 @@ document.write(`
     <span class="s2">&quot;IC_width_Bootstrap&quot;</span><span class="p">:</span> <span class="n">ic_boot_width</span><span class="p">,</span>
 <span class="p">})</span>
 
-<span class="c1"># 5) Tablas finales</span>
 <span class="n">coef_df</span> <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s2">&quot;Coef_OLS&quot;</span><span class="p">,</span> <span class="s2">&quot;Coef_Bootstrap&quot;</span><span class="p">]]</span>
 <span class="n">se_df</span>   <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s2">&quot;SE_OLS&quot;</span><span class="p">,</span> <span class="s2">&quot;SE_HC3&quot;</span><span class="p">,</span> <span class="s2">&quot;SE_Bootstrap&quot;</span><span class="p">]]</span>
 <span class="n">ic_df</span>   <span class="o">=</span> <span class="n">comparative_df</span><span class="p">[[</span><span class="s2">&quot;IC_width_OLS&quot;</span><span class="p">,</span> <span class="s2">&quot;IC_width_HC3&quot;</span><span class="p">,</span> <span class="s2">&quot;IC_width_Bootstrap&quot;</span><span class="p">]]</span>
 
-<span class="c1"># Vista</span>
 <span class="n">coef_df</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Aviso: no se pudo cargar bootstrap_df automáticamente: name &#39;BOOT_CSV_PATH&#39; is not defined
-</pre></div>
 </div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">15</span>
-<span class="g g-Whitespace">     </span><span class="mi">12</span>         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aviso: no se pudo cargar bootstrap_df automáticamente:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">14</span> <span class="c1"># 1) OLS (base)</span>
-<span class="ne">---&gt; </span><span class="mi">15</span> <span class="n">coef_ols</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span>                    <span class="c1"># pd.Series con índice = nombres de coeficientes</span>
-<span class="g g-Whitespace">     </span><span class="mi">16</span> <span class="n">se_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">bse</span>                       <span class="c1"># pd.Series</span>
-<span class="g g-Whitespace">     </span><span class="mi">17</span> <span class="n">ci_ols</span>   <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span>                <span class="c1"># pd.DataFrame [lower, upper]</span>
-
-<span class="ne">NameError</span>: name &#39;modelo_base&#39; is not defined
-</pre></div>
-</div>
-</div>
-</div>
+<p><strong>Tabla 7.4.1.</strong> Coeficientes OLS vs. Bootstrap. <em>Valores en escala logarítmica.</em></p>
+<p>Se observa que la estimación de los parámetros es muy estable frente al remuestreo, lo que sugiere que la muestra utilizada es suficientemente representativa y que los coeficientes no dependen excesivamente de observaciones individuales.</p>
+<p>En particular, las variables como <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code> y <code class="docutils literal notranslate"><span class="pre">Fireplaces</span></code> muestran coeficientes positivos consistentes en ambos métodos, confirmando su relación directa con el precio de la vivienda. Por su parte, <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> mantiene un coeficiente ligeramente negativo, indicando que, controlando por las demás variables, su efecto es mínimo.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">se_df</span>
@@ -575,6 +620,10 @@ document.write(`
 </div>
 </div>
 </div>
+<p><strong>Tabla 7.4.2.</strong> Errores estándar OLS vs. HC3 vs. Bootstrap.<a id="tabla-742-se-ols-hc3-boot"></a></p>
+<p>Los errores estándar de OLS son generalmente menores que los obtenidos mediante HC3 o bootstrap, lo que sugiere que este modelo inicial podría subestimar la incertidumbre cuando hay heterocedasticidad presente o dependiendo de la muestra seleccionada.</p>
+<p>El método HC3, diseñado para ser más conservador frente a heterocedasticidad y leverage points, produce errores estándar ligeramente mayores que OLS, especialmente para variables como <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code> y <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code>. El bootstrap refleja un patrón muy similar al de HC3, confirmando la estabilidad de las estimaciones.</p>
+<p>Es notable que las variables con errores estándar relativamente bajos (<code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>, <code class="docutils literal notranslate"><span class="pre">Lot</span> <span class="pre">Area</span></code>) están estimadas con gran precisión, mientras que aquellas con errores más altos (<code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code>, <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code>) presentan mayor incertidumbre en la estimación de su efecto sobre el precio de la vivienda.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ic_df</span>
@@ -582,6 +631,9 @@ document.write(`
 </div>
 </div>
 </div>
+<p><strong>Tabla 7.4.3.</strong> Amplitud intervalos de confianza OLS vs. HC3 vs. Bootstrap.</p>
+<p>Alineados con los errores estándar (<a class="reference internal" href="#tabla-742-se-ols-hc3-boot"><span class="xref myst">Tabla 7.4.2</span></a>), los intervalos calculados con OLS son consistentemente más estrechos que los obtenidos con HC3 o bootstrap, llegando a la misma conclusión de que el OLS inicial es menos robusto.</p>
+</section>
 </section>
 <section id="takeaways">
 <h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
@@ -664,7 +716,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-hc3-vs-bootstrap">7.4 OLS vs. HC3 vs. Bootstrap</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">7.4 OLS vs. HC3 vs. Bootstrap</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
   </nav></div>
