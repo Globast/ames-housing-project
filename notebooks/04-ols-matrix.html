@@ -437,23 +437,93 @@ S(\beta) = (Y - X\beta)^\top (Y - X\beta)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="n">vars_modelo</span> <span class="o">=</span> <span class="p">[</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span> <span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span> <span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span>     <span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span> <span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">10</span>     <span class="s1">&#39;Year Built&#39;</span><span class="p">,</span> <span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span> <span class="s1">&#39;Lot Area&#39;</span>
-<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="p">]</span>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;statsmodels&#39;
-</pre></div>
-</div>
-</div>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Variable</th>
+      <th>Formulación matricial</th>
+      <th>Statsmodels</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Intercept</td>
+      <td>912601.01</td>
+      <td>912601.01</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Overall Qual</td>
+      <td>17686.26</td>
+      <td>17686.26</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Gr Liv Area</td>
+      <td>41.72</td>
+      <td>41.72</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Garage Cars</td>
+      <td>8531.03</td>
+      <td>8531.03</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Total Bsmt SF</td>
+      <td>26.75</td>
+      <td>26.75</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1st Flr SF</td>
+      <td>0.44</td>
+      <td>0.44</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Full Bath</td>
+      <td>-2348.34</td>
+      <td>-2348.34</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Year Built</td>
+      <td>480.51</td>
+      <td>480.51</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Fireplaces</td>
+      <td>8028.88</td>
+      <td>8028.88</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Lot Area</td>
+      <td>1.71</td>
+      <td>1.71</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p><strong>Tabla 4.1.1.</strong> Formulación matricial vs. Statsmodels.</p>
 <p>Se construye un modelo de regresión lineal para predecir <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> a partir de nueve variables predictoras.</p>

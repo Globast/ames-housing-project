@@ -477,20 +477,7 @@ SE(\hat{\beta}_j) = \sqrt{[\text{Var}(\hat{\beta})]_{jj}}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="n">vars_modelo</span> <span class="o">=</span> <span class="p">[</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span> <span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span> <span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span> <span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span>     <span class="s1">&#39;Year Built&#39;</span><span class="p">,</span> <span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span> <span class="s1">&#39;Lot Area&#39;</span>
-<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="p">]</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;statsmodels&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2768
 </pre></div>
 </div>
 </div>
@@ -549,6 +536,127 @@ p_j = 2 \cdot P(T &gt; |t_j|)
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>coef</th>
+      <th>std err</th>
+      <th>t</th>
+      <th>p-value</th>
+      <th>[0.025</th>
+      <th>0.975]</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>const</th>
+      <td>912601.01</td>
+      <td>0.25</td>
+      <td>20.70</td>
+      <td>0.00</td>
+      <td>4.75</td>
+      <td>5.74</td>
+    </tr>
+    <tr>
+      <th>Overall Qual</th>
+      <td>17686.26</td>
+      <td>0.00</td>
+      <td>30.50</td>
+      <td>0.00</td>
+      <td>0.10</td>
+      <td>0.11</td>
+    </tr>
+    <tr>
+      <th>Gr Liv Area</th>
+      <td>41.72</td>
+      <td>0.00</td>
+      <td>23.97</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Garage Cars</th>
+      <td>8531.03</td>
+      <td>0.01</td>
+      <td>9.25</td>
+      <td>0.00</td>
+      <td>0.04</td>
+      <td>0.06</td>
+    </tr>
+    <tr>
+      <th>Total Bsmt SF</th>
+      <td>26.75</td>
+      <td>0.00</td>
+      <td>12.30</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>1st Flr SF</th>
+      <td>0.44</td>
+      <td>0.00</td>
+      <td>0.18</td>
+      <td>0.86</td>
+      <td>-0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Full Bath</th>
+      <td>-2348.34</td>
+      <td>0.01</td>
+      <td>-1.76</td>
+      <td>0.08</td>
+      <td>-0.03</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Year Built</th>
+      <td>480.51</td>
+      <td>0.00</td>
+      <td>20.69</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Fireplaces</th>
+      <td>8028.88</td>
+      <td>0.01</td>
+      <td>8.75</td>
+      <td>0.00</td>
+      <td>0.04</td>
+      <td>0.06</td>
+    </tr>
+    <tr>
+      <th>Lot Area</th>
+      <td>1.71</td>
+      <td>0.00</td>
+      <td>11.83</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p><strong>Tabla 5.3.1.</strong> Inferencia estadística del modelo 1.</p>
 <p>Coeficientes con <strong>errores estándar</strong> muy pequeños, como los de <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code> o <code class="docutils literal notranslate"><span class="pre">Year</span> <span class="pre">Built</span></code>, indican que estas estimaciones son bastante precisas. Por el contrario, un coeficiente con error estándar relativamente más grande, como <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> o <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code>, refleja mayor incertidumbre en la estimación de su efecto sobre el precio de la vivienda.</p>
