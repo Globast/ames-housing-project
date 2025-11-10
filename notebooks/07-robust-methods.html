@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Capítulo 7 — Remedios y métodos robustos &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>12. Capítulo 7 — Remedios y métodos robustos &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -62,8 +62,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/07-robust-methods';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Capítulo 8 — Validación y selección de modelos" href="08-validation.html" />
-    <link rel="prev" title="Capítulo 6: Diagnóstico de supuestos" href="06-diagnostics.html" />
+    <link rel="next" title="13. Capítulo 8 — Validación y selección de modelos" href="08-validation.html" />
+    <link rel="prev" title="11. Capítulo 6: Diagnóstico de supuestos" href="06-diagnostics.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -168,21 +168,21 @@
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="00-instructions.html">Capítulo 0 · Instrucciones de reproducción</a></li>
+<li class="toctree-l1"><a class="reference internal" href="00-instructions.html">1. Capítulo 0 · Instrucciones de reproducción</a></li>
 
 
 
 
-<li class="toctree-l1"><a class="reference internal" href="01-introduction.html">Capítulo 1: Introduccióny pregunta de investigación</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">Capítulo 2: Descripción y limpieza del dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03-eda.html">Capítulo 3: Análisis exploratorio (EDA)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 7 — Remedios y métodos robustos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capítulo 8 — Validación y selección de modelos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-interpretation.html">Capítulo 9: Interpretación aplicada</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10-conclusions.html">Capítulo 10: Conclusiones y trabajo futuro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-introduction.html">6. Capítulo 1: Introduccióny pregunta de investigación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">7. Capítulo 2: Descripción y limpieza del dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-eda.html">8. Capítulo 3: Análisis exploratorio (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">9. Capítulo 4: Formulación matricial del modelo OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-inference.html">10. Capítulo 5: Inferencia y grados de libertad</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">11. Capítulo 6: Diagnóstico de supuestos</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">12. Capítulo 7 — Remedios y métodos robustos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-validation.html">13. Capítulo 8 — Validación y selección de modelos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-interpretation.html">14. Capítulo 9: Interpretación aplicada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-conclusions.html">15. Capítulo 10: Conclusiones y trabajo futuro</a></li>
 </ul>
 
     </div>
@@ -331,14 +331,14 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-rutas">Configuración de rutas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correcciones-para-heterocedasticidad">7.1 Correcciones para heterocedasticidad</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-robustos-con-funciones-huber-tukey">7.2 Modelos robustos con funciones Huber/Tukey</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap">7.3 Bootstrap</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-hc3-vs-bootstrap">7.4 OLS vs. HC3 vs. Bootstrap</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discusion-y-analisis">Discusión y análisis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">12.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-rutas">12.2. Configuración de rutas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correcciones-para-heterocedasticidad">12.3. 7.1 Correcciones para heterocedasticidad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-robustos-con-funciones-huber-tukey">12.4. 7.2 Modelos robustos con funciones Huber/Tukey</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap">12.5. 7.3 Bootstrap</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-hc3-vs-bootstrap">12.6. 7.4 OLS vs. HC3 vs. Bootstrap</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discusion-y-analisis">12.7. Discusión y análisis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">12.8. Takeaways</a></li>
 </ul>
             </nav>
         </div>
@@ -351,16 +351,16 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-7-remedios-y-metodos-robustos">
-<h1>Capítulo 7 — Remedios y métodos robustos<a class="headerlink" href="#capitulo-7-remedios-y-metodos-robustos" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">12. </span>Capítulo 7 — Remedios y métodos robustos<a class="headerlink" href="#capitulo-7-remedios-y-metodos-robustos" title="Link to this heading">#</a></h1>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.1. </span>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>En este capítulo se ajusta un modelo lineal OLS para <strong>Ames Housing</strong> y se comparan errores estándar y
 ancho de intervalos de confianza bajo OLS, correcciones robustas a la heterocedasticidad (HC0–HC3) y <strong>bootstrap</strong>.
 También se estiman modelos <strong>RLM</strong> (Huber y Tukey) para mitigar la influencia de outliers.
 Presentamos resultados en tablas y los discutimos, incluyendo recomendaciones prácticas.</p>
 </section>
 <section id="configuracion-de-rutas">
-<h2>Configuración de rutas<a class="headerlink" href="#configuracion-de-rutas" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.2. </span>Configuración de rutas<a class="headerlink" href="#configuracion-de-rutas" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -384,7 +384,7 @@ Archivo bootstrap se guardará en: /workspaces/ames-housing-project/book/data/bo
 </div>
 </section>
 <section id="correcciones-para-heterocedasticidad">
-<h2>7.1 Correcciones para heterocedasticidad<a class="headerlink" href="#correcciones-para-heterocedasticidad" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.3. </span>7.1 Correcciones para heterocedasticidad<a class="headerlink" href="#correcciones-para-heterocedasticidad" title="Link to this heading">#</a></h2>
 <p>De acuerdo con el supuesto de homocedasticidad (<a class="reference internal" href="#ecuacion-621-varianza-errores"><span class="xref myst">Ecuación 6.2.1</span></a>), la presencia de heterocedasticidad puede provocar que los errores estándar de los coeficientes estén subestimados, afectando los valores <span class="math notranslate nohighlight">\(t\)</span> y las decisiones de significancia. Para corregir este problema, se utilizan los estimadores de varianza robusta <strong>HC</strong> (Heteroscedasticity-Consistent), que ajustan los errores estándar sin cambiar los coeficientes estimados.</p>
 <ul class="simple">
 <li><p><strong>HC0</strong>: Estimador original de White, básico y consistente frente a heterocedasticidad.</p></li>
@@ -464,15 +464,15 @@ Archivo bootstrap se guardará en: /workspaces/ames-housing-project/book/data/bo
 <div class="cell_output docutils container">
 <div class="output text_html"><style type="text/css">
 </style>
-<table id="T_72a31">
+<table id="T_6c7f5">
   <thead>
     <tr>
       <th class="blank level0" >&nbsp;</th>
-      <th id="T_72a31_level0_col0" class="col_heading level0 col0" >OLS</th>
-      <th id="T_72a31_level0_col1" class="col_heading level0 col1" >HC0</th>
-      <th id="T_72a31_level0_col2" class="col_heading level0 col2" >HC1</th>
-      <th id="T_72a31_level0_col3" class="col_heading level0 col3" >HC2</th>
-      <th id="T_72a31_level0_col4" class="col_heading level0 col4" >HC3</th>
+      <th id="T_6c7f5_level0_col0" class="col_heading level0 col0" >OLS</th>
+      <th id="T_6c7f5_level0_col1" class="col_heading level0 col1" >HC0</th>
+      <th id="T_6c7f5_level0_col2" class="col_heading level0 col2" >HC1</th>
+      <th id="T_6c7f5_level0_col3" class="col_heading level0 col3" >HC2</th>
+      <th id="T_6c7f5_level0_col4" class="col_heading level0 col4" >HC3</th>
     </tr>
     <tr>
       <th class="index_name level0" >Variable</th>
@@ -485,84 +485,84 @@ Archivo bootstrap se guardará en: /workspaces/ames-housing-project/book/data/bo
   </thead>
   <tbody>
     <tr>
-      <th id="T_72a31_level0_row0" class="row_heading level0 row0" >const</th>
-      <td id="T_72a31_row0_col0" class="data row0 col0" >0.253443</td>
-      <td id="T_72a31_row0_col1" class="data row0 col1" >0.289644</td>
-      <td id="T_72a31_row0_col2" class="data row0 col2" >0.290168</td>
-      <td id="T_72a31_row0_col3" class="data row0 col3" >0.290559</td>
-      <td id="T_72a31_row0_col4" class="data row0 col4" >0.291480</td>
+      <th id="T_6c7f5_level0_row0" class="row_heading level0 row0" >const</th>
+      <td id="T_6c7f5_row0_col0" class="data row0 col0" >0.253443</td>
+      <td id="T_6c7f5_row0_col1" class="data row0 col1" >0.289644</td>
+      <td id="T_6c7f5_row0_col2" class="data row0 col2" >0.290168</td>
+      <td id="T_6c7f5_row0_col3" class="data row0 col3" >0.290559</td>
+      <td id="T_6c7f5_row0_col4" class="data row0 col4" >0.291480</td>
     </tr>
     <tr>
-      <th id="T_72a31_level0_row1" class="row_heading level0 row1" >Overall Qual</th>
-      <td id="T_72a31_row1_col0" class="data row1 col0" >0.003334</td>
-      <td id="T_72a31_row1_col1" class="data row1 col1" >0.004443</td>
-      <td id="T_72a31_row1_col2" class="data row1 col2" >0.004451</td>
-      <td id="T_72a31_row1_col3" class="data row1 col3" >0.004459</td>
-      <td id="T_72a31_row1_col4" class="data row1 col4" >0.004474</td>
+      <th id="T_6c7f5_level0_row1" class="row_heading level0 row1" >Overall Qual</th>
+      <td id="T_6c7f5_row1_col0" class="data row1 col0" >0.003334</td>
+      <td id="T_6c7f5_row1_col1" class="data row1 col1" >0.004443</td>
+      <td id="T_6c7f5_row1_col2" class="data row1 col2" >0.004451</td>
+      <td id="T_6c7f5_row1_col3" class="data row1 col3" >0.004459</td>
+      <td id="T_6c7f5_row1_col4" class="data row1 col4" >0.004474</td>
     </tr>
     <tr>
-      <th id="T_72a31_level0_row2" class="row_heading level0 row2" >Gr Liv Area</th>
-      <td id="T_72a31_row2_col0" class="data row2 col0" >0.000010</td>
-      <td id="T_72a31_row2_col1" class="data row2 col1" >0.000010</td>
-      <td id="T_72a31_row2_col2" class="data row2 col2" >0.000010</td>
-      <td id="T_72a31_row2_col3" class="data row2 col3" >0.000010</td>
-      <td id="T_72a31_row2_col4" class="data row2 col4" >0.000011</td>
+      <th id="T_6c7f5_level0_row2" class="row_heading level0 row2" >Gr Liv Area</th>
+      <td id="T_6c7f5_row2_col0" class="data row2 col0" >0.000010</td>
+      <td id="T_6c7f5_row2_col1" class="data row2 col1" >0.000010</td>
+      <td id="T_6c7f5_row2_col2" class="data row2 col2" >0.000010</td>
+      <td id="T_6c7f5_row2_col3" class="data row2 col3" >0.000010</td>
+      <td id="T_6c7f5_row2_col4" class="data row2 col4" >0.000011</td>
     </tr>
     <tr>
-      <th id="T_72a31_level0_row3" class="row_heading level0 row3" >Garage Cars</th>
-      <td id="T_72a31_row3_col0" class="data row3 col0" >0.005301</td>
-      <td id="T_72a31_row3_col1" class="data row3 col1" >0.006828</td>
-      <td id="T_72a31_row3_col2" class="data row3 col2" >0.006841</td>
-      <td id="T_72a31_row3_col3" class="data row3 col3" >0.006851</td>
-      <td id="T_72a31_row3_col4" class="data row3 col4" >0.006874</td>
+      <th id="T_6c7f5_level0_row3" class="row_heading level0 row3" >Garage Cars</th>
+      <td id="T_6c7f5_row3_col0" class="data row3 col0" >0.005301</td>
+      <td id="T_6c7f5_row3_col1" class="data row3 col1" >0.006828</td>
+      <td id="T_6c7f5_row3_col2" class="data row3 col2" >0.006841</td>
+      <td id="T_6c7f5_row3_col3" class="data row3 col3" >0.006851</td>
+      <td id="T_6c7f5_row3_col4" class="data row3 col4" >0.006874</td>
     </tr>
     <tr>
-      <th id="T_72a31_level0_row4" class="row_heading level0 row4" >Total Bsmt SF</th>
-      <td id="T_72a31_row4_col0" class="data row4 col0" >0.000013</td>
-      <td id="T_72a31_row4_col1" class="data row4 col1" >0.000015</td>
-      <td id="T_72a31_row4_col2" class="data row4 col2" >0.000015</td>
-      <td id="T_72a31_row4_col3" class="data row4 col3" >0.000015</td>
-      <td id="T_72a31_row4_col4" class="data row4 col4" >0.000015</td>
+      <th id="T_6c7f5_level0_row4" class="row_heading level0 row4" >Total Bsmt SF</th>
+      <td id="T_6c7f5_row4_col0" class="data row4 col0" >0.000013</td>
+      <td id="T_6c7f5_row4_col1" class="data row4 col1" >0.000015</td>
+      <td id="T_6c7f5_row4_col2" class="data row4 col2" >0.000015</td>
+      <td id="T_6c7f5_row4_col3" class="data row4 col3" >0.000015</td>
+      <td id="T_6c7f5_row4_col4" class="data row4 col4" >0.000015</td>
     </tr>
     <tr>
-      <th id="T_72a31_level0_row5" class="row_heading level0 row5" >1st Flr SF</th>
-      <td id="T_72a31_row5_col0" class="data row5 col0" >0.000014</td>
-      <td id="T_72a31_row5_col1" class="data row5 col1" >0.000016</td>
-      <td id="T_72a31_row5_col2" class="data row5 col2" >0.000016</td>
-      <td id="T_72a31_row5_col3" class="data row5 col3" >0.000016</td>
-      <td id="T_72a31_row5_col4" class="data row5 col4" >0.000016</td>
+      <th id="T_6c7f5_level0_row5" class="row_heading level0 row5" >1st Flr SF</th>
+      <td id="T_6c7f5_row5_col0" class="data row5 col0" >0.000014</td>
+      <td id="T_6c7f5_row5_col1" class="data row5 col1" >0.000016</td>
+      <td id="T_6c7f5_row5_col2" class="data row5 col2" >0.000016</td>
+      <td id="T_6c7f5_row5_col3" class="data row5 col3" >0.000016</td>
+      <td id="T_6c7f5_row5_col4" class="data row5 col4" >0.000016</td>
     </tr>
     <tr>
-      <th id="T_72a31_level0_row6" class="row_heading level0 row6" >Full Bath</th>
-      <td id="T_72a31_row6_col0" class="data row6 col0" >0.007656</td>
-      <td id="T_72a31_row6_col1" class="data row6 col1" >0.008385</td>
-      <td id="T_72a31_row6_col2" class="data row6 col2" >0.008400</td>
-      <td id="T_72a31_row6_col3" class="data row6 col3" >0.008412</td>
-      <td id="T_72a31_row6_col4" class="data row6 col4" >0.008439</td>
+      <th id="T_6c7f5_level0_row6" class="row_heading level0 row6" >Full Bath</th>
+      <td id="T_6c7f5_row6_col0" class="data row6 col0" >0.007656</td>
+      <td id="T_6c7f5_row6_col1" class="data row6 col1" >0.008385</td>
+      <td id="T_6c7f5_row6_col2" class="data row6 col2" >0.008400</td>
+      <td id="T_6c7f5_row6_col3" class="data row6 col3" >0.008412</td>
+      <td id="T_6c7f5_row6_col4" class="data row6 col4" >0.008439</td>
     </tr>
     <tr>
-      <th id="T_72a31_level0_row7" class="row_heading level0 row7" >Year Built</th>
-      <td id="T_72a31_row7_col0" class="data row7 col0" >0.000134</td>
-      <td id="T_72a31_row7_col1" class="data row7 col1" >0.000151</td>
-      <td id="T_72a31_row7_col2" class="data row7 col2" >0.000151</td>
-      <td id="T_72a31_row7_col3" class="data row7 col3" >0.000151</td>
-      <td id="T_72a31_row7_col4" class="data row7 col4" >0.000152</td>
+      <th id="T_6c7f5_level0_row7" class="row_heading level0 row7" >Year Built</th>
+      <td id="T_6c7f5_row7_col0" class="data row7 col0" >0.000134</td>
+      <td id="T_6c7f5_row7_col1" class="data row7 col1" >0.000151</td>
+      <td id="T_6c7f5_row7_col2" class="data row7 col2" >0.000151</td>
+      <td id="T_6c7f5_row7_col3" class="data row7 col3" >0.000151</td>
+      <td id="T_6c7f5_row7_col4" class="data row7 col4" >0.000152</td>
     </tr>
     <tr>
-      <th id="T_72a31_level0_row8" class="row_heading level0 row8" >Fireplaces</th>
-      <td id="T_72a31_row8_col0" class="data row8 col0" >0.005274</td>
-      <td id="T_72a31_row8_col1" class="data row8 col1" >0.005640</td>
-      <td id="T_72a31_row8_col2" class="data row8 col2" >0.005650</td>
-      <td id="T_72a31_row8_col3" class="data row8 col3" >0.005658</td>
-      <td id="T_72a31_row8_col4" class="data row8 col4" >0.005676</td>
+      <th id="T_6c7f5_level0_row8" class="row_heading level0 row8" >Fireplaces</th>
+      <td id="T_6c7f5_row8_col0" class="data row8 col0" >0.005274</td>
+      <td id="T_6c7f5_row8_col1" class="data row8 col1" >0.005640</td>
+      <td id="T_6c7f5_row8_col2" class="data row8 col2" >0.005650</td>
+      <td id="T_6c7f5_row8_col3" class="data row8 col3" >0.005658</td>
+      <td id="T_6c7f5_row8_col4" class="data row8 col4" >0.005676</td>
     </tr>
     <tr>
-      <th id="T_72a31_level0_row9" class="row_heading level0 row9" >Lot Area</th>
-      <td id="T_72a31_row9_col0" class="data row9 col0" >0.000001</td>
-      <td id="T_72a31_row9_col1" class="data row9 col1" >0.000001</td>
-      <td id="T_72a31_row9_col2" class="data row9 col2" >0.000001</td>
-      <td id="T_72a31_row9_col3" class="data row9 col3" >0.000001</td>
-      <td id="T_72a31_row9_col4" class="data row9 col4" >0.000001</td>
+      <th id="T_6c7f5_level0_row9" class="row_heading level0 row9" >Lot Area</th>
+      <td id="T_6c7f5_row9_col0" class="data row9 col0" >0.000001</td>
+      <td id="T_6c7f5_row9_col1" class="data row9 col1" >0.000001</td>
+      <td id="T_6c7f5_row9_col2" class="data row9 col2" >0.000001</td>
+      <td id="T_6c7f5_row9_col3" class="data row9 col3" >0.000001</td>
+      <td id="T_6c7f5_row9_col4" class="data row9 col4" >0.000001</td>
     </tr>
   </tbody>
 </table>
@@ -581,20 +581,20 @@ Archivo bootstrap se guardará en: /workspaces/ames-housing-project/book/data/bo
 <div class="cell_output docutils container">
 <div class="output text_html"><style type="text/css">
 </style>
-<table id="T_f6b9d">
+<table id="T_5dc86">
   <thead>
     <tr>
       <th class="blank level0" >&nbsp;</th>
-      <th id="T_f6b9d_level0_col0" class="col_heading level0 col0" >OLS_lower</th>
-      <th id="T_f6b9d_level0_col1" class="col_heading level0 col1" >OLS_upper</th>
-      <th id="T_f6b9d_level0_col2" class="col_heading level0 col2" >HC0_lower</th>
-      <th id="T_f6b9d_level0_col3" class="col_heading level0 col3" >HC0_upper</th>
-      <th id="T_f6b9d_level0_col4" class="col_heading level0 col4" >HC1_lower</th>
-      <th id="T_f6b9d_level0_col5" class="col_heading level0 col5" >HC1_upper</th>
-      <th id="T_f6b9d_level0_col6" class="col_heading level0 col6" >HC2_lower</th>
-      <th id="T_f6b9d_level0_col7" class="col_heading level0 col7" >HC2_upper</th>
-      <th id="T_f6b9d_level0_col8" class="col_heading level0 col8" >HC3_lower</th>
-      <th id="T_f6b9d_level0_col9" class="col_heading level0 col9" >HC3_upper</th>
+      <th id="T_5dc86_level0_col0" class="col_heading level0 col0" >OLS_lower</th>
+      <th id="T_5dc86_level0_col1" class="col_heading level0 col1" >OLS_upper</th>
+      <th id="T_5dc86_level0_col2" class="col_heading level0 col2" >HC0_lower</th>
+      <th id="T_5dc86_level0_col3" class="col_heading level0 col3" >HC0_upper</th>
+      <th id="T_5dc86_level0_col4" class="col_heading level0 col4" >HC1_lower</th>
+      <th id="T_5dc86_level0_col5" class="col_heading level0 col5" >HC1_upper</th>
+      <th id="T_5dc86_level0_col6" class="col_heading level0 col6" >HC2_lower</th>
+      <th id="T_5dc86_level0_col7" class="col_heading level0 col7" >HC2_upper</th>
+      <th id="T_5dc86_level0_col8" class="col_heading level0 col8" >HC3_lower</th>
+      <th id="T_5dc86_level0_col9" class="col_heading level0 col9" >HC3_upper</th>
     </tr>
     <tr>
       <th class="index_name level0" >Variable</th>
@@ -612,134 +612,134 @@ Archivo bootstrap se guardará en: /workspaces/ames-housing-project/book/data/bo
   </thead>
   <tbody>
     <tr>
-      <th id="T_f6b9d_level0_row0" class="row_heading level0 row0" >const</th>
-      <td id="T_f6b9d_row0_col0" class="data row0 col0" >4.749133</td>
-      <td id="T_f6b9d_row0_col1" class="data row0 col1" >5.743047</td>
-      <td id="T_f6b9d_row0_col2" class="data row0 col2" >4.678149</td>
-      <td id="T_f6b9d_row0_col3" class="data row0 col3" >5.814030</td>
-      <td id="T_f6b9d_row0_col4" class="data row0 col4" >4.677121</td>
-      <td id="T_f6b9d_row0_col5" class="data row0 col5" >5.815059</td>
-      <td id="T_f6b9d_row0_col6" class="data row0 col6" >4.676355</td>
-      <td id="T_f6b9d_row0_col7" class="data row0 col7" >5.815825</td>
-      <td id="T_f6b9d_row0_col8" class="data row0 col8" >4.674550</td>
-      <td id="T_f6b9d_row0_col9" class="data row0 col9" >5.817630</td>
+      <th id="T_5dc86_level0_row0" class="row_heading level0 row0" >const</th>
+      <td id="T_5dc86_row0_col0" class="data row0 col0" >4.749133</td>
+      <td id="T_5dc86_row0_col1" class="data row0 col1" >5.743047</td>
+      <td id="T_5dc86_row0_col2" class="data row0 col2" >4.678149</td>
+      <td id="T_5dc86_row0_col3" class="data row0 col3" >5.814030</td>
+      <td id="T_5dc86_row0_col4" class="data row0 col4" >4.677121</td>
+      <td id="T_5dc86_row0_col5" class="data row0 col5" >5.815059</td>
+      <td id="T_5dc86_row0_col6" class="data row0 col6" >4.676355</td>
+      <td id="T_5dc86_row0_col7" class="data row0 col7" >5.815825</td>
+      <td id="T_5dc86_row0_col8" class="data row0 col8" >4.674550</td>
+      <td id="T_5dc86_row0_col9" class="data row0 col9" >5.817630</td>
     </tr>
     <tr>
-      <th id="T_f6b9d_level0_row1" class="row_heading level0 row1" >Overall Qual</th>
-      <td id="T_f6b9d_row1_col0" class="data row1 col0" >0.095133</td>
-      <td id="T_f6b9d_row1_col1" class="data row1 col1" >0.108206</td>
-      <td id="T_f6b9d_row1_col2" class="data row1 col2" >0.092957</td>
-      <td id="T_f6b9d_row1_col3" class="data row1 col3" >0.110382</td>
-      <td id="T_f6b9d_row1_col4" class="data row1 col4" >0.092942</td>
-      <td id="T_f6b9d_row1_col5" class="data row1 col5" >0.110397</td>
-      <td id="T_f6b9d_row1_col6" class="data row1 col6" >0.092927</td>
-      <td id="T_f6b9d_row1_col7" class="data row1 col7" >0.110412</td>
-      <td id="T_f6b9d_row1_col8" class="data row1 col8" >0.092897</td>
-      <td id="T_f6b9d_row1_col9" class="data row1 col9" >0.110442</td>
+      <th id="T_5dc86_level0_row1" class="row_heading level0 row1" >Overall Qual</th>
+      <td id="T_5dc86_row1_col0" class="data row1 col0" >0.095133</td>
+      <td id="T_5dc86_row1_col1" class="data row1 col1" >0.108206</td>
+      <td id="T_5dc86_row1_col2" class="data row1 col2" >0.092957</td>
+      <td id="T_5dc86_row1_col3" class="data row1 col3" >0.110382</td>
+      <td id="T_5dc86_row1_col4" class="data row1 col4" >0.092942</td>
+      <td id="T_5dc86_row1_col5" class="data row1 col5" >0.110397</td>
+      <td id="T_5dc86_row1_col6" class="data row1 col6" >0.092927</td>
+      <td id="T_5dc86_row1_col7" class="data row1 col7" >0.110412</td>
+      <td id="T_5dc86_row1_col8" class="data row1 col8" >0.092897</td>
+      <td id="T_5dc86_row1_col9" class="data row1 col9" >0.110442</td>
     </tr>
     <tr>
-      <th id="T_f6b9d_level0_row2" class="row_heading level0 row2" >Gr Liv Area</th>
-      <td id="T_f6b9d_row2_col0" class="data row2 col0" >0.000220</td>
-      <td id="T_f6b9d_row2_col1" class="data row2 col1" >0.000259</td>
-      <td id="T_f6b9d_row2_col2" class="data row2 col2" >0.000219</td>
-      <td id="T_f6b9d_row2_col3" class="data row2 col3" >0.000260</td>
-      <td id="T_f6b9d_row2_col4" class="data row2 col4" >0.000219</td>
-      <td id="T_f6b9d_row2_col5" class="data row2 col5" >0.000260</td>
-      <td id="T_f6b9d_row2_col6" class="data row2 col6" >0.000219</td>
-      <td id="T_f6b9d_row2_col7" class="data row2 col7" >0.000260</td>
-      <td id="T_f6b9d_row2_col8" class="data row2 col8" >0.000219</td>
-      <td id="T_f6b9d_row2_col9" class="data row2 col9" >0.000260</td>
+      <th id="T_5dc86_level0_row2" class="row_heading level0 row2" >Gr Liv Area</th>
+      <td id="T_5dc86_row2_col0" class="data row2 col0" >0.000220</td>
+      <td id="T_5dc86_row2_col1" class="data row2 col1" >0.000259</td>
+      <td id="T_5dc86_row2_col2" class="data row2 col2" >0.000219</td>
+      <td id="T_5dc86_row2_col3" class="data row2 col3" >0.000260</td>
+      <td id="T_5dc86_row2_col4" class="data row2 col4" >0.000219</td>
+      <td id="T_5dc86_row2_col5" class="data row2 col5" >0.000260</td>
+      <td id="T_5dc86_row2_col6" class="data row2 col6" >0.000219</td>
+      <td id="T_5dc86_row2_col7" class="data row2 col7" >0.000260</td>
+      <td id="T_5dc86_row2_col8" class="data row2 col8" >0.000219</td>
+      <td id="T_5dc86_row2_col9" class="data row2 col9" >0.000260</td>
     </tr>
     <tr>
-      <th id="T_f6b9d_level0_row3" class="row_heading level0 row3" >Garage Cars</th>
-      <td id="T_f6b9d_row3_col0" class="data row3 col0" >0.038647</td>
-      <td id="T_f6b9d_row3_col1" class="data row3 col1" >0.059434</td>
-      <td id="T_f6b9d_row3_col2" class="data row3 col2" >0.035652</td>
-      <td id="T_f6b9d_row3_col3" class="data row3 col3" >0.062430</td>
-      <td id="T_f6b9d_row3_col4" class="data row3 col4" >0.035627</td>
-      <td id="T_f6b9d_row3_col5" class="data row3 col5" >0.062454</td>
-      <td id="T_f6b9d_row3_col6" class="data row3 col6" >0.035607</td>
-      <td id="T_f6b9d_row3_col7" class="data row3 col7" >0.062475</td>
-      <td id="T_f6b9d_row3_col8" class="data row3 col8" >0.035561</td>
-      <td id="T_f6b9d_row3_col9" class="data row3 col9" >0.062520</td>
+      <th id="T_5dc86_level0_row3" class="row_heading level0 row3" >Garage Cars</th>
+      <td id="T_5dc86_row3_col0" class="data row3 col0" >0.038647</td>
+      <td id="T_5dc86_row3_col1" class="data row3 col1" >0.059434</td>
+      <td id="T_5dc86_row3_col2" class="data row3 col2" >0.035652</td>
+      <td id="T_5dc86_row3_col3" class="data row3 col3" >0.062430</td>
+      <td id="T_5dc86_row3_col4" class="data row3 col4" >0.035627</td>
+      <td id="T_5dc86_row3_col5" class="data row3 col5" >0.062454</td>
+      <td id="T_5dc86_row3_col6" class="data row3 col6" >0.035607</td>
+      <td id="T_5dc86_row3_col7" class="data row3 col7" >0.062475</td>
+      <td id="T_5dc86_row3_col8" class="data row3 col8" >0.035561</td>
+      <td id="T_5dc86_row3_col9" class="data row3 col9" >0.062520</td>
     </tr>
     <tr>
-      <th id="T_f6b9d_level0_row4" class="row_heading level0 row4" >Total Bsmt SF</th>
-      <td id="T_f6b9d_row4_col0" class="data row4 col0" >0.000129</td>
-      <td id="T_f6b9d_row4_col1" class="data row4 col1" >0.000178</td>
-      <td id="T_f6b9d_row4_col2" class="data row4 col2" >0.000125</td>
-      <td id="T_f6b9d_row4_col3" class="data row4 col3" >0.000182</td>
-      <td id="T_f6b9d_row4_col4" class="data row4 col4" >0.000125</td>
-      <td id="T_f6b9d_row4_col5" class="data row4 col5" >0.000182</td>
-      <td id="T_f6b9d_row4_col6" class="data row4 col6" >0.000125</td>
-      <td id="T_f6b9d_row4_col7" class="data row4 col7" >0.000182</td>
-      <td id="T_f6b9d_row4_col8" class="data row4 col8" >0.000125</td>
-      <td id="T_f6b9d_row4_col9" class="data row4 col9" >0.000183</td>
+      <th id="T_5dc86_level0_row4" class="row_heading level0 row4" >Total Bsmt SF</th>
+      <td id="T_5dc86_row4_col0" class="data row4 col0" >0.000129</td>
+      <td id="T_5dc86_row4_col1" class="data row4 col1" >0.000178</td>
+      <td id="T_5dc86_row4_col2" class="data row4 col2" >0.000125</td>
+      <td id="T_5dc86_row4_col3" class="data row4 col3" >0.000182</td>
+      <td id="T_5dc86_row4_col4" class="data row4 col4" >0.000125</td>
+      <td id="T_5dc86_row4_col5" class="data row4 col5" >0.000182</td>
+      <td id="T_5dc86_row4_col6" class="data row4 col6" >0.000125</td>
+      <td id="T_5dc86_row4_col7" class="data row4 col7" >0.000182</td>
+      <td id="T_5dc86_row4_col8" class="data row4 col8" >0.000125</td>
+      <td id="T_5dc86_row4_col9" class="data row4 col9" >0.000183</td>
     </tr>
     <tr>
-      <th id="T_f6b9d_level0_row5" class="row_heading level0 row5" >1st Flr SF</th>
-      <td id="T_f6b9d_row5_col0" class="data row5 col0" >-0.000026</td>
-      <td id="T_f6b9d_row5_col1" class="data row5 col1" >0.000031</td>
-      <td id="T_f6b9d_row5_col2" class="data row5 col2" >-0.000028</td>
-      <td id="T_f6b9d_row5_col3" class="data row5 col3" >0.000033</td>
-      <td id="T_f6b9d_row5_col4" class="data row5 col4" >-0.000028</td>
-      <td id="T_f6b9d_row5_col5" class="data row5 col5" >0.000033</td>
-      <td id="T_f6b9d_row5_col6" class="data row5 col6" >-0.000028</td>
-      <td id="T_f6b9d_row5_col7" class="data row5 col7" >0.000033</td>
-      <td id="T_f6b9d_row5_col8" class="data row5 col8" >-0.000028</td>
-      <td id="T_f6b9d_row5_col9" class="data row5 col9" >0.000033</td>
+      <th id="T_5dc86_level0_row5" class="row_heading level0 row5" >1st Flr SF</th>
+      <td id="T_5dc86_row5_col0" class="data row5 col0" >-0.000026</td>
+      <td id="T_5dc86_row5_col1" class="data row5 col1" >0.000031</td>
+      <td id="T_5dc86_row5_col2" class="data row5 col2" >-0.000028</td>
+      <td id="T_5dc86_row5_col3" class="data row5 col3" >0.000033</td>
+      <td id="T_5dc86_row5_col4" class="data row5 col4" >-0.000028</td>
+      <td id="T_5dc86_row5_col5" class="data row5 col5" >0.000033</td>
+      <td id="T_5dc86_row5_col6" class="data row5 col6" >-0.000028</td>
+      <td id="T_5dc86_row5_col7" class="data row5 col7" >0.000033</td>
+      <td id="T_5dc86_row5_col8" class="data row5 col8" >-0.000028</td>
+      <td id="T_5dc86_row5_col9" class="data row5 col9" >0.000033</td>
     </tr>
     <tr>
-      <th id="T_f6b9d_level0_row6" class="row_heading level0 row6" >Full Bath</th>
-      <td id="T_f6b9d_row6_col0" class="data row6 col0" >-0.028511</td>
-      <td id="T_f6b9d_row6_col1" class="data row6 col1" >0.001512</td>
-      <td id="T_f6b9d_row6_col2" class="data row6 col2" >-0.029940</td>
-      <td id="T_f6b9d_row6_col3" class="data row6 col3" >0.002941</td>
-      <td id="T_f6b9d_row6_col4" class="data row6 col4" >-0.029970</td>
-      <td id="T_f6b9d_row6_col5" class="data row6 col5" >0.002971</td>
-      <td id="T_f6b9d_row6_col6" class="data row6 col6" >-0.029993</td>
-      <td id="T_f6b9d_row6_col7" class="data row6 col7" >0.002994</td>
-      <td id="T_f6b9d_row6_col8" class="data row6 col8" >-0.030046</td>
-      <td id="T_f6b9d_row6_col9" class="data row6 col9" >0.003047</td>
+      <th id="T_5dc86_level0_row6" class="row_heading level0 row6" >Full Bath</th>
+      <td id="T_5dc86_row6_col0" class="data row6 col0" >-0.028511</td>
+      <td id="T_5dc86_row6_col1" class="data row6 col1" >0.001512</td>
+      <td id="T_5dc86_row6_col2" class="data row6 col2" >-0.029940</td>
+      <td id="T_5dc86_row6_col3" class="data row6 col3" >0.002941</td>
+      <td id="T_5dc86_row6_col4" class="data row6 col4" >-0.029970</td>
+      <td id="T_5dc86_row6_col5" class="data row6 col5" >0.002971</td>
+      <td id="T_5dc86_row6_col6" class="data row6 col6" >-0.029993</td>
+      <td id="T_5dc86_row6_col7" class="data row6 col7" >0.002994</td>
+      <td id="T_5dc86_row6_col8" class="data row6 col8" >-0.030046</td>
+      <td id="T_5dc86_row6_col9" class="data row6 col9" >0.003047</td>
     </tr>
     <tr>
-      <th id="T_f6b9d_level0_row7" class="row_heading level0 row7" >Year Built</th>
-      <td id="T_f6b9d_row7_col0" class="data row7 col0" >0.002500</td>
-      <td id="T_f6b9d_row7_col1" class="data row7 col1" >0.003024</td>
-      <td id="T_f6b9d_row7_col2" class="data row7 col2" >0.002467</td>
-      <td id="T_f6b9d_row7_col3" class="data row7 col3" >0.003058</td>
-      <td id="T_f6b9d_row7_col4" class="data row7 col4" >0.002466</td>
-      <td id="T_f6b9d_row7_col5" class="data row7 col5" >0.003058</td>
-      <td id="T_f6b9d_row7_col6" class="data row7 col6" >0.002466</td>
-      <td id="T_f6b9d_row7_col7" class="data row7 col7" >0.003059</td>
-      <td id="T_f6b9d_row7_col8" class="data row7 col8" >0.002465</td>
-      <td id="T_f6b9d_row7_col9" class="data row7 col9" >0.003060</td>
+      <th id="T_5dc86_level0_row7" class="row_heading level0 row7" >Year Built</th>
+      <td id="T_5dc86_row7_col0" class="data row7 col0" >0.002500</td>
+      <td id="T_5dc86_row7_col1" class="data row7 col1" >0.003024</td>
+      <td id="T_5dc86_row7_col2" class="data row7 col2" >0.002467</td>
+      <td id="T_5dc86_row7_col3" class="data row7 col3" >0.003058</td>
+      <td id="T_5dc86_row7_col4" class="data row7 col4" >0.002466</td>
+      <td id="T_5dc86_row7_col5" class="data row7 col5" >0.003058</td>
+      <td id="T_5dc86_row7_col6" class="data row7 col6" >0.002466</td>
+      <td id="T_5dc86_row7_col7" class="data row7 col7" >0.003059</td>
+      <td id="T_5dc86_row7_col8" class="data row7 col8" >0.002465</td>
+      <td id="T_5dc86_row7_col9" class="data row7 col9" >0.003060</td>
     </tr>
     <tr>
-      <th id="T_f6b9d_level0_row8" class="row_heading level0 row8" >Fireplaces</th>
-      <td id="T_f6b9d_row8_col0" class="data row8 col0" >0.035813</td>
-      <td id="T_f6b9d_row8_col1" class="data row8 col1" >0.056495</td>
-      <td id="T_f6b9d_row8_col2" class="data row8 col2" >0.035095</td>
-      <td id="T_f6b9d_row8_col3" class="data row8 col3" >0.057213</td>
-      <td id="T_f6b9d_row8_col4" class="data row8 col4" >0.035075</td>
-      <td id="T_f6b9d_row8_col5" class="data row8 col5" >0.057233</td>
-      <td id="T_f6b9d_row8_col6" class="data row8 col6" >0.035060</td>
-      <td id="T_f6b9d_row8_col7" class="data row8 col7" >0.057248</td>
-      <td id="T_f6b9d_row8_col8" class="data row8 col8" >0.035025</td>
-      <td id="T_f6b9d_row8_col9" class="data row8 col9" >0.057283</td>
+      <th id="T_5dc86_level0_row8" class="row_heading level0 row8" >Fireplaces</th>
+      <td id="T_5dc86_row8_col0" class="data row8 col0" >0.035813</td>
+      <td id="T_5dc86_row8_col1" class="data row8 col1" >0.056495</td>
+      <td id="T_5dc86_row8_col2" class="data row8 col2" >0.035095</td>
+      <td id="T_5dc86_row8_col3" class="data row8 col3" >0.057213</td>
+      <td id="T_5dc86_row8_col4" class="data row8 col4" >0.035075</td>
+      <td id="T_5dc86_row8_col5" class="data row8 col5" >0.057233</td>
+      <td id="T_5dc86_row8_col6" class="data row8 col6" >0.035060</td>
+      <td id="T_5dc86_row8_col7" class="data row8 col7" >0.057248</td>
+      <td id="T_5dc86_row8_col8" class="data row8 col8" >0.035025</td>
+      <td id="T_5dc86_row8_col9" class="data row8 col9" >0.057283</td>
     </tr>
     <tr>
-      <th id="T_f6b9d_level0_row9" class="row_heading level0 row9" >Lot Area</th>
-      <td id="T_f6b9d_row9_col0" class="data row9 col0" >0.000008</td>
-      <td id="T_f6b9d_row9_col1" class="data row9 col1" >0.000011</td>
-      <td id="T_f6b9d_row9_col2" class="data row9 col2" >0.000008</td>
-      <td id="T_f6b9d_row9_col3" class="data row9 col3" >0.000012</td>
-      <td id="T_f6b9d_row9_col4" class="data row9 col4" >0.000008</td>
-      <td id="T_f6b9d_row9_col5" class="data row9 col5" >0.000012</td>
-      <td id="T_f6b9d_row9_col6" class="data row9 col6" >0.000008</td>
-      <td id="T_f6b9d_row9_col7" class="data row9 col7" >0.000012</td>
-      <td id="T_f6b9d_row9_col8" class="data row9 col8" >0.000008</td>
-      <td id="T_f6b9d_row9_col9" class="data row9 col9" >0.000012</td>
+      <th id="T_5dc86_level0_row9" class="row_heading level0 row9" >Lot Area</th>
+      <td id="T_5dc86_row9_col0" class="data row9 col0" >0.000008</td>
+      <td id="T_5dc86_row9_col1" class="data row9 col1" >0.000011</td>
+      <td id="T_5dc86_row9_col2" class="data row9 col2" >0.000008</td>
+      <td id="T_5dc86_row9_col3" class="data row9 col3" >0.000012</td>
+      <td id="T_5dc86_row9_col4" class="data row9 col4" >0.000008</td>
+      <td id="T_5dc86_row9_col5" class="data row9 col5" >0.000012</td>
+      <td id="T_5dc86_row9_col6" class="data row9 col6" >0.000008</td>
+      <td id="T_5dc86_row9_col7" class="data row9 col7" >0.000012</td>
+      <td id="T_5dc86_row9_col8" class="data row9 col8" >0.000008</td>
+      <td id="T_5dc86_row9_col9" class="data row9 col9" >0.000012</td>
     </tr>
   </tbody>
 </table>
@@ -751,30 +751,30 @@ Archivo bootstrap se guardará en: /workspaces/ames-housing-project/book/data/bo
 <p>En general, aplicar correcciones HC permite obtener intervalos de confianza más robustos, proporcionando inferencias más conservadoras y fiables cuando se sospecha heterocedasticidad.</p>
 </section>
 <section id="modelos-robustos-con-funciones-huber-tukey">
-<h2>7.2 Modelos robustos con funciones Huber/Tukey<a class="headerlink" href="#modelos-robustos-con-funciones-huber-tukey" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.4. </span>7.2 Modelos robustos con funciones Huber/Tukey<a class="headerlink" href="#modelos-robustos-con-funciones-huber-tukey" title="Link to this heading">#</a></h2>
 <p>Los <strong>modelos de regresión robusta</strong> son una extensión de la regresión lineal ordinaria diseñada para reducir la influencia de outliers o valores atípicos en la estimación de los coeficientes. Mientras que la regresión OLS pondera todos los residuales por igual, los modelos robustos asignan <strong>menor peso a los residuales grandes</strong>, permitiendo obtener estimaciones más confiables y estables.</p>
 <p>Existen diversas funciones de pérdida que determinan cómo se penalizan los residuales, donde cada una equilibra de distinta manera la eficiencia para valores centrales y la robustez frente a outliers extremos:</p>
 <ul class="simple">
 <li><p><strong>Huber / TukeyHuberT()</strong>:</p></li>
 </ul>
 <div class="math notranslate nohighlight" id="equation-eq-7-2-1-huber">
-<span class="eqno">(1)<a class="headerlink" href="#equation-eq-7-2-1-huber" title="Link to this equation">#</a></span>\[\begin{split}\rho(r) = 
+<span class="eqno">(12.4.1)<a class="headerlink" href="#equation-eq-7-2-1-huber" title="Link to this equation">#</a></span>\[\begin{split}\rho(r) = 
 \begin{cases} 
 \frac{1}{2} r^2 &amp; \text{si } |r| \le \delta \\[2mm]
 \delta \left(|r| - \frac{1}{2}\delta \right) &amp; \text{si } |r| &gt; \delta
 \end{cases}\end{split}\]</div>
-<p><em>Ecuación</em> <a class="reference internal" href="#equation-eq-7-2-1-huber">(1)</a>. Función de pérdida Huber.</p>
+<p><em>Ecuación</em> <a class="reference internal" href="#equation-eq-7-2-1-huber">(12.4.1)</a>. Función de pérdida Huber.</p>
 <p>Protege contra outliers moderados manteniendo eficiencia para valores centrales.</p>
 <ul class="simple">
 <li><p><strong>Tukey Biweight</strong>:</p></li>
 </ul>
 <div class="math notranslate nohighlight" id="equation-eq-7-2-2-tukey">
-<span class="eqno">(2)<a class="headerlink" href="#equation-eq-7-2-2-tukey" title="Link to this equation">#</a></span>\[\begin{split}\rho(r) = 
+<span class="eqno">(12.4.2)<a class="headerlink" href="#equation-eq-7-2-2-tukey" title="Link to this equation">#</a></span>\[\begin{split}\rho(r) = 
 \begin{cases}
 \frac{c^2}{6} \left[ 1 - \left(1 - \left(\frac{r}{c}\right)^2 \right)^3 \right] &amp; \text{si } |r| \le c \\[1mm]
 \frac{c^2}{6} &amp; \text{si } |r| &gt; c
 \end{cases}\end{split}\]</div>
-<p><em>Ecuación</em> <a class="reference internal" href="#equation-eq-7-2-2-tukey">(2)</a>. Función de pérdida Tukey.</p>
+<p><em>Ecuación</em> <a class="reference internal" href="#equation-eq-7-2-2-tukey">(12.4.2)</a>. Función de pérdida Tukey.</p>
 <p>Limita el impacto de observaciones lejanas sin eliminarlas completamente.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -987,7 +987,7 @@ Archivo bootstrap se guardará en: /workspaces/ames-housing-project/book/data/bo
 <p>Además, es evidente que Tukey aplica un castigo más fuerte a residuales extremos.</p>
 </section>
 <section id="bootstrap">
-<h2>7.3 Bootstrap<a class="headerlink" href="#bootstrap" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.5. </span>7.3 Bootstrap<a class="headerlink" href="#bootstrap" title="Link to this heading">#</a></h2>
 <p>El <strong>bootstrap</strong> es un método de remuestreo que permite estimar la variabilidad de los coeficientes de un modelo sin asumir una distribución específica de los errores. Consiste en generar múltiples muestras con reemplazo a partir de los datos originales y recalcular los estimadores para cada réplica, obteniendo así una <strong>distribución empírica</strong> de los coeficientes, a partir de la cual se calculan el error estándar y los intervalos de confianza.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1049,66 +1049,66 @@ Archivo bootstrap se guardará en: /workspaces/ames-housing-project/book/data/bo
   <tbody>
     <tr>
       <th>const</th>
-      <td>5.238973</td>
-      <td>0.288691</td>
-      <td>4.658947</td>
-      <td>5.795830</td>
+      <td>5.247301</td>
+      <td>0.293037</td>
+      <td>4.644149</td>
+      <td>5.807477</td>
     </tr>
     <tr>
       <th>Overall Qual</th>
-      <td>0.101534</td>
-      <td>0.004418</td>
-      <td>0.092858</td>
-      <td>0.110662</td>
+      <td>0.101699</td>
+      <td>0.004476</td>
+      <td>0.092769</td>
+      <td>0.110753</td>
     </tr>
     <tr>
       <th>Gr Liv Area</th>
       <td>0.000240</td>
-      <td>0.000011</td>
+      <td>0.000010</td>
       <td>0.000219</td>
-      <td>0.000261</td>
+      <td>0.000259</td>
     </tr>
     <tr>
       <th>Garage Cars</th>
-      <td>0.049216</td>
-      <td>0.006917</td>
-      <td>0.036324</td>
-      <td>0.062707</td>
+      <td>0.048880</td>
+      <td>0.007099</td>
+      <td>0.034912</td>
+      <td>0.062672</td>
     </tr>
     <tr>
       <th>Total Bsmt SF</th>
       <td>0.000154</td>
       <td>0.000014</td>
-      <td>0.000126</td>
-      <td>0.000181</td>
+      <td>0.000127</td>
+      <td>0.000183</td>
     </tr>
     <tr>
       <th>1st Flr SF</th>
-      <td>0.000002</td>
-      <td>0.000015</td>
-      <td>-0.000027</td>
-      <td>0.000033</td>
+      <td>0.000003</td>
+      <td>0.000016</td>
+      <td>-0.000028</td>
+      <td>0.000032</td>
     </tr>
     <tr>
       <th>Full Bath</th>
-      <td>-0.014042</td>
-      <td>0.008362</td>
-      <td>-0.030309</td>
-      <td>0.002019</td>
+      <td>-0.013710</td>
+      <td>0.008255</td>
+      <td>-0.029252</td>
+      <td>0.002823</td>
     </tr>
     <tr>
       <th>Year Built</th>
-      <td>0.002766</td>
-      <td>0.000150</td>
+      <td>0.002762</td>
+      <td>0.000153</td>
       <td>0.002472</td>
-      <td>0.003066</td>
+      <td>0.003067</td>
     </tr>
     <tr>
       <th>Fireplaces</th>
-      <td>0.046578</td>
-      <td>0.005508</td>
-      <td>0.035739</td>
-      <td>0.057287</td>
+      <td>0.045889</td>
+      <td>0.005456</td>
+      <td>0.035129</td>
+      <td>0.056228</td>
     </tr>
     <tr>
       <th>Lot Area</th>
@@ -1129,7 +1129,7 @@ de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)</p>
 <p>Se observa que variables como <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>, <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code> y <code class="docutils literal notranslate"><span class="pre">Year</span> <span class="pre">Built</span></code> tienen coeficientes claramente distintos de cero, con intervalos de confianza estrechos y consistentes, lo que sugiere estimaciones robustas y estables. Por el contrario, <code class="docutils literal notranslate"><span class="pre">1st</span> <span class="pre">Flr</span> <span class="pre">SF</span></code> y <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> presentan intervalos que incluyen el cero, indicando que su efecto sobre la variable respuesta podría no ser significativo.</p>
 </section>
 <section id="ols-vs-hc3-vs-bootstrap">
-<h2>7.4 OLS vs. HC3 vs. Bootstrap<a class="headerlink" href="#ols-vs-hc3-vs-bootstrap" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.6. </span>7.4 OLS vs. HC3 vs. Bootstrap<a class="headerlink" href="#ols-vs-hc3-vs-bootstrap" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -1207,12 +1207,12 @@ de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)</p>
     <tr>
       <th>const</th>
       <td>5.246090</td>
-      <td>5.238973</td>
+      <td>5.247301</td>
     </tr>
     <tr>
       <th>Overall Qual</th>
       <td>0.101670</td>
-      <td>0.101534</td>
+      <td>0.101699</td>
     </tr>
     <tr>
       <th>Gr Liv Area</th>
@@ -1222,7 +1222,7 @@ de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)</p>
     <tr>
       <th>Garage Cars</th>
       <td>0.049041</td>
-      <td>0.049216</td>
+      <td>0.048880</td>
     </tr>
     <tr>
       <th>Total Bsmt SF</th>
@@ -1232,22 +1232,22 @@ de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)</p>
     <tr>
       <th>1st Flr SF</th>
       <td>0.000003</td>
-      <td>0.000002</td>
+      <td>0.000003</td>
     </tr>
     <tr>
       <th>Full Bath</th>
       <td>-0.013499</td>
-      <td>-0.014042</td>
+      <td>-0.013710</td>
     </tr>
     <tr>
       <th>Year Built</th>
       <td>0.002762</td>
-      <td>0.002766</td>
+      <td>0.002762</td>
     </tr>
     <tr>
       <th>Fireplaces</th>
       <td>0.046154</td>
-      <td>0.046578</td>
+      <td>0.045889</td>
     </tr>
     <tr>
       <th>Lot Area</th>
@@ -1300,25 +1300,25 @@ de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)</p>
       <th>const</th>
       <td>0.253443</td>
       <td>0.291480</td>
-      <td>0.288691</td>
+      <td>0.293037</td>
     </tr>
     <tr>
       <th>Overall Qual</th>
       <td>0.003334</td>
       <td>0.004474</td>
-      <td>0.004418</td>
+      <td>0.004476</td>
     </tr>
     <tr>
       <th>Gr Liv Area</th>
       <td>0.000010</td>
       <td>0.000011</td>
-      <td>0.000011</td>
+      <td>0.000010</td>
     </tr>
     <tr>
       <th>Garage Cars</th>
       <td>0.005301</td>
       <td>0.006874</td>
-      <td>0.006917</td>
+      <td>0.007099</td>
     </tr>
     <tr>
       <th>Total Bsmt SF</th>
@@ -1330,25 +1330,25 @@ de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)</p>
       <th>1st Flr SF</th>
       <td>0.000014</td>
       <td>0.000016</td>
-      <td>0.000015</td>
+      <td>0.000016</td>
     </tr>
     <tr>
       <th>Full Bath</th>
       <td>0.007656</td>
       <td>0.008439</td>
-      <td>0.008362</td>
+      <td>0.008255</td>
     </tr>
     <tr>
       <th>Year Built</th>
       <td>0.000134</td>
       <td>0.000152</td>
-      <td>0.000150</td>
+      <td>0.000153</td>
     </tr>
     <tr>
       <th>Fireplaces</th>
       <td>0.005274</td>
       <td>0.005676</td>
-      <td>0.005508</td>
+      <td>0.005456</td>
     </tr>
     <tr>
       <th>Lot Area</th>
@@ -1403,31 +1403,31 @@ de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)</p>
       <th>const</th>
       <td>0.993914</td>
       <td>1.143080</td>
-      <td>1.136884</td>
+      <td>1.163328</td>
     </tr>
     <tr>
       <th>Overall Qual</th>
       <td>0.013073</td>
       <td>0.017545</td>
-      <td>0.017804</td>
+      <td>0.017983</td>
     </tr>
     <tr>
       <th>Gr Liv Area</th>
       <td>0.000039</td>
       <td>0.000041</td>
-      <td>0.000042</td>
+      <td>0.000040</td>
     </tr>
     <tr>
       <th>Garage Cars</th>
       <td>0.020787</td>
       <td>0.026959</td>
-      <td>0.026383</td>
+      <td>0.027760</td>
     </tr>
     <tr>
       <th>Total Bsmt SF</th>
       <td>0.000049</td>
       <td>0.000058</td>
-      <td>0.000054</td>
+      <td>0.000056</td>
     </tr>
     <tr>
       <th>1st Flr SF</th>
@@ -1439,19 +1439,19 @@ de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)</p>
       <th>Full Bath</th>
       <td>0.030023</td>
       <td>0.033094</td>
-      <td>0.032329</td>
+      <td>0.032075</td>
     </tr>
     <tr>
       <th>Year Built</th>
       <td>0.000524</td>
       <td>0.000595</td>
-      <td>0.000594</td>
+      <td>0.000596</td>
     </tr>
     <tr>
       <th>Fireplaces</th>
       <td>0.020682</td>
       <td>0.022258</td>
-      <td>0.021548</td>
+      <td>0.021099</td>
     </tr>
     <tr>
       <th>Lot Area</th>
@@ -1471,7 +1471,7 @@ de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)</p>
 <p>Alineados con los errores estándar (<a class="reference internal" href="#tabla-742-se-ols-hc3-boot"><span class="xref myst">Tabla 7.4.2</span></a>), los intervalos calculados con OLS son consistentemente más estrechos que los obtenidos con HC3 o bootstrap, llegando a la misma conclusión de que el OLS inicial es menos robusto.</p>
 </section>
 <section id="discusion-y-analisis">
-<h2>Discusión y análisis<a class="headerlink" href="#discusion-y-analisis" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.7. </span>Discusión y análisis<a class="headerlink" href="#discusion-y-analisis" title="Link to this heading">#</a></h2>
 <p><strong>Sobre heterocedasticidad.</strong> Si los errores estándar HC3 (o HC2) superan de manera consistente a los de OLS,
 esto sugiere varianza no constante. En tal caso, la inferencia debe basarse en versiones robustas (HC3 recomendado).
 Además, el <strong>ancho de los IC</strong> (Tabla 7.2) es un buen indicador del impacto en la precisión de la estimación.</p>
@@ -1483,7 +1483,7 @@ Considere comparar los percentiles 2.5%/97.5% de bootstrap con los IC teóricos;
 sensibilidad a supuestos o a la muestra.</p>
 </section>
 <section id="takeaways">
-<h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">12.8. </span>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
 <li><p><strong>Inferencia robusta:</strong> En presencia de heterocedasticidad, utilice <strong>HC3</strong> para SE e IC; valide conclusiones frente a OLS.</p></li>
 <li><p><strong>Diagnóstico de outliers:</strong> Si RLM re-pondera fuertemente algunos casos, investigue esas observaciones (posibles errores o segmentos distintos).</p></li>
@@ -1529,7 +1529,7 @@ sensibilidad a supuestos o a la muestra.</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Capítulo 6: Diagnóstico de supuestos</p>
+        <p class="prev-next-title"><span class="section-number">11. </span>Capítulo 6: Diagnóstico de supuestos</p>
       </div>
     </a>
     <a class="right-next"
@@ -1537,7 +1537,7 @@ sensibilidad a supuestos o a la muestra.</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Capítulo 8 — Validación y selección de modelos</p>
+        <p class="prev-next-title"><span class="section-number">13. </span>Capítulo 8 — Validación y selección de modelos</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1557,14 +1557,14 @@ sensibilidad a supuestos o a la muestra.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-rutas">Configuración de rutas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correcciones-para-heterocedasticidad">7.1 Correcciones para heterocedasticidad</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-robustos-con-funciones-huber-tukey">7.2 Modelos robustos con funciones Huber/Tukey</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap">7.3 Bootstrap</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-hc3-vs-bootstrap">7.4 OLS vs. HC3 vs. Bootstrap</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discusion-y-analisis">Discusión y análisis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">12.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-rutas">12.2. Configuración de rutas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correcciones-para-heterocedasticidad">12.3. 7.1 Correcciones para heterocedasticidad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-robustos-con-funciones-huber-tukey">12.4. 7.2 Modelos robustos con funciones Huber/Tukey</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap">12.5. 7.3 Bootstrap</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-hc3-vs-bootstrap">12.6. 7.4 OLS vs. HC3 vs. Bootstrap</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discusion-y-analisis">12.7. Discusión y análisis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">12.8. Takeaways</a></li>
 </ul>
   </nav></div>
 
