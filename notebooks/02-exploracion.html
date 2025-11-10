@@ -1,0 +1,1087 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Capítulo 2: Descripción y limpieza del dataset &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"TeX": {"equationNumbers": {"autoNumber": "all"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/02-exploracion';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Capítulo 3 · Regresión lineal (OLS) e inferencia" href="03-modelado.html" />
+    <link rel="prev" title="Capítulo 1: Introduccióny pregunta de investigación" href="01-introduccion.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="00-repro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-introduccion.html">Capítulo 1: Introduccióny pregunta de investigación</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 2: Descripción y limpieza del dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-modelado.html">Capítulo 3 · Regresión lineal (OLS) e inferencia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-diagnostico.html">Capítulo 4 · Diagnóstico del modelo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-metodos-robustos.html">Capítulo 5 · Métodos robustos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-conclusiones.html">Capítulo 6 · Conclusiones y trabajo futuro</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/02-exploracion.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Capítulo 2: Descripción y limpieza del dataset</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset">2.1 Carga del dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers">2.2 Tratamiento de outliers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-de-variables-categoricas">2.3 Codificación de variables categóricas</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="capitulo-2-descripcion-y-limpieza-del-dataset">
+<h1>Capítulo 2: Descripción y limpieza del dataset<a class="headerlink" href="#capitulo-2-descripcion-y-limpieza-del-dataset" title="Link to this heading">#</a></h1>
+<p><strong>Notebook original:</strong> Capítulo 2: Descripción y limpieza del dataset</p>
+<p><strong>Librerías usadas:</strong> numpy, pandas, warnings</p>
+<p><strong>Lectura de datos detectada en el .ipynb:</strong> ../data/AmesHousing.csv</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/ames_housing.csv&quot;</span><span class="p">)</span>  <span class="c1"># relativo a book/notebooks/</span>
+<span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="s2">&quot;No se encontró &#39;../data/ames_housing.csv&#39;&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usando CSV:&quot;</span><span class="p">,</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Usando CSV: /workspaces/ames-housing-project/book/data/ames_housing.csv
+</pre></div>
+</div>
+</div>
+</div>
+<section id="carga-del-dataset">
+<h2>2.1 Carga del dataset<a class="headerlink" href="#carga-del-dataset" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Order</th>
+      <th>PID</th>
+      <th>MS SubClass</th>
+      <th>MS Zoning</th>
+      <th>Lot Frontage</th>
+      <th>Lot Area</th>
+      <th>Street</th>
+      <th>Alley</th>
+      <th>Lot Shape</th>
+      <th>Land Contour</th>
+      <th>...</th>
+      <th>Pool Area</th>
+      <th>Pool QC</th>
+      <th>Fence</th>
+      <th>Misc Feature</th>
+      <th>Misc Val</th>
+      <th>Mo Sold</th>
+      <th>Yr Sold</th>
+      <th>Sale Type</th>
+      <th>Sale Condition</th>
+      <th>SalePrice</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>526301100</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>141.0</td>
+      <td>31770</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>5</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>215000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>526350040</td>
+      <td>20</td>
+      <td>RH</td>
+      <td>80.0</td>
+      <td>11622</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>MnPrv</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>105000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>526351010</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>81.0</td>
+      <td>14267</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Gar2</td>
+      <td>12500</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>172000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>526353030</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>93.0</td>
+      <td>11160</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>244000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>527105010</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>74.0</td>
+      <td>13830</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>MnPrv</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>189900</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 82 columns</p>
+</div></div></div>
+</div>
+<p><strong>Tabla 2.1.1.</strong> Conjunto de datos <em>Ames Housing</em>.</p>
+<p>Esta tabla muestra las primeras observaciones del dataset original, permitiendo verificar la correcta carga de los datos y la estructura general de las variables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fuente</span> <span class="o">=</span> <span class="s2">&quot;Ames Housing Dataset (De Cock, 2011) — Iowa State University&quot;</span>
+<span class="n">tamano</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">n_variables</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">licencia</span> <span class="o">=</span> <span class="s2">&quot;Open Data, libre uso académico&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fuente: </span><span class="si">{</span><span class="n">fuente</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tamaño: </span><span class="si">{</span><span class="n">tamano</span><span class="si">}</span><span class="s2"> registros&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Número de variables: </span><span class="si">{</span><span class="n">n_variables</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Licencia: </span><span class="si">{</span><span class="n">licencia</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fuente: Ames Housing Dataset (De Cock, 2011) — Iowa State University
+Tamaño: 2930 registros
+Número de variables: 82
+Licencia: Open Data, libre uso académico
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Tabla 2.1.2.</strong> Metadatos <em>Ames Housing</em>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">faltantes</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">tipos</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dtypes</span>
+
+<span class="n">tabla_faltantes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;Tipo de variable&quot;</span><span class="p">:</span> <span class="n">tipos</span><span class="p">,</span>
+    <span class="s2">&quot;</span><span class="si">% F</span><span class="s2">altantes&quot;</span><span class="p">:</span> <span class="n">faltantes</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="n">tabla_faltantes</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">tabla_faltantes</span><span class="p">[</span><span class="n">tabla_faltantes</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">% F</span><span class="s2">altantes&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">% F</span><span class="s2">altantes&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">tabla_faltantes</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Tipo de variable</th>
+      <th>% Faltantes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Pool QC</th>
+      <td>object</td>
+      <td>99.56</td>
+    </tr>
+    <tr>
+      <th>Misc Feature</th>
+      <td>object</td>
+      <td>96.38</td>
+    </tr>
+    <tr>
+      <th>Alley</th>
+      <td>object</td>
+      <td>93.24</td>
+    </tr>
+    <tr>
+      <th>Fence</th>
+      <td>object</td>
+      <td>80.48</td>
+    </tr>
+    <tr>
+      <th>Mas Vnr Type</th>
+      <td>object</td>
+      <td>60.58</td>
+    </tr>
+    <tr>
+      <th>Fireplace Qu</th>
+      <td>object</td>
+      <td>48.53</td>
+    </tr>
+    <tr>
+      <th>Lot Frontage</th>
+      <td>float64</td>
+      <td>16.72</td>
+    </tr>
+    <tr>
+      <th>Garage Qual</th>
+      <td>object</td>
+      <td>5.43</td>
+    </tr>
+    <tr>
+      <th>Garage Cond</th>
+      <td>object</td>
+      <td>5.43</td>
+    </tr>
+    <tr>
+      <th>Garage Yr Blt</th>
+      <td>float64</td>
+      <td>5.43</td>
+    </tr>
+    <tr>
+      <th>Garage Finish</th>
+      <td>object</td>
+      <td>5.43</td>
+    </tr>
+    <tr>
+      <th>Garage Type</th>
+      <td>object</td>
+      <td>5.36</td>
+    </tr>
+    <tr>
+      <th>Bsmt Exposure</th>
+      <td>object</td>
+      <td>2.83</td>
+    </tr>
+    <tr>
+      <th>BsmtFin Type 2</th>
+      <td>object</td>
+      <td>2.76</td>
+    </tr>
+    <tr>
+      <th>Bsmt Cond</th>
+      <td>object</td>
+      <td>2.73</td>
+    </tr>
+    <tr>
+      <th>Bsmt Qual</th>
+      <td>object</td>
+      <td>2.73</td>
+    </tr>
+    <tr>
+      <th>BsmtFin Type 1</th>
+      <td>object</td>
+      <td>2.73</td>
+    </tr>
+    <tr>
+      <th>Mas Vnr Area</th>
+      <td>float64</td>
+      <td>0.78</td>
+    </tr>
+    <tr>
+      <th>Bsmt Full Bath</th>
+      <td>float64</td>
+      <td>0.07</td>
+    </tr>
+    <tr>
+      <th>Bsmt Half Bath</th>
+      <td>float64</td>
+      <td>0.07</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p><strong>Tabla 2.1.3.</strong> Valores faltantes por variable.</p>
+<p>El tratamiento de valores faltantes se realizó de forma diferenciada según el tipo de variable.<br />
+Para las <strong>variables numéricas</strong>, se imputó la <strong>mediana</strong>, una medida robusta frente a valores extremos.<br />
+En las <strong>variables categóricas</strong>, se reemplazaron los valores ausentes por la <strong>moda</strong>, preservando la categoría más frecuente.</p>
+<p>La regla aplicada se resume en la siguiente expresión:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+x_{ij}^{*} =
+\begin{cases}
+\text{Mediana}(X_j) &amp; \text{si } X_j \text{ es numérica}\\[4pt]
+\text{Moda}(X_j) &amp; \text{si } X_j \text{ es categórica}
+\end{cases}
+\end{split}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+
+<span class="n">data_limpia</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">num_cols</span> <span class="o">=</span> <span class="n">data_limpia</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">num_cols</span><span class="p">:</span>
+    <span class="n">data_limpia</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">data_limpia</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">(),</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">cat_cols</span> <span class="o">=</span> <span class="n">data_limpia</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cat_cols</span><span class="p">:</span>
+    <span class="n">data_limpia</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">data_limpia</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">mode</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="tratamiento-de-outliers">
+<h2>2.2 Tratamiento de outliers<a class="headerlink" href="#tratamiento-de-outliers" title="Link to this heading">#</a></h2>
+<p>Se aplicó el criterio de <strong>tres desviaciones estándar (3Z)</strong> para identificar observaciones atípicas en las variables numéricas de interés, incluyendo la variable objetivo <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> y 13 predictoras potenciales.</p>
+<p>Bajo este método, un dato se considera <em>outlier</em> si su distancia a la media supera tres desviaciones estándar:</p>
+<div class="math notranslate nohighlight">
+\[
+|z_i| = \left| \frac{x_i - \bar{x}}{s} \right| &gt; 3
+\]</div>
+<p><strong>Ecuación 2.2.1.</strong> Outlier 3Z.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">vars_outliers</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Overall Qual&quot;</span><span class="p">,</span> <span class="s2">&quot;Gr Liv Area&quot;</span><span class="p">,</span><span class="s2">&quot;Garage Area&quot;</span><span class="p">,</span> <span class="s2">&quot;Garage Cars&quot;</span><span class="p">,</span><span class="s2">&quot;Bedroom AbvGr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Total Bsmt SF&quot;</span><span class="p">,</span> <span class="s2">&quot;Year Remod/Add&quot;</span><span class="p">,</span><span class="s2">&quot;TotRms AbvGrd&quot;</span><span class="p">,</span><span class="s2">&quot;1st Flr SF&quot;</span><span class="p">,</span> <span class="s2">&quot;Full Bath&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Year Built&quot;</span><span class="p">,</span> <span class="s2">&quot;Fireplaces&quot;</span><span class="p">,</span> <span class="s2">&quot;Lot Area&quot;</span><span class="p">,</span><span class="s2">&quot;SalePrice&quot;</span>
+<span class="p">]</span>
+
+<span class="n">data_sin_outliers</span> <span class="o">=</span> <span class="n">data_limpia</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">detectar_outliers_3z</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">col</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="o">*</span><span class="n">std</span>
+
+<span class="n">outliers_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_sin_outliers</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">vars_outliers</span><span class="p">:</span>
+    <span class="n">outliers_mask</span> <span class="o">|=</span> <span class="n">detectar_outliers_3z</span><span class="p">(</span><span class="n">data_sin_outliers</span><span class="p">[</span><span class="n">var</span><span class="p">])</span>
+
+<span class="n">antes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_sin_outliers</span><span class="p">)</span>
+<span class="n">n_outliers</span> <span class="o">=</span> <span class="n">outliers_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="n">data_sin_outliers</span> <span class="o">=</span> <span class="n">data_sin_outliers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">outliers_mask</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">despues</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_sin_outliers</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Registros antes: </span><span class="si">{</span><span class="n">antes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Outliers detectados (3Z): </span><span class="si">{</span><span class="n">n_outliers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Registros después de eliminar outliers: </span><span class="si">{</span><span class="n">despues</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Registros antes: 2930
+Outliers detectados (3Z): 162
+Registros después de eliminar outliers: 2768
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Tabla 2.2.1.</strong> Resumen tratamiento de outliers.</p>
+<p>En total, se detectaron <strong>162 observaciones atípicas</strong>, las cuales fueron eliminadas del conjunto de datos con el objetivo de reducir la influencia de valores extremos sobre el ajuste del modelo a aplicar.</p>
+<p>Además, se aplicó una transformación logarítmica natural a la variable <strong>SalePrice</strong> con el fin de mejorar la relación lineal entre esta y las variables predictoras, reduciendo cualquier sesgo presente en la distribución original.</p>
+<div class="math notranslate nohighlight">
+\[
+Y' = \log(1 + Y)
+\]</div>
+<p><strong>Ecuación 2.2.2.</strong> Transformación logarítmica. <a id="eq-2-2-2"></a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_sin_outliers</span><span class="p">[</span><span class="s2">&quot;SalePrice_log&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">data_sin_outliers</span><span class="p">[</span><span class="s2">&quot;SalePrice&quot;</span><span class="p">])</span>
+<span class="n">data_sin_outliers</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;../data/AmesHousing_sin_outliers.csv&quot;</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="codificacion-de-variables-categoricas">
+<h2>2.3 Codificación de variables categóricas<a class="headerlink" href="#codificacion-de-variables-categoricas" title="Link to this heading">#</a></h2>
+<p>Las variables categóricas se transformaron en valores numéricos para facilitar su uso en modelos.</p>
+<p>Primero se codificaron las <strong>variables ordinales</strong> según su nivel, asignando valores enteros que respetan el orden lógico de las categorías (por ejemplo, <em>Po</em> &lt; <em>Fa</em> &lt; <em>TA</em> &lt; <em>Gd</em> &lt; <em>Ex</em>).</p>
+<p>Posteriormente, las <strong>variables nominales</strong> (sin orden inherente) se codificaron mediante variables <em>dummy</em>, creando una representación binaria para cada categoría (y una nueva columna).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_ordinal</span> <span class="o">=</span> <span class="n">data_sin_outliers</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">map_calidad</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Po&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Fa&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;TA&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Gd&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Ex&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+
+<span class="n">map_poolqc</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Fa&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;TA&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Gd&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Ex&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+
+<span class="n">map_bsmt_exposure</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;No&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Mn&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Av&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Gd&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+
+<span class="n">map_functional</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Sal&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Sev&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Maj2&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Maj1&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;Mod&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;Min2&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;Min1&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s2">&quot;Typ&quot;</span><span class="p">:</span> <span class="mi">8</span>
+<span class="p">}</span>
+
+<span class="n">cols_calidad</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Exter Qual&quot;</span><span class="p">,</span> <span class="s2">&quot;Exter Cond&quot;</span><span class="p">,</span> <span class="s2">&quot;Bsmt Qual&quot;</span><span class="p">,</span> <span class="s2">&quot;Bsmt Cond&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Heating QC&quot;</span><span class="p">,</span> <span class="s2">&quot;Kitchen Qual&quot;</span><span class="p">,</span> <span class="s2">&quot;Fireplace Qu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Garage Qual&quot;</span><span class="p">,</span> <span class="s2">&quot;Garage Cond&quot;</span>
+<span class="p">]</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_calidad</span><span class="p">:</span>
+    <span class="n">data_ordinal</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_ordinal</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">map_calidad</span><span class="p">)</span>
+
+<span class="n">data_ordinal</span><span class="p">[</span><span class="s2">&quot;Pool QC&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_ordinal</span><span class="p">[</span><span class="s2">&quot;Pool QC&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">map_poolqc</span><span class="p">)</span>
+<span class="n">data_ordinal</span><span class="p">[</span><span class="s2">&quot;Bsmt Exposure&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_ordinal</span><span class="p">[</span><span class="s2">&quot;Bsmt Exposure&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">map_bsmt_exposure</span><span class="p">)</span>
+<span class="n">data_ordinal</span><span class="p">[</span><span class="s2">&quot;Functional&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_ordinal</span><span class="p">[</span><span class="s2">&quot;Functional&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">map_functional</span><span class="p">)</span>
+
+<span class="n">data_codificada</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">data_ordinal</span><span class="p">,</span> <span class="n">drop_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">data_codificada</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;../data/AmesHousing_codificada.csv&quot;</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">n_ordinales</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols_calidad</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span>  <span class="c1"># las de cols_calidad + Pool QC, Bsmt Exposure, Functional</span>
+
+<span class="n">n_nominales</span> <span class="o">=</span> <span class="n">data_codificada</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">data_ordinal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">tabla_transformaciones</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;Tipo de transformación&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Ordinales recodificadas&quot;</span><span class="p">,</span> <span class="s2">&quot;Nominales codificadas (dummies)&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;Cantidad de variables&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">n_ordinales</span><span class="p">,</span> <span class="n">n_nominales</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">tabla_transformaciones</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Tipo de transformación</th>
+      <th>Cantidad de variables</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Ordinales recodificadas</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Nominales codificadas (dummies)</td>
+      <td>139</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p><strong>Tabla 2.3.1.</strong> Resumen variables categóricas codificadas.</p>
+<p>El resultado muestra que se transformaron <strong>12 variables ordinales</strong> mediante recodificación numérica y <strong>139 variables nominales</strong> a través de codificación <em>dummy</em>.</p>
+<p>Con estas transformaciones, el dataset quedó sin valores faltantes, sin outliers y con todas las variables en formato adecuado para su modelación.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resumen</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;Etapa&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Original&quot;</span><span class="p">,</span> <span class="s2">&quot;Después de limpieza&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;Registros&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data_codificada</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+    <span class="s2">&quot;Columnas&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">data_codificada</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+    <span class="s2">&quot;Faltantes totales&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">data_codificada</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()]</span>
+<span class="p">})</span>
+
+<span class="n">resumen</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Etapa</th>
+      <th>Registros</th>
+      <th>Columnas</th>
+      <th>Faltantes totales</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Original</td>
+      <td>2930</td>
+      <td>82</td>
+      <td>15749</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Después de limpieza</td>
+      <td>2768</td>
+      <td>222</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p><strong>Key</strong>
+Resumen genera limpieza de datos.</p>
+<p>El conjunto original contenía 2930 registros y 82 variables, con un total de 15 749 valores faltantes.<br />
+Tras el proceso de imputación, eliminación de outliers, transformación logarítmica y codificación de variables, el dataset final quedó compuesto por 2768 observaciones y 222 variables, sin valores ausentes.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="01-introduccion.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Capítulo 1: Introduccióny pregunta de investigación</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="03-modelado.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Capítulo 3 · Regresión lineal (OLS) e inferencia</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset">2.1 Carga del dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers">2.2 Tratamiento de outliers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-de-variables-categoricas">2.3 Codificación de variables categóricas</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gloria Bastidas - Daniel Carbono - Luis Perez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
