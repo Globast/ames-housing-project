@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>4. Capítulo 3: Análisis exploratorio (EDA) &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>3. Capítulo 3: Análisis exploratorio (EDA) &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -60,8 +60,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/03-eda';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="5. Capítulo 4: Formulación matricial del modelo OLS" href="04-ols-matrix.html" />
-    <link rel="prev" title="3. Capítulo 2: Descripción y limpieza del dataset" href="02-data-cleaning.html" />
+    <link rel="next" title="4. Capítulo 4: Formulación matricial del modelo OLS" href="04-ols-matrix.html" />
+    <link rel="prev" title="2. Capítulo 2: Descripción y limpieza del dataset" href="02-data-cleaning.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -165,18 +165,22 @@
  </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="00-instructions.html">1. Capítulo 0 · Instrucciones de reproducción</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01-introduction.html">2. Capítulo 1: Introduccióny pregunta de investigación</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">3. Capítulo 2: Descripción y limpieza del dataset</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">4. Capítulo 3: Análisis exploratorio (EDA)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">5. Capítulo 4: Formulación matricial del modelo OLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-inference.html">6. Capítulo 5: Inferencia y grados de libertad</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">7. Capítulo 6: Diagnóstico de supuestos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">8. Capítulo 7 — Remedios y métodos robustos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08-validation.html">9. Capítulo 8 — Validación y selección de modelos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-interpretation.html">10. Capítulo 9: Interpretación aplicada</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10-conclusions.html">11. Capítulo 10: Conclusiones y trabajo futuro</a></li>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Prefacio</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="00-instructions.html">Capítulo 0 · Instrucciones de reproducción</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contenido</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-introduction.html">1. Capítulo 1: Introduccióny pregunta de investigación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">2. Capítulo 2: Descripción y limpieza del dataset</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Capítulo 3: Análisis exploratorio (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">4. Capítulo 4: Formulación matricial del modelo OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-inference.html">5. Capítulo 5: Inferencia y grados de libertad</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">6. Capítulo 6: Diagnóstico de supuestos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">7. Capítulo 7 — Remedios y métodos robustos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-validation.html">8. Capítulo 8 — Validación y selección de modelos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-interpretation.html">9. Capítulo 9: Interpretación aplicada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-conclusions.html">10. Capítulo 10: Conclusiones y trabajo futuro</a></li>
 </ul>
 
     </div>
@@ -325,11 +329,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">4.1. Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">4.2. 3.1 Distribución de la variable respuesta</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">4.3. 3.2 Correlaciones entre variables numéricas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">4.4. 3.4 Relaciones de variables categóricas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">4.5. Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">3.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.2. 3.1 Distribución de la variable respuesta</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.3. 3.2 Correlaciones entre variables numéricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.4. 3.4 Relaciones de variables categóricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">3.5. Takeaways</a></li>
 </ul>
             </nav>
         </div>
@@ -342,9 +346,9 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-3-analisis-exploratorio-eda">
-<h1><span class="section-number">4. </span>Capítulo 3: Análisis exploratorio (EDA)<a class="headerlink" href="#capitulo-3-analisis-exploratorio-eda" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">3. </span>Capítulo 3: Análisis exploratorio (EDA)<a class="headerlink" href="#capitulo-3-analisis-exploratorio-eda" title="Link to this heading">#</a></h1>
 <section id="overview">
-<h2><span class="section-number">4.1. </span>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.1. </span>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>Incluye distribución de variables, relaciones bivariadas y detección preliminar de colinealidad.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -373,7 +377,7 @@ document.write(`
 </div>
 </section>
 <section id="distribucion-de-la-variable-respuesta">
-<h2><span class="section-number">4.2. </span>3.1 Distribución de la variable respuesta<a class="headerlink" href="#distribucion-de-la-variable-respuesta" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.2. </span>3.1 Distribución de la variable respuesta<a class="headerlink" href="#distribucion-de-la-variable-respuesta" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -443,7 +447,7 @@ document.write(`
 <p>Inicialmente se observa una <strong>dispersión notable en los valores altos</strong>. Tras aplicar la transformación, el patrón muestra una <strong>relación más lineal y estable</strong>, reduciendo la asimetría y atenuando la influencia de valores extremos.</p>
 </section>
 <section id="correlaciones-entre-variables-numericas">
-<h2><span class="section-number">4.3. </span>3.2 Correlaciones entre variables numéricas<a class="headerlink" href="#correlaciones-entre-variables-numericas" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.3. </span>3.2 Correlaciones entre variables numéricas<a class="headerlink" href="#correlaciones-entre-variables-numericas" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
@@ -504,7 +508,7 @@ Name: SalePrice, dtype: float64
 <p>Sin embargo, variables como <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code> y <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Area</span></code> tienen una correlación alta entre sí, de modo que puede no ser necesario incluir ambas.</p>
 </section>
 <section id="relaciones-de-variables-categoricas">
-<h2><span class="section-number">4.4. </span>3.4 Relaciones de variables categóricas<a class="headerlink" href="#relaciones-de-variables-categoricas" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.4. </span>3.4 Relaciones de variables categóricas<a class="headerlink" href="#relaciones-de-variables-categoricas" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
@@ -581,7 +585,7 @@ Name: SalePrice, dtype: float64
 <p>Se eligen 9 variables predictoras, teniendo en cuenta una <strong>alta correlación con la variable de respuesta</strong>, <strong>baja correlación entre ellas</strong> (para evitar redundancia en el modelo) y <strong>sentido práctico</strong>.</p>
 </section>
 <section id="takeaways">
-<h2><span class="section-number">4.5. </span>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.5. </span>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Las distribuciones sugieren posibles transformaciones para linealidad/normalidad.</p></li>
 <li><p>Se identifican variables con fuerte asociación a la respuesta (útiles para el modelo base).</p></li>
@@ -626,7 +630,7 @@ Name: SalePrice, dtype: float64
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">3. </span>Capítulo 2: Descripción y limpieza del dataset</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Capítulo 2: Descripción y limpieza del dataset</p>
       </div>
     </a>
     <a class="right-next"
@@ -634,7 +638,7 @@ Name: SalePrice, dtype: float64
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">5. </span>Capítulo 4: Formulación matricial del modelo OLS</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Capítulo 4: Formulación matricial del modelo OLS</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -654,11 +658,11 @@ Name: SalePrice, dtype: float64
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">4.1. Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">4.2. 3.1 Distribución de la variable respuesta</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">4.3. 3.2 Correlaciones entre variables numéricas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">4.4. 3.4 Relaciones de variables categóricas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">4.5. Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">3.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.2. 3.1 Distribución de la variable respuesta</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.3. 3.2 Correlaciones entre variables numéricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.4. 3.4 Relaciones de variables categóricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">3.5. Takeaways</a></li>
 </ul>
   </nav></div>
 

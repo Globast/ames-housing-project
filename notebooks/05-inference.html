@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>6. Capítulo 5: Inferencia y grados de libertad &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>5. Capítulo 5: Inferencia y grados de libertad &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -62,8 +62,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/05-inference';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="7. Capítulo 6: Diagnóstico de supuestos" href="06-diagnostics.html" />
-    <link rel="prev" title="5. Capítulo 4: Formulación matricial del modelo OLS" href="04-ols-matrix.html" />
+    <link rel="next" title="6. Capítulo 6: Diagnóstico de supuestos" href="06-diagnostics.html" />
+    <link rel="prev" title="4. Capítulo 4: Formulación matricial del modelo OLS" href="04-ols-matrix.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -167,18 +167,22 @@
  </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="00-instructions.html">1. Capítulo 0 · Instrucciones de reproducción</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01-introduction.html">2. Capítulo 1: Introduccióny pregunta de investigación</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">3. Capítulo 2: Descripción y limpieza del dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03-eda.html">4. Capítulo 3: Análisis exploratorio (EDA)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">5. Capítulo 4: Formulación matricial del modelo OLS</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">6. Capítulo 5: Inferencia y grados de libertad</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">7. Capítulo 6: Diagnóstico de supuestos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">8. Capítulo 7 — Remedios y métodos robustos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08-validation.html">9. Capítulo 8 — Validación y selección de modelos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-interpretation.html">10. Capítulo 9: Interpretación aplicada</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10-conclusions.html">11. Capítulo 10: Conclusiones y trabajo futuro</a></li>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Prefacio</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="00-instructions.html">Capítulo 0 · Instrucciones de reproducción</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contenido</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-introduction.html">1. Capítulo 1: Introduccióny pregunta de investigación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">2. Capítulo 2: Descripción y limpieza del dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-eda.html">3. Capítulo 3: Análisis exploratorio (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">4. Capítulo 4: Formulación matricial del modelo OLS</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">5. Capítulo 5: Inferencia y grados de libertad</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">6. Capítulo 6: Diagnóstico de supuestos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">7. Capítulo 7 — Remedios y métodos robustos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-validation.html">8. Capítulo 8 — Validación y selección de modelos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-interpretation.html">9. Capítulo 9: Interpretación aplicada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-conclusions.html">10. Capítulo 10: Conclusiones y trabajo futuro</a></li>
 </ul>
 
     </div>
@@ -327,11 +331,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">6.1. Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">6.2. 5.1 Grados de libertad</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">6.3. 5.2 Errores estándar</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">6.4. 5.3 Valores P</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">6.5. Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">5.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">5.2. 5.1 Grados de libertad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">5.3. 5.2 Errores estándar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">5.4. 5.3 Valores P</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">5.5. Takeaways</a></li>
 </ul>
             </nav>
         </div>
@@ -344,9 +348,9 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-5-inferencia-y-grados-de-libertad">
-<h1><span class="section-number">6. </span>Capítulo 5: Inferencia y grados de libertad<a class="headerlink" href="#capitulo-5-inferencia-y-grados-de-libertad" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">5. </span>Capítulo 5: Inferencia y grados de libertad<a class="headerlink" href="#capitulo-5-inferencia-y-grados-de-libertad" title="Link to this heading">#</a></h1>
 <section id="overview">
-<h2><span class="section-number">6.1. </span>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">5.1. </span>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>Se realiza <strong>inferencia</strong>: intervalos de confianza, pruebas de hipótesis sobre coeficientes y ajuste global del modelo. Se reportan supuestos y su impacto en la validez inferencial.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -375,7 +379,7 @@ document.write(`
 </div>
 </section>
 <section id="grados-de-libertad">
-<h2><span class="section-number">6.2. </span>5.1 Grados de libertad<a class="headerlink" href="#grados-de-libertad" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">5.2. </span>5.1 Grados de libertad<a class="headerlink" href="#grados-de-libertad" title="Link to this heading">#</a></h2>
 <p>En regresión lineal, sea:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(n\)</span> = número de observaciones</p></li>
@@ -408,7 +412,7 @@ document.write(`
 <p>Representa los grados de libertad restantes después de ajustar el modelo.</p>
 </section>
 <section id="errores-estandar">
-<h2><span class="section-number">6.3. </span>5.2 Errores estándar<a class="headerlink" href="#errores-estandar" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">5.3. </span>5.2 Errores estándar<a class="headerlink" href="#errores-estandar" title="Link to this heading">#</a></h2>
 <p>En un modelo de regresión lineal, los <strong>errores estándar de los coeficientes</strong> miden la incertidumbre asociada a cada estimador <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span>.<br />
 En otras palabras, nos indican cuánto esperaríamos que varíen los coeficientes si repitiéramos el experimento con nuevas muestras del mismo tamaño. Coeficientes con errores estándar grandes son menos precisos y más sensibles al muestreo.</p>
 <p>La suma de cuadrados de los residuos se define como:</p>
@@ -478,7 +482,7 @@ SE(\hat{\beta}_j) = \sqrt{[\text{Var}(\hat{\beta})]_{jj}}
 </div>
 </section>
 <section id="valores-p">
-<h2><span class="section-number">6.4. </span>5.3 Valores P<a class="headerlink" href="#valores-p" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">5.4. </span>5.3 Valores P<a class="headerlink" href="#valores-p" title="Link to this heading">#</a></h2>
 <p>Consecuentemente, los <strong>valores p</strong> permiten evaluar la significancia estadística de cada coeficiente <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span>.<br />
 En otras palabras, nos indican la probabilidad de obtener un coeficiente tan extremo como el observado si, en realidad, el coeficiente fuera cero (hipótesis nula <span class="math notranslate nohighlight">\(H_0: \beta_j = 0\)</span>).</p>
 <p>Para calcular el valor p, primero se construye el <strong>estadístico t</strong> de cada coeficiente:</p>
@@ -657,7 +661,7 @@ p_j = 2 \cdot P(T &gt; |t_j|)
 <p><strong>Valores p</strong> menores que 0.05 se consideran significativos, indicando que los coeficientes son distintos de 0. En este modelo, la mayoría de las variables cumplen este criterio, de forma que contribuyen significativamente a explicar <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>. Por el contrario, <code class="docutils literal notranslate"><span class="pre">1st</span> <span class="pre">Flr</span> <span class="pre">SF</span></code> y <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> tienen valores p mayores a 0.05, sugiriendo que su efecto podría no ser relevante al controlar por los demás predictores.</p>
 </section>
 <section id="takeaways">
-<h2><span class="section-number">6.5. </span>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">5.5. </span>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Intervalos y p-valores dependen de supuestos de homocedasticidad y normalidad de errores.</p></li>
 <li><p>Los efectos significativos son coherentes con el EDA, reforzando validez del modelo.</p></li>
@@ -702,7 +706,7 @@ p_j = 2 \cdot P(T &gt; |t_j|)
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">5. </span>Capítulo 4: Formulación matricial del modelo OLS</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Capítulo 4: Formulación matricial del modelo OLS</p>
       </div>
     </a>
     <a class="right-next"
@@ -710,7 +714,7 @@ p_j = 2 \cdot P(T &gt; |t_j|)
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">7. </span>Capítulo 6: Diagnóstico de supuestos</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>Capítulo 6: Diagnóstico de supuestos</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -730,11 +734,11 @@ p_j = 2 \cdot P(T &gt; |t_j|)
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">6.1. Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">6.2. 5.1 Grados de libertad</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">6.3. 5.2 Errores estándar</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">6.4. 5.3 Valores P</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">6.5. Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">5.1. Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">5.2. 5.1 Grados de libertad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">5.3. 5.2 Errores estándar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">5.4. 5.3 Valores P</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">5.5. Takeaways</a></li>
 </ul>
   </nav></div>
 
