@@ -29,13 +29,17 @@ nbclient.exceptions.CellExecutionError: An error occurred while executing the fo
 from pathlib import Path
 DATA_PATH = Path("data/ames_housing.csv")
 assert DATA_PATH.is_file(), "No se encontró 'book/data/ames_housing.csv'"
-print("Usando CSV:", DATA_PATH.resolve()))
+print("Usando CSV:", DATA_PATH.resolve())
 ------------------
 
 
-  [36mCell[39m[36m [39m[32mIn[1][39m[32m, line 5[39m
-[31m    [39m[31mprint("Usando CSV:", DATA_PATH.resolve()))[39m
-                                             ^
-[31mSyntaxError[39m[31m:[39m unmatched ')'
+[31m---------------------------------------------------------------------------[39m
+[31mAssertionError[39m                            Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 4[39m
+[32m      2[39m [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01mpathlib[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m Path
+[32m      3[39m DATA_PATH = Path([33m"[39m[33mdata/ames_housing.csv[39m[33m"[39m)
+[32m----> [39m[32m4[39m [38;5;28;01massert[39;00m DATA_PATH.is_file(), [33m"[39m[33mNo se encontró [39m[33m'[39m[33mbook/data/ames_housing.csv[39m[33m'[39m[33m"[39m
+[32m      5[39m [38;5;28mprint[39m([33m"[39m[33mUsando CSV:[39m[33m"[39m, DATA_PATH.resolve())
 
+[31mAssertionError[39m: No se encontró 'book/data/ames_housing.csv'
 
