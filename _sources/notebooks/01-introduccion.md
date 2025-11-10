@@ -1,4 +1,4 @@
-# Capítulo 1 · Introducción y pregunta de investigación
+# Capítulo 1: Introduccióny pregunta de investigación 
 
 ## Resumen (overview)
 Este capítulo presenta el dataset **Ames Housing**, su contexto y relevancia para modelado e inferencia.
