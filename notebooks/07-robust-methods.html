@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Capítulo 5 · Métodos robustos &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>Capítulo 7: Remedios y métodos robustos &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -57,10 +57,12 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]]}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/07-robust-methods';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="08-validation.html" />
+    <link rel="next" title="Capitulo 8. Validación y selección de modelo (Train/Test)" href="08-validation.html" />
     <link rel="prev" title="Capítulo 6: Diagnóstico de supuestos" href="06-diagnostics.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -177,7 +179,13 @@
 <li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 5 · Métodos robustos</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 7: Remedios y métodos robustos</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="11-conclusions.html">Capítulo 6 · Conclusiones y trabajo futuro</a></li>
 </ul>
 
@@ -304,7 +312,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -315,11 +325,44 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Capítulo 5 · Métodos robustos</h1>
+    <h1>Capítulo 7: Remedios y métodos robustos</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Capítulo 7: Remedios y métodos robustos</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contexto"><strong>Contexto</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-general"><strong>Definición general</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tipos-de-correccion-hc0hc3"><strong>Tipos de corrección (HC0–HC3)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementacion-en-python"><strong>Implementacion en Python</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-e-interpretacion"><strong>Resultados e interpretación</strong></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-principales"><strong>Resultados principales</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-los-resultados"><strong>Interpretación de los resultados</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion"><strong>Conclusión</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-robustos-rlm-con-huber-y-tukey">Modelos robustos RLM con Huber y Tukey</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#funciones-de-perdida-comunes-en-rlm">Funciones de pérdida comunes en RLM</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#caracteristicas">Características</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><strong>Implementación en Python</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-de-coeficientes-ols"><strong>Bootstrap de coeficientes OLS</strong></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-principales-bootstrap">3️⃣ Resultados principales: Bootstrap</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-comparativa-final">Tabla comparativa final</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion">Interpretación</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -329,118 +372,631 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="capitulo-5-metodos-robustos">
-<h1>Capítulo 5 · Métodos robustos<a class="headerlink" href="#capitulo-5-metodos-robustos" title="Link to this heading">#</a></h1>
-<blockquote>
-<div><p><strong>Overview</strong>: Comparar OLS con estimadores robustos (Huber, RLM/Quantile) y evaluar estabilidad de coeficientes.</p>
-</div></blockquote>
+  <section class="tex2jax_ignore mathjax_ignore" id="capitulo-7-remedios-y-metodos-robustos">
+<h1>Capítulo 7: Remedios y métodos robustos<a class="headerlink" href="#capitulo-7-remedios-y-metodos-robustos" title="Link to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/AmesHousing_codificada.csv&quot;</span><span class="p">)</span>  <span class="c1"># relativo a book/notebooks/</span>
+<span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="s2">&quot;No se encontró &#39;../data/AmesHousing_codificada.csv&#39;&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usando CSV:&quot;</span><span class="p">,</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Usando CSV: /workspaces/ames-housing-project/book/data/AmesHousing_codificada.csv
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<section id="contexto">
+<h2><strong>Contexto</strong><a class="headerlink" href="#contexto" title="Link to this heading">#</a></h2>
+<p>Cuando el supuesto de <strong>homocedasticidad</strong> se viola (es decir, los residuos no tienen varianza constante), los estimadores OLS siguen siendo <strong>insesgados</strong>, pero sus <strong>errores estándar y valores p dejan de ser válidos</strong>.</p>
+<p>Para corregirlo sin modificar los coeficientes, se usan las <strong>correcciones de varianza robustas</strong>, conocidas como <strong>HC0, HC1, HC2 y HC3</strong>.</p>
+</section>
+<hr class="docutils" />
+<section id="definicion-general">
+<h2><strong>Definición general</strong><a class="headerlink" href="#definicion-general" title="Link to this heading">#</a></h2>
+<p>La matriz de varianza-covarianza robusta se define como:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Var}(\hat{\beta}) = (X^\top X)^{-1} \left( X^\top \Omega X \right) (X^\top X)^{-1}
+\]</div>
+<p>donde ( \Omega ) es una matriz diagonal con los residuos al cuadrado corregidos según el tipo de estimador HC.</p>
+</section>
+<hr class="docutils" />
+<section id="tipos-de-correccion-hc0hc3">
+<h2><strong>Tipos de corrección (HC0–HC3)</strong><a class="headerlink" href="#tipos-de-correccion-hc0hc3" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Método</p></th>
+<th class="head text-left"><p>Descripción</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><strong>HC0</strong></p></td>
+<td class="text-left"><p>White (1980). Asume grandes muestras.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>HC1</strong></p></td>
+<td class="text-left"><p>Corrige el sesgo pequeño de muestra.</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>HC2</strong></p></td>
+<td class="text-left"><p>Ajusta según la influencia de cada observación.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>HC3</strong></p></td>
+<td class="text-left"><p>Más conservador; recomendado con outliers.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="implementacion-en-python">
+<h2><strong>Implementacion en Python</strong><a class="headerlink" href="#implementacion-en-python" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.robust.robust_linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">RLM</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">HuberRegressor</span><span class="p">,</span> <span class="n">QuantileRegressor</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="c1"># Ajustar modelo OLS normal</span>
+<span class="n">data_modelo_base</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data/ames_housing.csv&#39;</span><span class="p">))</span>
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;log_SalePrice&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;SalePrice&#39;</span><span class="p">])</span>
+<span class="n">data_modelo_base</span> <span class="o">=</span> <span class="n">data_modelo_base</span><span class="p">[[</span><span class="s1">&#39;SalePrice&#39;</span><span class="p">,</span><span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span><span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Area&#39;</span><span class="p">,</span><span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span><span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span><span class="s1">&#39;Year Built&#39;</span><span class="p">,</span><span class="s1">&#39;Year Remod/Add&#39;</span><span class="p">,</span><span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Yr Blt&#39;</span><span class="p">,</span><span class="s1">&#39;TotRms AbvGrd&#39;</span><span class="p">,</span><span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span><span class="s1">&#39;Mas Vnr Area&#39;</span><span class="p">,</span><span class="s1">&#39;BsmtFin SF 1&#39;</span><span class="p">]]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data_modelo_base</span><span class="p">[[</span><span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span><span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Area&#39;</span><span class="p">,</span><span class="s1">&#39;Year Built&#39;</span><span class="p">,</span><span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span><span class="s1">&#39;Year Remod/Add&#39;</span><span class="p">,</span><span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span><span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Yr Blt&#39;</span><span class="p">,</span><span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span><span class="s1">&#39;TotRms AbvGrd&#39;</span><span class="p">]]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data_modelo_base</span><span class="p">[[</span><span class="s1">&#39;SalePrice&#39;</span><span class="p">]]</span>
 
-<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span><span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span><span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span><span class="s1">&#39;Year Built&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">X_sm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;log_SalePrice&#39;</span><span class="p">]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
-<span class="c1"># OLS</span>
-<span class="n">ols</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X_sm</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">modelo_base</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
-<span class="c1"># Huber (sklearn)</span>
-<span class="n">hub</span> <span class="o">=</span> <span class="n">HuberRegressor</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="c1"># Aplicar correcciones HC0–HC3</span>
+<span class="n">resultados_HC0</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">get_robustcov_results</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="s1">&#39;HC0&#39;</span><span class="p">)</span>
+<span class="n">resultados_HC1</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">get_robustcov_results</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="s1">&#39;HC1&#39;</span><span class="p">)</span>
+<span class="n">resultados_HC2</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">get_robustcov_results</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="s1">&#39;HC2&#39;</span><span class="p">)</span>
+<span class="n">resultados_HC3</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">get_robustcov_results</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="s1">&#39;HC3&#39;</span><span class="p">)</span>
 
-<span class="c1"># Quantile (mediana)</span>
-<span class="n">qr</span> <span class="o">=</span> <span class="n">QuantileRegressor</span><span class="p">(</span><span class="n">quantile</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="c1"># Mostrar resumen comparativo</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== HC0 ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultados_HC0</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== HC1 ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultados_HC1</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== HC2 ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultados_HC2</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== HC3 ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultados_HC3</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== HC0 ===
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              SalePrice   R-squared:                       0.845
+Model:                            OLS   Adj. R-squared:                  0.845
+Method:                 Least Squares   F-statistic:                     804.8
+Date:                Mon, 10 Nov 2025   Prob (F-statistic):               0.00
+Time:                        04:12:17   Log-Likelihood:                -32098.
+No. Observations:                2768   AIC:                         6.422e+04
+Df Residuals:                    2755   BIC:                         6.430e+04
+Df Model:                          12                                         
+Covariance Type:                  HC0                                         
+==================================================================================
+                     coef    std err          t      P&gt;|t|      [0.025      0.975]
+----------------------------------------------------------------------------------
+const          -1.388e+06   6.37e+04    -21.803      0.000   -1.51e+06   -1.26e+06
+Overall Qual    1.548e+04    675.990     22.897      0.000    1.42e+04    1.68e+04
+Gr Liv Area       50.9544      2.949     17.280      0.000      45.173      56.736
+Garage Cars      865.8764   1551.821      0.558      0.577   -2176.973    3908.726
+Garage Area       38.4294      5.859      6.559      0.000      26.940      49.919
+Year Built       266.8266     29.472      9.054      0.000     209.038     324.615
+Total Bsmt SF     27.1376      2.586     10.492      0.000      22.066      32.209
+Year Remod/Add   357.9672     30.361     11.790      0.000     298.434     417.500
+1st Flr SF        10.6326      2.824      3.765      0.000       5.096      16.170
+Full Bath      -7030.8661   1541.331     -4.562      0.000   -1.01e+04   -4008.586
+Garage Yr Blt     55.9347     33.141      1.688      0.092      -9.049     120.918
+Fireplaces      8865.1262    975.146      9.091      0.000    6953.036    1.08e+04
+TotRms AbvGrd   -825.2572    698.781     -1.181      0.238   -2195.444     544.929
+==============================================================================
+Omnibus:                      245.293   Durbin-Watson:                   1.590
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              936.365
+Skew:                           0.377   Prob(JB):                    4.69e-204
+Kurtosis:                       5.748   Cond. No.                     5.49e+05
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity robust (HC0)
+[2] The condition number is large, 5.49e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.
+
+=== HC1 ===
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              SalePrice   R-squared:                       0.845
+Model:                            OLS   Adj. R-squared:                  0.845
+Method:                 Least Squares   F-statistic:                     801.0
+Date:                Mon, 10 Nov 2025   Prob (F-statistic):               0.00
+Time:                        04:12:17   Log-Likelihood:                -32098.
+No. Observations:                2768   AIC:                         6.422e+04
+Df Residuals:                    2755   BIC:                         6.430e+04
+Df Model:                          12                                         
+Covariance Type:                  HC1                                         
+==================================================================================
+                     coef    std err          t      P&gt;|t|      [0.025      0.975]
+----------------------------------------------------------------------------------
+const          -1.388e+06   6.38e+04    -21.751      0.000   -1.51e+06   -1.26e+06
+Overall Qual    1.548e+04    677.583     22.844      0.000    1.41e+04    1.68e+04
+Gr Liv Area       50.9544      2.956     17.240      0.000      45.159      56.750
+Garage Cars      865.8764   1555.478      0.557      0.578   -2184.144    3915.897
+Garage Area       38.4294      5.873      6.543      0.000      26.913      49.946
+Year Built       266.8266     29.541      9.032      0.000     208.902     324.751
+Total Bsmt SF     27.1376      2.593     10.468      0.000      22.054      32.221
+Year Remod/Add   357.9672     30.433     11.763      0.000     298.294     417.640
+1st Flr SF        10.6326      2.830      3.757      0.000       5.083      16.183
+Full Bath      -7030.8661   1544.963     -4.551      0.000   -1.01e+04   -4001.463
+Garage Yr Blt     55.9347     33.219      1.684      0.092      -9.202     121.072
+Fireplaces      8865.1262    977.444      9.070      0.000    6948.530    1.08e+04
+TotRms AbvGrd   -825.2572    700.427     -1.178      0.239   -2198.673     548.158
+==============================================================================
+Omnibus:                      245.293   Durbin-Watson:                   1.590
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              936.365
+Skew:                           0.377   Prob(JB):                    4.69e-204
+Kurtosis:                       5.748   Cond. No.                     5.49e+05
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity robust (HC1)
+[2] The condition number is large, 5.49e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.
+
+=== HC2 ===
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              SalePrice   R-squared:                       0.845
+Model:                            OLS   Adj. R-squared:                  0.845
+Method:                 Least Squares   F-statistic:                     800.6
+Date:                Mon, 10 Nov 2025   Prob (F-statistic):               0.00
+Time:                        04:12:17   Log-Likelihood:                -32098.
+No. Observations:                2768   AIC:                         6.422e+04
+Df Residuals:                    2755   BIC:                         6.430e+04
+Df Model:                          12                                         
+Covariance Type:                  HC2                                         
+==================================================================================
+                     coef    std err          t      P&gt;|t|      [0.025      0.975]
+----------------------------------------------------------------------------------
+const          -1.388e+06   6.39e+04    -21.727      0.000   -1.51e+06   -1.26e+06
+Overall Qual    1.548e+04    678.509     22.812      0.000    1.41e+04    1.68e+04
+Gr Liv Area       50.9544      2.960     17.217      0.000      45.151      56.758
+Garage Cars      865.8764   1557.401      0.556      0.578   -2187.914    3919.667
+Garage Area       38.4294      5.880      6.535      0.000      26.899      49.960
+Year Built       266.8266     29.640      9.002      0.000     208.707     324.946
+Total Bsmt SF     27.1376      2.603     10.427      0.000      22.034      32.241
+Year Remod/Add   357.9672     30.480     11.744      0.000     298.201     417.734
+1st Flr SF        10.6326      2.839      3.745      0.000       5.065      16.200
+Full Bath      -7030.8661   1547.352     -4.544      0.000   -1.01e+04   -3996.779
+Garage Yr Blt     55.9347     33.313      1.679      0.093      -9.386     121.255
+Fireplaces      8865.1262    978.400      9.061      0.000    6946.654    1.08e+04
+TotRms AbvGrd   -825.2572    701.355     -1.177      0.239   -2200.492     549.977
+==============================================================================
+Omnibus:                      245.293   Durbin-Watson:                   1.590
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              936.365
+Skew:                           0.377   Prob(JB):                    4.69e-204
+Kurtosis:                       5.748   Cond. No.                     5.49e+05
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity robust (HC2)
+[2] The condition number is large, 5.49e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.
+
+=== HC3 ===
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              SalePrice   R-squared:                       0.845
+Model:                            OLS   Adj. R-squared:                  0.845
+Method:                 Least Squares   F-statistic:                     796.4
+Date:                Mon, 10 Nov 2025   Prob (F-statistic):               0.00
+Time:                        04:12:17   Log-Likelihood:                -32098.
+No. Observations:                2768   AIC:                         6.422e+04
+Df Residuals:                    2755   BIC:                         6.430e+04
+Df Model:                          12                                         
+Covariance Type:                  HC3                                         
+==================================================================================
+                     coef    std err          t      P&gt;|t|      [0.025      0.975]
+----------------------------------------------------------------------------------
+const          -1.388e+06   6.41e+04    -21.652      0.000   -1.51e+06   -1.26e+06
+Overall Qual    1.548e+04    681.044     22.728      0.000    1.41e+04    1.68e+04
+Gr Liv Area       50.9544      2.970     17.154      0.000      45.130      56.779
+Garage Cars      865.8764   1563.015      0.554      0.580   -2198.923    3930.676
+Garage Area       38.4294      5.901      6.512      0.000      26.858      50.001
+Year Built       266.8266     29.811      8.951      0.000     208.373     325.280
+Total Bsmt SF     27.1376      2.619     10.362      0.000      22.002      32.273
+Year Remod/Add   357.9672     30.600     11.698      0.000     297.966     417.969
+1st Flr SF        10.6326      2.855      3.724      0.000       5.034      16.231
+Full Bath      -7030.8661   1553.414     -4.526      0.000   -1.01e+04   -3984.892
+Garage Yr Blt     55.9347     33.486      1.670      0.095      -9.726     121.596
+Fireplaces      8865.1262    981.674      9.031      0.000    6940.235    1.08e+04
+TotRms AbvGrd   -825.2572    703.947     -1.172      0.241   -2205.574     555.060
+==============================================================================
+Omnibus:                      245.293   Durbin-Watson:                   1.590
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              936.365
+Skew:                           0.377   Prob(JB):                    4.69e-204
+Kurtosis:                       5.748   Cond. No.                     5.49e+05
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity robust (HC3)
+[2] The condition number is large, 5.49e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="resultados-e-interpretacion">
+<h1><strong>Resultados e interpretación</strong><a class="headerlink" href="#resultados-e-interpretacion" title="Link to this heading">#</a></h1>
+<hr class="docutils" />
+<p>Los resultados del modelo OLS mostraron heterocedasticidad (p &lt; 0.05 en las pruebas Breusch–Pagan y White).<br />
+Para corregir los errores estándar, se aplicaron las <strong>correcciones robustas HC0, HC1, HC2 y HC3</strong>, que ajustan la matriz de varianza sin modificar los coeficientes.</p>
+<section id="resultados-principales">
+<h2><strong>Resultados principales</strong><a class="headerlink" href="#resultados-principales" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Los <strong>coeficientes estimados ((\hat{\beta})) son idénticos</strong> en todos los métodos → OLS sigue siendo insesgado.</p></li>
+<li><p>Cambian los <strong>errores estándar</strong>, los <strong>t-values</strong> y, en menor medida, los <strong>p-valores</strong>.</p></li>
+<li><p>Las diferencias entre HC0 y HC3 son mínimas, lo cual indica que el modelo es <strong>robusto</strong> frente a la heterocedasticidad leve.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="interpretacion-de-los-resultados">
+<h2><strong>Interpretación de los resultados</strong><a class="headerlink" href="#interpretacion-de-los-resultados" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Variable</p></th>
+<th class="head text-left"><p>Significativa (p &lt; 0.05)?</p></th>
+<th class="head text-left"><p>Comentario</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><strong>OverallQual</strong></p></td>
+<td class="text-left"><p>✅ Sí</p></td>
+<td class="text-left"><p>Mayor calidad percibida → mayor precio.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>GrLivArea</strong></p></td>
+<td class="text-left"><p>✅ Sí</p></td>
+<td class="text-left"><p>Cada m² adicional de área habitable incrementa el valor.</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>GarageCars</strong></p></td>
+<td class="text-left"><p>⚠️ No</p></td>
+<td class="text-left"><p>El número de autos del garaje no tiene efecto fuerte controlando por área.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>GarageArea</strong></p></td>
+<td class="text-left"><p>✅ Sí</p></td>
+<td class="text-left"><p>Tamaño del garaje sí afecta el precio.</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>YearBuilt</strong></p></td>
+<td class="text-left"><p>✅ Sí</p></td>
+<td class="text-left"><p>Casas más nuevas valen más.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>TotalBsmtSF</strong></p></td>
+<td class="text-left"><p>✅ Sí</p></td>
+<td class="text-left"><p>Mayor área de sótano aumenta el precio.</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>YearRemod/Add</strong></p></td>
+<td class="text-left"><p>✅ Sí</p></td>
+<td class="text-left"><p>Renovaciones recientes incrementan valor.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>1stFlrSF</strong></p></td>
+<td class="text-left"><p>✅ Sí</p></td>
+<td class="text-left"><p>Contribución positiva pero pequeña.</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>FullBath</strong></p></td>
+<td class="text-left"><p>✅ Sí (negativa)</p></td>
+<td class="text-left"><p>Posible correlación con otras variables de tamaño.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>GarageYrBlt</strong></p></td>
+<td class="text-left"><p>❌ No</p></td>
+<td class="text-left"><p>No tiene efecto significativo.</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Fireplaces</strong></p></td>
+<td class="text-left"><p>✅ Sí</p></td>
+<td class="text-left"><p>Mayor número de chimeneas aumenta valor.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>TotRmsAbvGrd</strong></p></td>
+<td class="text-left"><p>❌ No</p></td>
+<td class="text-left"><p>Altamente correlacionada con área habitable.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="conclusion">
+<h2><strong>Conclusión</strong><a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>El modelo <strong>mantiene estabilidad estadística</strong>: los signos y la significancia no cambian entre HC0 y HC3.</p></li>
+<li><p>La <strong>heterocedasticidad fue corregida</strong> mediante errores estándar robustos.</p></li>
+<li><p>Los resultados más confiables, en presencia de posibles outliers o alta varianza, son los obtenidos con <strong>HC3</strong>.</p></li>
+<li><p>En adelante, para reportar los coeficientes y su significancia, debe usarse la versión <strong>OLS (HC3)</strong>.</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="modelos-robustos-rlm-con-huber-y-tukey">
+<h1>Modelos robustos RLM con Huber y Tukey<a class="headerlink" href="#modelos-robustos-rlm-con-huber-y-tukey" title="Link to this heading">#</a></h1>
+<p>Aquí usamos <code class="docutils literal notranslate"><span class="pre">RLM</span></code> para ajustar modelos robustos que reducen el impacto de outliers:</p>
+<ul class="simple">
+<li><p><strong>Huber</strong>: penaliza menos outliers moderados.</p></li>
+<li><p><strong>Tukey</strong>: limita fuertemente el efecto de outliers extremos.</p></li>
+</ul>
+<p>Se comparan los coeficientes y se examinan los pesos de cada observación.</p>
+<hr class="docutils" />
+<ul class="simple">
+<li><p>Residuos pequeños → se tratan como en OLS (cuadrático).</p></li>
+<li><p>Residuos grandes → penalización menor, reduciendo su efecto sobre los coeficientes.</p></li>
+</ul>
+<hr class="docutils" />
+<section id="funciones-de-perdida-comunes-en-rlm">
+<h2>Funciones de pérdida comunes en RLM<a class="headerlink" href="#funciones-de-perdida-comunes-en-rlm" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Función</p></th>
+<th class="head text-left"><p>Comportamiento</p></th>
+<th class="head text-left"><p>Comentario</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><strong>HuberT</strong></p></td>
+<td class="text-left"><p>Cuadrática para residuos pequeños, lineal para grandes</p></td>
+<td class="text-left"><p>Protege contra outliers moderados manteniendo eficiencia</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>TukeyBiweight</strong></p></td>
+<td class="text-left"><p>Penalización progresiva hasta eliminar la influencia de residuos extremos</p></td>
+<td class="text-left"><p>Muy robusto frente a outliers, pero menos eficiente si no hay outliers</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="caracteristicas">
+<h2>Características<a class="headerlink" href="#caracteristicas" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Cada observación recibe un <strong>peso</strong> según su residuo: residuos grandes → peso pequeño.</p></li>
+<li><p>Mantiene coeficientes estables ante <strong>outliers extremos</strong>.</p></li>
+<li><p>Ideal para datasets con heterocedasticidad leve o outliers moderados/extremos.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="id1">
+<h2><strong>Implementación en Python</strong><a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Modelos RLM</span>
+<span class="n">rlm_huber</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">RLM</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">robust</span><span class="o">.</span><span class="n">norms</span><span class="o">.</span><span class="n">HuberT</span><span class="p">())</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">rlm_tukey</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">RLM</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">robust</span><span class="o">.</span><span class="n">norms</span><span class="o">.</span><span class="n">TukeyBiweight</span><span class="p">())</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
 <span class="c1"># Comparación de coeficientes</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="n">coef</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;OLS&#39;</span><span class="p">:</span> <span class="n">ols</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">reindex</span><span class="p">([</span><span class="s1">&#39;const&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>
-    <span class="s1">&#39;Huber&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="n">hub</span><span class="o">.</span><span class="n">intercept_</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">hub</span><span class="o">.</span><span class="n">coef_</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;const&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>
-    <span class="s1">&#39;Quantile(0.5)&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">qr</span><span class="o">.</span><span class="n">coef_</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;const&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+<span class="n">rlm_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;OLS&#39;</span><span class="p">:</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+    <span class="s1">&#39;RLM_Huber&#39;</span><span class="p">:</span> <span class="n">rlm_huber</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+    <span class="s1">&#39;RLM_Tukey&#39;</span><span class="p">:</span> <span class="n">rlm_tukey</span><span class="o">.</span><span class="n">params</span>
 <span class="p">})</span>
-<span class="n">coef</span>
+
+<span class="c1"># Pesos de observaciones (para análisis de outliers)</span>
+<span class="n">weights_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;Huber_weights&#39;</span><span class="p">:</span> <span class="n">rlm_huber</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span>
+    <span class="s1">&#39;Tukey_weights&#39;</span><span class="p">:</span> <span class="n">rlm_tukey</span><span class="o">.</span><span class="n">weights</span>
+<span class="p">})</span>
+
+<span class="n">rlm_df</span><span class="p">,</span> <span class="n">weights_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(                         OLS     RLM_Huber     RLM_Tukey
+ const          -1.388172e+06 -1.284957e+06 -1.252850e+06
+ Overall Qual    1.547847e+04  1.382553e+04  1.271174e+04
+ Gr Liv Area     5.095444e+01  4.976224e+01  4.891861e+01
+ Garage Cars     8.658764e+02  3.456898e+02 -6.497454e+01
+ Garage Area     3.842936e+01  4.057001e+01  4.123489e+01
+ Year Built      2.668266e+02  2.764529e+02  2.903994e+02
+ Total Bsmt SF   2.713756e+01  2.685270e+01  2.631752e+01
+ Year Remod/Add  3.579672e+02  3.212009e+02  3.087352e+02
+ 1st Flr SF      1.063263e+01  8.756250e+00  6.624696e+00
+ Full Bath      -7.030866e+03 -5.476265e+03 -4.081479e+03
+ Garage Yr Blt   5.593473e+01  3.534171e+01  2.202964e+01
+ Fireplaces      8.865126e+03  7.820516e+03  7.914921e+03
+ TotRms AbvGrd  -8.252572e+02 -4.435346e+02 -5.014672e+02,
+    Huber_weights  Tukey_weights
+ 0            1.0       0.878856
+ 1            1.0       0.911558
+ 2            1.0       0.931099
+ 3            1.0       0.966281
+ 4            1.0       0.970097)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="bootstrap-de-coeficientes-ols">
+<h1><strong>Bootstrap de coeficientes OLS</strong><a class="headerlink" href="#bootstrap-de-coeficientes-ols" title="Link to this heading">#</a></h1>
+<p>Se realiza remuestreo bootstrap (B=1000 réplicas) para estimar la distribución
+de los coeficientes sin asumir normalidad, obteniendo errores estándar y
+intervalos de confianza percentiles.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">resample</span>
+<span class="n">B</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">coef_boot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">B</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="p">):</span>
+    <span class="n">X_resample</span><span class="p">,</span> <span class="n">y_resample</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">model_bs</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_resample</span><span class="p">,</span> <span class="n">X_resample</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">coef_boot</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">model_bs</span><span class="o">.</span><span class="n">params</span>
+
+<span class="c1"># Estadísticas bootstrap</span>
+<span class="n">coef_mean</span> <span class="o">=</span> <span class="n">coef_boot</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">coef_se</span> <span class="o">=</span> <span class="n">coef_boot</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ic_lower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">coef_boot</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ic_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">coef_boot</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">bootstrap_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;Coef_mean&#39;</span><span class="p">:</span> <span class="n">coef_mean</span><span class="p">,</span>
+    <span class="s1">&#39;SE_bootstrap&#39;</span><span class="p">:</span> <span class="n">coef_se</span><span class="p">,</span>
+    <span class="s1">&#39;IC_2.5%&#39;</span><span class="p">:</span> <span class="n">ic_lower</span><span class="p">,</span>
+    <span class="s1">&#39;IC_97.5%&#39;</span><span class="p">:</span> <span class="n">ic_upper</span>
+<span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="n">bootstrap_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;boostrap_df.csv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">bootstrap_df</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">8</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">HuberRegressor</span><span class="p">,</span> <span class="n">QuantileRegressor</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="ne">----&gt; </span><span class="mi">8</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data/ames_housing.csv&#39;</span><span class="p">))</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;log_SalePrice&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;SalePrice&#39;</span><span class="p">])</span>
-<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span><span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span><span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span><span class="s1">&#39;Year Built&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">resample</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">B</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">coef_boot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">B</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="p">):</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="n">X_resample</span><span class="p">,</span> <span class="n">y_resample</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/parsers/readers.py:1026,</span> in <span class="ni">read_csv</span><span class="nt">(filepath_or_buffer, sep, delimiter, header, names, index_col, usecols, dtype, engine, converters, true_values, false_values, skipinitialspace, skiprows, skipfooter, nrows, na_values, keep_default_na, na_filter, verbose, skip_blank_lines, parse_dates, infer_datetime_format, keep_date_col, date_parser, date_format, dayfirst, cache_dates, iterator, chunksize, compression, thousands, decimal, lineterminator, quotechar, quoting, doublequote, escapechar, comment, encoding, encoding_errors, dialect, on_bad_lines, delim_whitespace, low_memory, memory_map, float_precision, storage_options, dtype_backend)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1013</span> <span class="n">kwds_defaults</span> <span class="o">=</span> <span class="n">_refine_defaults_read</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1014</span>     <span class="n">dialect</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1015</span>     <span class="n">delimiter</span><span class="p">,</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>   <span class="mi">1022</span>     <span class="n">dtype_backend</span><span class="o">=</span><span class="n">dtype_backend</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1023</span> <span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1024</span> <span class="n">kwds</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwds_defaults</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">1026</span> <span class="k">return</span> <span class="n">_read</span><span class="p">(</span><span class="n">filepath_or_buffer</span><span class="p">,</span> <span class="n">kwds</span><span class="p">)</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/parsers/readers.py:620,</span> in <span class="ni">_read</span><span class="nt">(filepath_or_buffer, kwds)</span>
-<span class="g g-Whitespace">    </span><span class="mi">617</span> <span class="n">_validate_names</span><span class="p">(</span><span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;names&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-<span class="g g-Whitespace">    </span><span class="mi">619</span> <span class="c1"># Create the parser.</span>
-<span class="ne">--&gt; </span><span class="mi">620</span> <span class="n">parser</span> <span class="o">=</span> <span class="n">TextFileReader</span><span class="p">(</span><span class="n">filepath_or_buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">622</span> <span class="k">if</span> <span class="n">chunksize</span> <span class="ow">or</span> <span class="n">iterator</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">623</span>     <span class="k">return</span> <span class="n">parser</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/parsers/readers.py:1620,</span> in <span class="ni">TextFileReader.__init__</span><span class="nt">(self, f, engine, **kwds)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1617</span>     <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;has_index_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwds</span><span class="p">[</span><span class="s2">&quot;has_index_names&quot;</span><span class="p">]</span>
-<span class="g g-Whitespace">   </span><span class="mi">1619</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span><span class="p">:</span> <span class="n">IOHandles</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="ne">-&gt; </span><span class="mi">1620</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_engine</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/parsers/readers.py:1880,</span> in <span class="ni">TextFileReader._make_engine</span><span class="nt">(self, f, engine)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1878</span>     <span class="k">if</span> <span class="s2">&quot;b&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mode</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1879</span>         <span class="n">mode</span> <span class="o">+=</span> <span class="s2">&quot;b&quot;</span>
-<span class="ne">-&gt; </span><span class="mi">1880</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span> <span class="o">=</span> <span class="n">get_handle</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1881</span>     <span class="n">f</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1882</span>     <span class="n">mode</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1883</span>     <span class="n">encoding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;encoding&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1884</span>     <span class="n">compression</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1885</span>     <span class="n">memory_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;memory_map&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1886</span>     <span class="n">is_text</span><span class="o">=</span><span class="n">is_text</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1887</span>     <span class="n">errors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;encoding_errors&quot;</span><span class="p">,</span> <span class="s2">&quot;strict&quot;</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1888</span>     <span class="n">storage_options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;storage_options&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1889</span> <span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1890</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<span class="g g-Whitespace">   </span><span class="mi">1891</span> <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span><span class="o">.</span><span class="n">handle</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/common.py:873,</span> in <span class="ni">get_handle</span><span class="nt">(path_or_buf, mode, encoding, compression, memory_map, is_text, errors, storage_options)</span>
-<span class="g g-Whitespace">    </span><span class="mi">868</span> <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">869</span>     <span class="c1"># Check whether the filename is to be opened in binary mode.</span>
-<span class="g g-Whitespace">    </span><span class="mi">870</span>     <span class="c1"># Binary mode does not support &#39;encoding&#39; and &#39;newline&#39;.</span>
-<span class="g g-Whitespace">    </span><span class="mi">871</span>     <span class="k">if</span> <span class="n">ioargs</span><span class="o">.</span><span class="n">encoding</span> <span class="ow">and</span> <span class="s2">&quot;b&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ioargs</span><span class="o">.</span><span class="n">mode</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">872</span>         <span class="c1"># Encoding</span>
-<span class="ne">--&gt; </span><span class="mi">873</span>         <span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">874</span>             <span class="n">handle</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">875</span>             <span class="n">ioargs</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">876</span>             <span class="n">encoding</span><span class="o">=</span><span class="n">ioargs</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">877</span>             <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">878</span>             <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">879</span>         <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">880</span>     <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">881</span>         <span class="c1"># Binary mode</span>
-<span class="g g-Whitespace">    </span><span class="mi">882</span>         <span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">ioargs</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
-
-<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;data/ames_housing.csv&#39;
+<span class="ne">NameError</span>: name &#39;np&#39; is not defined
 </pre></div>
 </div>
 </div>
 </div>
-<p>Discute diferencias y estabilidad. Analiza sensibilidad ante outliers retirando observaciones influyentes y comparando nuevamente.</p>
-<p>{takeaways}</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="resultados-principales-bootstrap">
+<h1>3️⃣ Resultados principales: Bootstrap<a class="headerlink" href="#resultados-principales-bootstrap" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Los coeficientes promedio son casi idénticos a OLS.</p></li>
+<li><p>Los <strong>errores estándar se estiman directamente de la distribución bootstrap</strong>, capturando asimetrías y posibles desviaciones de normalidad.</p></li>
+<li><p>Intervalos percentiles (2.5%-97.5%) permiten <strong>IC robustos sin supuestos de normalidad</strong>.</p></li>
+</ul>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="tabla-comparativa-final">
+<h1>Tabla comparativa final<a class="headerlink" href="#tabla-comparativa-final" title="Link to this heading">#</a></h1>
+<p>Se comparan los resultados de los tres métodos principales:</p>
+<ul class="simple">
+<li><p><strong>Coeficientes estimados</strong> ((\hat{\beta}))</p></li>
+<li><p><strong>Errores estándar</strong>: OLS, HC3 y Bootstrap</p></li>
+<li><p><strong>Amplitud de intervalos de confianza al 95%</strong></p></li>
+</ul>
+<p>Esto permite identificar discrepancias significativas y evaluar la robustez del modelo.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ejemplo: coeficientes OLS y errores estándar</span>
+<span class="n">coef_ols</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">params</span>
+<span class="n">se_ols</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">bse</span>
+
+<span class="c1"># Errores estándar robustos HC3</span>
+<span class="n">se_hc3</span> <span class="o">=</span> <span class="n">resultados_HC3</span><span class="o">.</span><span class="n">bse</span>
+
+<span class="c1"># Bootstrap: media y SE</span>
+<span class="n">coef_boot_mean</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="s1">&#39;Coef_mean&#39;</span><span class="p">]</span>
+<span class="n">se_boot</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="s1">&#39;SE_bootstrap&#39;</span><span class="p">]</span>
+
+<span class="c1"># Intervalos de confianza OLS y HC3 (amplitud)</span>
+<span class="n">ic_ols</span> <span class="o">=</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">modelo_base</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Para HC3, conf_int() es ndarray, así que hacemos operación directa</span>
+<span class="n">ic_hc3</span> <span class="o">=</span> <span class="n">resultados_HC3</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">resultados_HC3</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()[:,</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Bootstrap: IC width</span>
+<span class="n">ic_boot</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="s1">&#39;IC_97.5%&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">bootstrap_df</span><span class="p">[</span><span class="s1">&#39;IC_2.5%&#39;</span><span class="p">]</span>
+
+<span class="c1"># Crear DataFrame comparativo</span>
+<span class="n">comparative_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;Coef_OLS&#39;</span><span class="p">:</span> <span class="n">coef_ols</span><span class="p">,</span>
+    <span class="s1">&#39;SE_OLS&#39;</span><span class="p">:</span> <span class="n">se_ols</span><span class="p">,</span>
+    <span class="s1">&#39;SE_HC3&#39;</span><span class="p">:</span> <span class="n">se_hc3</span><span class="p">,</span>
+    <span class="s1">&#39;Coef_Bootstrap&#39;</span><span class="p">:</span> <span class="n">coef_boot_mean</span><span class="p">,</span>
+    <span class="s1">&#39;SE_Bootstrap&#39;</span><span class="p">:</span> <span class="n">se_boot</span><span class="p">,</span>
+    <span class="s1">&#39;IC_width_OLS&#39;</span><span class="p">:</span> <span class="n">ic_ols</span><span class="p">,</span>
+    <span class="s1">&#39;IC_width_HC3&#39;</span><span class="p">:</span> <span class="n">ic_hc3</span><span class="p">,</span>
+    <span class="s1">&#39;IC_width_Bootstrap&#39;</span><span class="p">:</span> <span class="n">ic_boot</span>
+<span class="p">})</span>
+
+<span class="n">comparative_df</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Calcular variaciones porcentuales respecto al modelo base (OLS)</span>
+<span class="n">var_SE_HC3</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">comparative_df</span><span class="p">[</span><span class="s1">&#39;SE_HC3&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">comparative_df</span><span class="p">[</span><span class="s1">&#39;SE_OLS&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">comparative_df</span><span class="p">[</span><span class="s1">&#39;SE_OLS&#39;</span><span class="p">]</span>
+<span class="n">var_SE_Boot</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">comparative_df</span><span class="p">[</span><span class="s1">&#39;SE_Bootstrap&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">comparative_df</span><span class="p">[</span><span class="s1">&#39;SE_OLS&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">comparative_df</span><span class="p">[</span><span class="s1">&#39;SE_OLS&#39;</span><span class="p">]</span>
+
+<span class="n">var_IC_HC3</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">comparative_df</span><span class="p">[</span><span class="s1">&#39;IC_width_HC3&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">comparative_df</span><span class="p">[</span><span class="s1">&#39;IC_width_OLS&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">comparative_df</span><span class="p">[</span><span class="s1">&#39;IC_width_OLS&#39;</span><span class="p">]</span>
+<span class="n">var_IC_Boot</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">comparative_df</span><span class="p">[</span><span class="s1">&#39;IC_width_Bootstrap&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">comparative_df</span><span class="p">[</span><span class="s1">&#39;IC_width_OLS&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">comparative_df</span><span class="p">[</span><span class="s1">&#39;IC_width_OLS&#39;</span><span class="p">]</span>
+
+<span class="c1"># Variables</span>
+<span class="n">variables</span> <span class="o">=</span> <span class="n">comparative_df</span><span class="o">.</span><span class="n">index</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">))</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mf">0.3</span>
+
+<span class="c1"># Función para agregar etiquetas sobre barras</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_labels</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bars</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">bar</span> <span class="ow">in</span> <span class="n">bars</span><span class="p">:</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">bar</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">height</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">,</span>
+                    <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">bar</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">bar</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span>
+                    <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>  <span class="c1"># desplazamiento vertical</span>
+                    <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">,</span>
+                    <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+
+<span class="c1"># 1️⃣ Gráfico: Variación porcentual de errores estándar</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">bars1</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">var_SE_HC3</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HC3&#39;</span><span class="p">)</span>
+<span class="n">bars2</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">var_SE_Boot</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Bootstrap&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Variación % vs OLS&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Variación porcentual de errores estándar respecto a OLS&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">add_labels</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bars1</span><span class="p">)</span>
+<span class="n">add_labels</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bars2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># 2️⃣ Gráfico: Variación porcentual de amplitud de IC</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">bars1</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">var_IC_HC3</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HC3&#39;</span><span class="p">)</span>
+<span class="n">bars2</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">var_IC_Boot</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Bootstrap&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Variación % vs OLS&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Variación porcentual de amplitud de IC 95</span><span class="si">% r</span><span class="s1">especto a OLS&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">add_labels</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bars1</span><span class="p">)</span>
+<span class="n">add_labels</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bars2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="interpretacion">
+<h2>Interpretación<a class="headerlink" href="#interpretacion" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Coeficientes:</strong> Todos los métodos muestran valores muy similares → OLS sigue siendo insesgado.</p></li>
+<li><p><strong>Errores estándar:</strong> HC3 y Bootstrap suelen ser más conservadores que OLS clásico.</p></li>
+<li><p><strong>Intervalos de confianza:</strong> Bootstrap e IC HC3 son más amplios, reflejando mayor incertidumbre frente a outliers o heterocedasticidad.</p></li>
+</ul>
+<p>💡 <strong>Conclusión:</strong></p>
+<ul class="simple">
+<li><p>Diferencias entre métodos son pequeñas → modelo robusto frente a heterocedasticidad leve y outliers moderados.</p></li>
+<li><p>Para decisiones conservadoras (p-values o IC), se recomienda <strong>HC3 o Bootstrap</strong>.</p></li>
+</ul>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -487,7 +1043,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">&lt;no title&gt;</p>
+        <p class="prev-next-title">Capitulo 8. Validación y selección de modelo (Train/Test)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -497,6 +1053,46 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Capítulo 7: Remedios y métodos robustos</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contexto"><strong>Contexto</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-general"><strong>Definición general</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tipos-de-correccion-hc0hc3"><strong>Tipos de corrección (HC0–HC3)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementacion-en-python"><strong>Implementacion en Python</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-e-interpretacion"><strong>Resultados e interpretación</strong></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-principales"><strong>Resultados principales</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-los-resultados"><strong>Interpretación de los resultados</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion"><strong>Conclusión</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#modelos-robustos-rlm-con-huber-y-tukey">Modelos robustos RLM con Huber y Tukey</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#funciones-de-perdida-comunes-en-rlm">Funciones de pérdida comunes en RLM</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#caracteristicas">Características</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><strong>Implementación en Python</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-de-coeficientes-ols"><strong>Bootstrap de coeficientes OLS</strong></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-principales-bootstrap">3️⃣ Resultados principales: Bootstrap</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-comparativa-final">Tabla comparativa final</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion">Interpretación</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
               
             
           </div>
