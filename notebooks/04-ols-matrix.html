@@ -331,9 +331,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">4.1. Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.2. 4.1 Definición del modelo</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">4.3. Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1. Definición del modelo</a></li>
 </ul>
             </nav>
         </div>
@@ -347,9 +345,11 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-4-formulacion-matricial-del-modelo-ols">
 <h1><span class="section-number">4. </span>Capítulo 4: Formulación matricial del modelo OLS<a class="headerlink" href="#capitulo-4-formulacion-matricial-del-modelo-ols" title="Link to this heading">#</a></h1>
-<section id="overview">
-<h2><span class="section-number">4.1. </span>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
-<p>Se formula y ajusta un modelo OLS usando álgebra matricial. Se presentan las ecuaciones clave (normal equations) y se verifica la equivalencia con APIs de alto nivel.</p>
+<blockquote>
+<div><p><strong>Overview</strong>:
+Se formula y ajusta un modelo OLS usando álgebra matricial. Se presentan las ecuaciones clave (normal equations) y se verifica la equivalencia con APIs de alto nivel.</p>
+</div></blockquote>
+<p><strong>Definir ruta de datos</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -375,9 +375,8 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
 <section id="definicion-del-modelo">
-<h2><span class="section-number">4.2. </span>4.1 Definición del modelo<a class="headerlink" href="#definicion-del-modelo" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">4.1. </span>Definición del modelo<a class="headerlink" href="#definicion-del-modelo" title="Link to this heading">#</a></h2>
 <p>El modelo de regresión lineal puede expresarse de forma matricial como:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -527,9 +526,9 @@ S(\beta) = (Y - X\beta)^\top (Y - X\beta)
 <p>Se construye un modelo de regresión lineal para predecir <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> a partir de nueve variables predictoras.</p>
 <p>Primero se calculan los coeficientes manualmente usando la formulación matricial de OLS, y luego se ajusta el mismo modelo con <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> para verificar los resultados. Se observan los mismos coeficientes.</p>
 <p>Cada coeficiente indica cuánto se espera que cambie el <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> por un incremento de una unidad en la variable correspondiente, manteniendo constantes las demás variables. Por ejemplo, el coeficiente de <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code> es aproximadamente 17 686. Esto significa que, en promedio, por cada punto adicional en la calificación general de la casa, se espera que el precio de venta aumente unos 17 686 dólares, manteniendo constantes las otras variables del modelo.</p>
-</section>
-<section id="takeaways">
-<h2><span class="section-number">4.3. </span>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p><strong>Key takeaways</strong></p>
+</div></blockquote>
 <ul class="simple">
 <li><p>La solución matricial (\hat{\beta}=(X^TX)^{-1}X^Ty) coincide con la obtenida vía librerías.</p></li>
 <li><p>El condicionamiento de (X^TX) anticipa problemas de varianza de coeficientes.</p></li>
@@ -602,9 +601,7 @@ S(\beta) = (Y - X\beta)^\top (Y - X\beta)
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">4.1. Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.2. 4.1 Definición del modelo</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">4.3. Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1. Definición del modelo</a></li>
 </ul>
   </nav></div>
 

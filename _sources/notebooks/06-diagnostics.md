@@ -6,8 +6,11 @@ kernelspec: {name: python3, display_name: Python 3}
 ---
 # Capítulo 6: Diagnóstico de supuestos
 
-## Overview
-Se llevan a cabo **diagnósticos**: residuos, heterocedasticidad, normalidad, influencia y multicolinealidad. Cada figura/tablas se discute con recomendaciones.
+> **Overview**:
+Se llevan a cabo diagnósticos: residuos, heterocedasticidad, normalidad, influencia y multicolinealidad. Cada figura/tablas se discute con recomendaciones.
+
+**Definir ruta de datos**
+
 ```{code-cell} ipython3
 from pathlib import Path
 import pandas as pd
@@ -23,7 +26,7 @@ df.shape
 ```
 
 
-## 6.1 Linealidad y normalidad
+## Linealidad y normalidad
 
 El supuesto de **linealidad** indica que la relación entre las variables predictoras y la respuesta es aproximadamente lineal. Representado en la ecuación de regresión lineal ([Ecuación 4.1.1](#ecuacion-411-regresion-lineal)), se evalúa con un gráfico de residuales vs valores ajustados; una dispersión aleatoria alrededor de cero sin patrones sugiere que se cumple, desviaciones sugieren una relación no lineal o la necesidad de alguna transformación.
 
@@ -82,7 +85,7 @@ En cuanto a la linealidad, la mayoría de los residuales se distribuyen de maner
 
 El QQ-plot muestra que a partir de aproximadamente -2 los datos siguen de manera bastante cercana la línea de referencia. Para valores menores a -2, los residuales se curvan hacia abajo y se desvían de la línea, lo que sugiere cierta no normalidad en los extremos. Esto puede afectar la validez de los intervalos de confianza y de las pruebas de significancia, aunque el ajuste de los coeficientes sigue siendo consistente bajo mínimos cuadrados.
 
-### 6.2 Homocedasticidad, autocorrelación y multicolinealidad
+### Homocedasticidad, autocorrelación y multicolinealidad
 
 La **homocedasticidad** indica que la varianza de los errores debe ser constante a lo largo de todos los valores de las variables predictoras. Se suele evaluar mediante pruebas como Breusch–Pagan o White. Su incumplimiento puede conducir a errores estándar incorrectos y, por lo tanto, a inferencias poco confiables sobre los coeficientes. Matemáticamente, se espera que:
 
@@ -150,7 +153,7 @@ El estadístico de Durbin–Watson es 1.79, lo que se encuentra dentro del rango
 
 Con respecto a la multicolinealidad, todos los valores de VIF de los predictores son menores a 5, lo que indica que no hay problemas importantes de colinealidad en el modelo.
 
-## Takeaways
+> **Key takeaways**
 - Patrones en residuos guían transformaciones o selección de variables.
 - Se evidencia si hay heterocedasticidad (motivando errores estándar robustos).
 - La influencia (Cook’s distance/DFBETAs) orienta decisiones sobre puntos anómalos.

@@ -329,11 +329,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">3.1. Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.2. 3.1 Distribución de la variable respuesta</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.3. 3.2 Correlaciones entre variables numéricas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.4. 3.4 Relaciones de variables categóricas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">3.5. Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.1. Distribución de la variable respuesta</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.2. Correlaciones entre variables numéricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.3. Relaciones de variables categóricas</a></li>
 </ul>
             </nav>
         </div>
@@ -347,9 +345,11 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-3-analisis-exploratorio-eda">
 <h1><span class="section-number">3. </span>Capítulo 3: Análisis exploratorio (EDA)<a class="headerlink" href="#capitulo-3-analisis-exploratorio-eda" title="Link to this heading">#</a></h1>
-<section id="overview">
-<h2><span class="section-number">3.1. </span>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
-<p>Incluye distribución de variables, relaciones bivariadas y detección preliminar de colinealidad.</p>
+<blockquote>
+<div><p><strong>Overview</strong>:
+Incluye distribución de variables, relaciones bivariadas y detección preliminar de colinealidad.</p>
+</div></blockquote>
+<p><strong>Definir ruta de datos</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -375,9 +375,8 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
 <section id="distribucion-de-la-variable-respuesta">
-<h2><span class="section-number">3.2. </span>3.1 Distribución de la variable respuesta<a class="headerlink" href="#distribucion-de-la-variable-respuesta" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.1. </span>Distribución de la variable respuesta<a class="headerlink" href="#distribucion-de-la-variable-respuesta" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -447,7 +446,7 @@ document.write(`
 <p>Inicialmente se observa una <strong>dispersión notable en los valores altos</strong>. Tras aplicar la transformación, el patrón muestra una <strong>relación más lineal y estable</strong>, reduciendo la asimetría y atenuando la influencia de valores extremos.</p>
 </section>
 <section id="correlaciones-entre-variables-numericas">
-<h2><span class="section-number">3.3. </span>3.2 Correlaciones entre variables numéricas<a class="headerlink" href="#correlaciones-entre-variables-numericas" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.2. </span>Correlaciones entre variables numéricas<a class="headerlink" href="#correlaciones-entre-variables-numericas" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
@@ -508,7 +507,7 @@ Name: SalePrice, dtype: float64
 <p>Sin embargo, variables como <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code> y <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Area</span></code> tienen una correlación alta entre sí, de modo que puede no ser necesario incluir ambas.</p>
 </section>
 <section id="relaciones-de-variables-categoricas">
-<h2><span class="section-number">3.4. </span>3.4 Relaciones de variables categóricas<a class="headerlink" href="#relaciones-de-variables-categoricas" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">3.3. </span>Relaciones de variables categóricas<a class="headerlink" href="#relaciones-de-variables-categoricas" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
@@ -583,9 +582,9 @@ Name: SalePrice, dtype: float64
 </div>
 </div>
 <p>Se eligen 9 variables predictoras, teniendo en cuenta una <strong>alta correlación con la variable de respuesta</strong>, <strong>baja correlación entre ellas</strong> (para evitar redundancia en el modelo) y <strong>sentido práctico</strong>.</p>
-</section>
-<section id="takeaways">
-<h2><span class="section-number">3.5. </span>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p><strong>Key takeaways</strong></p>
+</div></blockquote>
 <ul class="simple">
 <li><p>Las distribuciones sugieren posibles transformaciones para linealidad/normalidad.</p></li>
 <li><p>Se identifican variables con fuerte asociación a la respuesta (útiles para el modelo base).</p></li>
@@ -658,11 +657,9 @@ Name: SalePrice, dtype: float64
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">3.1. Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.2. 3.1 Distribución de la variable respuesta</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.3. 3.2 Correlaciones entre variables numéricas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.4. 3.4 Relaciones de variables categóricas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">3.5. Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.1. Distribución de la variable respuesta</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.2. Correlaciones entre variables numéricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.3. Relaciones de variables categóricas</a></li>
 </ul>
   </nav></div>
 

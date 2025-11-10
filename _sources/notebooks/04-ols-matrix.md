@@ -6,8 +6,11 @@ kernelspec: {name: python3, display_name: Python 3}
 ---
 # Capítulo 4: Formulación matricial del modelo OLS
 
-## Overview
+> **Overview**:
 Se formula y ajusta un modelo OLS usando álgebra matricial. Se presentan las ecuaciones clave (normal equations) y se verifica la equivalencia con APIs de alto nivel.
+
+**Definir ruta de datos**
+
 ```{code-cell} ipython3
 from pathlib import Path
 import pandas as pd
@@ -21,7 +24,7 @@ print("Usando CSV:", DATA_PATH.resolve())
 df = pd.read_csv(DATA_PATH)
 df.shape
 ```
-## 4.1 Definición del modelo
+## Definición del modelo
 
 El modelo de regresión lineal puede expresarse de forma matricial como:
 
@@ -91,7 +94,7 @@ Primero se calculan los coeficientes manualmente usando la formulación matricia
 
 Cada coeficiente indica cuánto se espera que cambie el `SalePrice` por un incremento de una unidad en la variable correspondiente, manteniendo constantes las demás variables. Por ejemplo, el coeficiente de `Overall Qual` es aproximadamente 17 686. Esto significa que, en promedio, por cada punto adicional en la calificación general de la casa, se espera que el precio de venta aumente unos 17 686 dólares, manteniendo constantes las otras variables del modelo.
 
-## Takeaways
+> **Key takeaways**
 - La solución matricial \(\hat{\beta}=(X^TX)^{-1}X^Ty\) coincide con la obtenida vía librerías.
 - El condicionamiento de \(X^TX\) anticipa problemas de varianza de coeficientes.
 - Se sientan bases para contrastes de hipótesis.

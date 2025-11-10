@@ -331,12 +331,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">6.1. Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linealidad-y-normalidad">6.2. 6.1 Linealidad y normalidad</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#homocedasticidad-autocorrelacion-y-multicolinealidad">6.2.1. 6.2 Homocedasticidad, autocorrelación y multicolinealidad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linealidad-y-normalidad">6.1. Linealidad y normalidad</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#homocedasticidad-autocorrelacion-y-multicolinealidad">6.1.1. Homocedasticidad, autocorrelación y multicolinealidad</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">6.3. Takeaways</a></li>
 </ul>
             </nav>
         </div>
@@ -350,9 +348,11 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-6-diagnostico-de-supuestos">
 <h1><span class="section-number">6. </span>Capítulo 6: Diagnóstico de supuestos<a class="headerlink" href="#capitulo-6-diagnostico-de-supuestos" title="Link to this heading">#</a></h1>
-<section id="overview">
-<h2><span class="section-number">6.1. </span>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
-<p>Se llevan a cabo <strong>diagnósticos</strong>: residuos, heterocedasticidad, normalidad, influencia y multicolinealidad. Cada figura/tablas se discute con recomendaciones.</p>
+<blockquote>
+<div><p><strong>Overview</strong>:
+Se llevan a cabo diagnósticos: residuos, heterocedasticidad, normalidad, influencia y multicolinealidad. Cada figura/tablas se discute con recomendaciones.</p>
+</div></blockquote>
+<p><strong>Definir ruta de datos</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -378,9 +378,8 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
 <section id="linealidad-y-normalidad">
-<h2><span class="section-number">6.2. </span>6.1 Linealidad y normalidad<a class="headerlink" href="#linealidad-y-normalidad" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">6.1. </span>Linealidad y normalidad<a class="headerlink" href="#linealidad-y-normalidad" title="Link to this heading">#</a></h2>
 <p>El supuesto de <strong>linealidad</strong> indica que la relación entre las variables predictoras y la respuesta es aproximadamente lineal. Representado en la ecuación de regresión lineal (<a class="reference internal" href="#ecuacion-411-regresion-lineal"><span class="xref myst">Ecuación 4.1.1</span></a>), se evalúa con un gráfico de residuales vs valores ajustados; una dispersión aleatoria alrededor de cero sin patrones sugiere que se cumple, desviaciones sugieren una relación no lineal o la necesidad de alguna transformación.</p>
 <p>La <strong>normalidad de los residuos</strong> implica que <span class="math notranslate nohighlight">\(\varepsilon \sim N(0, \sigma^2)\)</span>.
 <strong>Ecuación 6.1.1.</strong> Normalidad de los residuos.</p>
@@ -440,7 +439,7 @@ document.write(`
 <p>En cuanto a la linealidad, la mayoría de los residuales se distribuyen de manera aleatoria alrededor de 0, lo que indica que el modelo captura correctamente la tendencia general. Sin embargo, se observan algunos valores extremos a lo largo del eje x, incluyendo un residual notablemente por debajo de los demás.</p>
 <p>El QQ-plot muestra que a partir de aproximadamente -2 los datos siguen de manera bastante cercana la línea de referencia. Para valores menores a -2, los residuales se curvan hacia abajo y se desvían de la línea, lo que sugiere cierta no normalidad en los extremos. Esto puede afectar la validez de los intervalos de confianza y de las pruebas de significancia, aunque el ajuste de los coeficientes sigue siendo consistente bajo mínimos cuadrados.</p>
 <section id="homocedasticidad-autocorrelacion-y-multicolinealidad">
-<h3><span class="section-number">6.2.1. </span>6.2 Homocedasticidad, autocorrelación y multicolinealidad<a class="headerlink" href="#homocedasticidad-autocorrelacion-y-multicolinealidad" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">6.1.1. </span>Homocedasticidad, autocorrelación y multicolinealidad<a class="headerlink" href="#homocedasticidad-autocorrelacion-y-multicolinealidad" title="Link to this heading">#</a></h3>
 <p>La <strong>homocedasticidad</strong> indica que la varianza de los errores debe ser constante a lo largo de todos los valores de las variables predictoras. Se suele evaluar mediante pruebas como Breusch–Pagan o White. Su incumplimiento puede conducir a errores estándar incorrectos y, por lo tanto, a inferencias poco confiables sobre los coeficientes. Matemáticamente, se espera que:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -552,15 +551,15 @@ r_{jk} = \frac{\text{Cov}(X_j, X_k)}{\sigma_{X_j} \, \sigma_{X_k}}
 <p>Los resultados de las pruebas de Breusch–Pagan y White muestran valores p iguales a 0.0000, indicando evidencia clara de heterocedasticidad. Esto significa que la variabilidad de los residuos no es constante a lo largo de los valores ajustados, lo cual podría afectar la confiabilidad de los intervalos de confianza y los errores estándar.</p>
 <p>El estadístico de Durbin–Watson es 1.79, lo que se encuentra dentro del rango de 1.5 a 2. Por lo tanto, no se observa autocorrelación significativa entre los residuos, y el supuesto de independencia se cumple razonablemente.</p>
 <p>Con respecto a la multicolinealidad, todos los valores de VIF de los predictores son menores a 5, lo que indica que no hay problemas importantes de colinealidad en el modelo.</p>
-</section>
-</section>
-<section id="takeaways">
-<h2><span class="section-number">6.3. </span>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p><strong>Key takeaways</strong></p>
+</div></blockquote>
 <ul class="simple">
 <li><p>Patrones en residuos guían transformaciones o selección de variables.</p></li>
 <li><p>Se evidencia si hay heterocedasticidad (motivando errores estándar robustos).</p></li>
 <li><p>La influencia (Cook’s distance/DFBETAs) orienta decisiones sobre puntos anómalos.</p></li>
 </ul>
+</section>
 </section>
 </section>
 
@@ -628,12 +627,10 @@ r_{jk} = \frac{\text{Cov}(X_j, X_k)}{\sigma_{X_j} \, \sigma_{X_k}}
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">6.1. Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linealidad-y-normalidad">6.2. 6.1 Linealidad y normalidad</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#homocedasticidad-autocorrelacion-y-multicolinealidad">6.2.1. 6.2 Homocedasticidad, autocorrelación y multicolinealidad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linealidad-y-normalidad">6.1. Linealidad y normalidad</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#homocedasticidad-autocorrelacion-y-multicolinealidad">6.1.1. Homocedasticidad, autocorrelación y multicolinealidad</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">6.3. Takeaways</a></li>
 </ul>
   </nav></div>
 

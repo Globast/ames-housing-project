@@ -329,14 +329,12 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-overview">1.1. Resumen (overview)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contexto-del-dataset-y-su-relevancia-estadistica">1.2. 1. Contexto del dataset y su relevancia estadística</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preguntas-de-investigacion">1.3. 2. Preguntas de investigación</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivo-general">1.4. 3. Objetivo general</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivos-especificos">1.5. 4. Objetivos específicos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#criterios-de-exito">1.6. 5. Criterios de éxito</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alcances-y-supuestos">1.7. 6. Alcances y supuestos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">1.8. Key takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contexto-del-dataset-y-su-relevancia-estadistica">1.1. Contexto del dataset y su relevancia estadística</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preguntas-de-investigacion">1.2. Preguntas de investigación</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivo-general">1.3. Objetivo general</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivos-especificos">1.4. Objetivos específicos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#criterios-de-exito">1.5. Criterios de éxito</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alcances-y-supuestos">1.6. Alcances y supuestos</a></li>
 </ul>
             </nav>
         </div>
@@ -350,22 +348,24 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-1-introducciony-pregunta-de-investigacion">
 <h1><span class="section-number">1. </span>Capítulo 1: Introduccióny pregunta de investigación<a class="headerlink" href="#capitulo-1-introducciony-pregunta-de-investigacion" title="Link to this heading">#</a></h1>
-<section id="resumen-overview">
-<h2><span class="section-number">1.1. </span>Resumen (overview)<a class="headerlink" href="#resumen-overview" title="Link to this heading">#</a></h2>
-<p>Este capítulo presenta el dataset <strong>Ames Housing</strong>, su contexto y relevancia para modelado e inferencia.
+<hr class="docutils" />
+<blockquote>
+<div><p><strong>Overview</strong>:
+Este capítulo presenta el dataset <strong>Ames Housing</strong>, su contexto y relevancia para modelado e inferencia.
 Planteamos preguntas de investigación sobre la contribución de variables estructurales/vecinales al precio
 y sobre la estabilidad de coeficientes bajo métodos robustos.
 Definimos objetivos, alcance y criterios de éxito con énfasis en reproducibilidad y validez inferencial.</p>
-</section>
+</div></blockquote>
+<hr class="docutils" />
 <section id="contexto-del-dataset-y-su-relevancia-estadistica">
-<h2><span class="section-number">1.2. </span>1. Contexto del dataset y su relevancia estadística<a class="headerlink" href="#contexto-del-dataset-y-su-relevancia-estadistica" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">1.1. </span>Contexto del dataset y su relevancia estadística<a class="headerlink" href="#contexto-del-dataset-y-su-relevancia-estadistica" title="Link to this heading">#</a></h2>
 <p>Usaremos el <strong>Ames Housing</strong> (versión “AmesHousing.csv”), un registro inmobiliario del condado de Story, Iowa (EE. UU.).
 Describe atributos estructurales, de sitio y de vecindario; la respuesta es SalePrice (USD).
 <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> suele presentar asimetría positiva, por lo que <code class="docutils literal notranslate"><span class="pre">log(SalePrice)</span></code> mejora supuestos de MCO.
 Existen faltantes altos en variables “estructurales” (p. ej., <code class="docutils literal notranslate"><span class="pre">Alley</span></code>, <code class="docutils literal notranslate"><span class="pre">Pool</span> <span class="pre">QC</span></code>), y correlaciones esperadas con <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>, <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Area/Cars</span></code>, <code class="docutils literal notranslate"><span class="pre">Total</span> <span class="pre">Bsmt</span> <span class="pre">SF</span></code>, <code class="docutils literal notranslate"><span class="pre">Year</span> <span class="pre">Built</span></code>.</p>
 </section>
 <section id="preguntas-de-investigacion">
-<h2><span class="section-number">1.3. </span>2. Preguntas de investigación<a class="headerlink" href="#preguntas-de-investigacion" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">1.2. </span>Preguntas de investigación<a class="headerlink" href="#preguntas-de-investigacion" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>¿Qué variables estructurales y de vecindario explican en mayor medida <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>/<code class="docutils literal notranslate"><span class="pre">log(SalePrice)</span></code> al controlar por calidad y antigüedad?</p></li>
 <li><p>¿Qué tan estables son los coeficientes bajo métodos robustos (MCO vs. Huber/Tukey) frente a outliers y heterocedasticidad?</p></li>
@@ -373,11 +373,11 @@ Existen faltantes altos en variables “estructurales” (p. ej., <code class="d
 </ul>
 </section>
 <section id="objetivo-general">
-<h2><span class="section-number">1.4. </span>3. Objetivo general<a class="headerlink" href="#objetivo-general" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">1.3. </span>Objetivo general<a class="headerlink" href="#objetivo-general" title="Link to this heading">#</a></h2>
 <p>Desarrollar un marco reproducible para explicar y modelar el precio de vivienda en Ames, comparando enfoques lineales (clásicos y robustos) y no lineales, priorizando validez inferencial y estabilidad.</p>
 </section>
 <section id="objetivos-especificos">
-<h2><span class="section-number">1.5. </span>4. Objetivos específicos<a class="headerlink" href="#objetivos-especificos" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">1.4. </span>Objetivos específicos<a class="headerlink" href="#objetivos-especificos" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
 <li><p>Preparación: auditoría de faltantes, imputación, codificación y estandarización; VIF.</p></li>
 <li><p>Lineal: MCO sobre <code class="docutils literal notranslate"><span class="pre">log(SalePrice)</span></code> + diagnósticos (BP, QQ, Cook) y contraste con estimadores robustos.</p></li>
@@ -386,17 +386,17 @@ Existen faltantes altos en variables “estructurales” (p. ej., <code class="d
 </ol>
 </section>
 <section id="criterios-de-exito">
-<h2><span class="section-number">1.6. </span>5. Criterios de éxito<a class="headerlink" href="#criterios-de-exito" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">1.5. </span>Criterios de éxito<a class="headerlink" href="#criterios-de-exito" title="Link to this heading">#</a></h2>
 <p><strong>Reproducibilidad</strong> (semillas/dependencias/CI), validez inferencial (heterocedasticidad controlada, VIF moderado, sin influencia extrema),
 desempeño (p. ej., RMSE ≤ ~0,5·IQR, MAE ≤ ~0,35·IQR; R² ≥ 0,75) y estabilidad (signo consistente y magnitudes similares entre MCO y robusto).</p>
 </section>
 <section id="alcances-y-supuestos">
-<h2><span class="section-number">1.7. </span>6. Alcances y supuestos<a class="headerlink" href="#alcances-y-supuestos" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">1.6. </span>Alcances y supuestos<a class="headerlink" href="#alcances-y-supuestos" title="Link to this heading">#</a></h2>
 <p>Respuesta primaria: <code class="docutils literal notranslate"><span class="pre">log(SalePrice)</span></code>; tratamiento de NA “estructurales” (categoría “None” o exclusión razonada); posibles splines/transformaciones en extensiones.</p>
-</section>
 <hr class="docutils" />
-<section id="key-takeaways">
-<h2><span class="section-number">1.8. </span>Key takeaways<a class="headerlink" href="#key-takeaways" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p><strong>Key takeaways</strong></p>
+</div></blockquote>
 <ul class="simple">
 <li><p>El Ames Housing es ideal para contrastar enfoques explicativos vs. predictivos en un escenario realista.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">log(SalePrice)</span></code> ayuda a mitigar asimetría y heterocedasticidad en modelos lineales.</p></li>
@@ -471,14 +471,12 @@ desempeño (p. ej., RMSE ≤ ~0,5·IQR, MAE ≤ ~0,35·IQR; R² ≥ 0,75) y esta
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-overview">1.1. Resumen (overview)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contexto-del-dataset-y-su-relevancia-estadistica">1.2. 1. Contexto del dataset y su relevancia estadística</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preguntas-de-investigacion">1.3. 2. Preguntas de investigación</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivo-general">1.4. 3. Objetivo general</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivos-especificos">1.5. 4. Objetivos específicos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#criterios-de-exito">1.6. 5. Criterios de éxito</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alcances-y-supuestos">1.7. 6. Alcances y supuestos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-takeaways">1.8. Key takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contexto-del-dataset-y-su-relevancia-estadistica">1.1. Contexto del dataset y su relevancia estadística</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preguntas-de-investigacion">1.2. Preguntas de investigación</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivo-general">1.3. Objetivo general</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivos-especificos">1.4. Objetivos específicos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#criterios-de-exito">1.5. Criterios de éxito</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alcances-y-supuestos">1.6. Alcances y supuestos</a></li>
 </ul>
   </nav></div>
 

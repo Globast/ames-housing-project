@@ -224,4 +224,3 @@ $$
 la matriz es **invertible** y la solución $\hat{\beta}$ está bien definida. En regresión múltiple, esto se traduce en la *ausencia de multicolinealidad perfecta* entre las variables explicativas.
 
 
-## Key takeaways
