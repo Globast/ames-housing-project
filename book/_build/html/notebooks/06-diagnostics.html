@@ -63,7 +63,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Capítulo 7: Remedios y métodos robustos" href="07-robust-methods.html" />
-    <link rel="prev" title="C5 · Inferencia de Parámetros" href="05-inference.html" />
+    <link rel="prev" title="Capítulo 5: Inferencia y grados de libertad" href="05-inference.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -177,8 +177,7 @@
 <li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">Capítulo 2: Descripción y limpieza del dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03-eda.html">Capítulo 3: Análisis exploratorio (EDA)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-inference.html">C5 · Inferencia de Parámetros</a></li>
-
+<li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 6: Diagnóstico de supuestos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7: Remedios y métodos robustos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
@@ -433,21 +432,8 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">data_modelo_final</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">data_modelo_final</span> <span class="o">=</span> <span class="n">data_modelo_final</span><span class="p">[</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="p">[</span><span class="s1">&#39;SalePrice_log&#39;</span><span class="p">,</span> <span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span> <span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span> <span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span>      <span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span> <span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span> <span class="s1">&#39;Year Built&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span>      <span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span> <span class="s1">&#39;Lot Area&#39;</span><span class="p">]</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="p">]</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;statsmodels&#39;
-</pre></div>
-</div>
+<img alt="../_images/2c31d4edb61616a3ccba2331b2af534990887d55f874941d0d036dbd6e53a642.png" src="../_images/2c31d4edb61616a3ccba2331b2af534990887d55f874941d0d036dbd6e53a642.png" />
+<img alt="../_images/69f8edb34e0de9a6a0d7a2811ed6e49afef82242509c6e230fecccbdfd4db3e6.png" src="../_images/69f8edb34e0de9a6a0d7a2811ed6e49afef82242509c6e230fecccbdfd4db3e6.png" />
 </div>
 </div>
 <p><em>Interpretación (Figura 6.1).</em> Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.</p>
@@ -513,6 +499,56 @@ r_{jk} = \frac{\text{Cov}(X_j, X_k)}{\sigma_{X_j} \, \sigma_{X_k}}
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Supuesto</th>
+      <th>Método</th>
+      <th>Valor observado</th>
+      <th>Interpretación esperada</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Homocedasticidad</td>
+      <td>Breusch–Pagan / White</td>
+      <td>BP p=0.0000, White p=0.0000</td>
+      <td>p &gt; 0.05 → no heterocedasticidad</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Autocorrelación</td>
+      <td>Durbin–Watson</td>
+      <td>DW=1.79</td>
+      <td>~2 → no autocorrelación</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Multicolinealidad</td>
+      <td>VIF</td>
+      <td>const: 8331.78; Overall Qual: 2.58; Gr Liv Are...</td>
+      <td>&lt;5 → aceptable</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p><strong>Tabla 6.2.1.</strong> Homocedasticidad, autocorrelación y multicolinealidad del modelo 1.</p>
 <p>Los resultados de las pruebas de Breusch–Pagan y White muestran valores p iguales a 0.0000, indicando evidencia clara de heterocedasticidad. Esto significa que la variabilidad de los residuos no es constante a lo largo de los valores ajustados, lo cual podría afectar la confiabilidad de los intervalos de confianza y los errores estándar.</p>
@@ -566,7 +602,7 @@ r_{jk} = \frac{\text{Cov}(X_j, X_k)}{\sigma_{X_j} \, \sigma_{X_k}}
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">C5 · Inferencia de Parámetros</p>
+        <p class="prev-next-title">Capítulo 5: Inferencia y grados de libertad</p>
       </div>
     </a>
     <a class="right-next"

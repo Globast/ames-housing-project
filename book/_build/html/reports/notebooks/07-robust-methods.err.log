@@ -25,79 +25,37 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-import statsmodels.api as sm
 import pandas as pd
 
-pd.set_option('display.float_format', '{:.6f}'.format)
+coef_ols = modelo_base.params         
+se_ols = modelo_base.bse               
 
-data_modelo_base = pd.read_csv(DATA_PATH)
+se_hc3 = resultados_HC3.bse            
 
-data_modelo_base = data_modelo_base[['SalePrice_log', 'Overall Qual', 'Gr Liv Area', 
-                                     'Garage Cars', 'Total Bsmt SF', '1st Flr SF', 
-                                     'Full Bath', 'Year Built', 'Fireplaces', 'Lot Area']]
-X = data_modelo_base[['Overall Qual', 'Gr Liv Area', 'Garage Cars', 'Total Bsmt SF',
-                      '1st Flr SF', 'Full Bath', 'Year Built', 'Fireplaces', 'Lot Area']]
-y = data_modelo_base[['SalePrice_log']]
+coef_boot_mean = bootstrap_df['Coef_mean']  
+se_boot = bootstrap_df['SE_bootstrap']  
 
-X = sm.add_constant(X)
+ic_ols = modelo_base.conf_int().iloc[:,1] - modelo_base.conf_int().iloc[:,0]
 
-modelo_base = sm.OLS(y, X).fit()
+ic_hc3 = resultados_HC3.conf_int()[:,1] - resultados_HC3.conf_int()[:,0]
 
-resultados_HC0 = modelo_base.get_robustcov_results(cov_type='HC0')
-resultados_HC1 = modelo_base.get_robustcov_results(cov_type='HC1')
-resultados_HC2 = modelo_base.get_robustcov_results(cov_type='HC2')
-resultados_HC3 = modelo_base.get_robustcov_results(cov_type='HC3')
+ic_boot = bootstrap_df['IC_97.5%'] - bootstrap_df['IC_2.5%']
 
-def get_confint_df(result, var_names):
-    ci = result.conf_int()
-    if isinstance(ci, pd.DataFrame):
-        ci = ci.loc[var_names]
-    else:
-        ci = pd.DataFrame(ci, columns=["lower", "upper"], index=var_names)
-    return ci
-
-variables = modelo_base.params.index
-
-se_df = pd.DataFrame({
-    "OLS": modelo_base.bse,
-    "HC0": resultados_HC0.bse,
-    "HC1": resultados_HC1.bse,
-    "HC2": resultados_HC2.bse,
-    "HC3": resultados_HC3.bse,
-})
-se_df.index.name = "Variable"
-
-ic_ols = get_confint_df(modelo_base, variables)
-ic_hc0 = get_confint_df(resultados_HC0, variables)
-ic_hc1 = get_confint_df(resultados_HC1, variables)
-ic_hc2 = get_confint_df(resultados_HC2, variables)
-ic_hc3 = get_confint_df(resultados_HC3, variables)
-
-ic_df = pd.DataFrame({
-    "OLS_lower": ic_ols.iloc[:,0],
-    "OLS_upper": ic_ols.iloc[:,1],
-    "HC0_lower": ic_hc0.iloc[:,0],
-    "HC0_upper": ic_hc0.iloc[:,1],
-    "HC1_lower": ic_hc1.iloc[:,0],
-    "HC1_upper": ic_hc1.iloc[:,1],
-    "HC2_lower": ic_hc2.iloc[:,0],
-    "HC2_upper": ic_hc2.iloc[:,1],
-    "HC3_lower": ic_hc3.iloc[:,0],
-    "HC3_upper": ic_hc3.iloc[:,1],
-})
-ic_df.index = variables
-ic_df.index.name = "Variable"
-
-display(se_df.style.format("{:.6f}"))
+coef_df = comparative_df[['Coef_OLS', 'Coef_Bootstrap']]
+se_df = comparative_df[['SE_OLS', 'SE_HC3', 'SE_Bootstrap']]
+ic_df = comparative_df[['IC_width_OLS', 'IC_width_HC3', 'IC_width_Bootstrap']]
+coef_df
 ------------------
 
 
 [31m---------------------------------------------------------------------------[39m
-[31mModuleNotFoundError[39m                       Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[2][39m[32m, line 1[39m
-[32m----> [39m[32m1[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mstatsmodels[39;00m[34;01m.[39;00m[34;01mapi[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01msm[39;00m
-[32m      2[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mpandas[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mpd[39;00m
-[32m      4[39m pd.set_option([33m'[39m[33mdisplay.float_format[39m[33m'[39m, [33m'[39m[38;5;132;01m{:.6f}[39;00m[33m'[39m.format)
+[31mNameError[39m                                 Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[7][39m[32m, line 17[39m
+[32m     13[39m ic_hc3 = resultados_HC3.conf_int()[:,[32m1[39m] - resultados_HC3.conf_int()[:,[32m0[39m]
+[32m     15[39m ic_boot = bootstrap_df[[33m'[39m[33mIC_97.5[39m[33m%[39m[33m'[39m] - bootstrap_df[[33m'[39m[33mIC_2.5[39m[33m%[39m[33m'[39m]
+[32m---> [39m[32m17[39m coef_df = [43mcomparative_df[49m[[[33m'[39m[33mCoef_OLS[39m[33m'[39m, [33m'[39m[33mCoef_Bootstrap[39m[33m'[39m]]
+[32m     18[39m se_df = comparative_df[[[33m'[39m[33mSE_OLS[39m[33m'[39m, [33m'[39m[33mSE_HC3[39m[33m'[39m, [33m'[39m[33mSE_Bootstrap[39m[33m'[39m]]
+[32m     19[39m ic_df = comparative_df[[[33m'[39m[33mIC_width_OLS[39m[33m'[39m, [33m'[39m[33mIC_width_HC3[39m[33m'[39m, [33m'[39m[33mIC_width_Bootstrap[39m[33m'[39m]]
 
-[31mModuleNotFoundError[39m: No module named 'statsmodels'
+[31mNameError[39m: name 'comparative_df' is not defined
 

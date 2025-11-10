@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>C5 · Inferencia de Parámetros &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>Capítulo 5: Inferencia y grados de libertad &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -177,8 +177,7 @@
 <li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">Capítulo 2: Descripción y limpieza del dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03-eda.html">Capítulo 3: Análisis exploratorio (EDA)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">C5 · Inferencia de Parámetros</a></li>
-
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 5: Inferencia y grados de libertad</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7: Remedios y métodos robustos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
@@ -323,7 +322,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>C5 · Inferencia de Parámetros</h1>
+    <h1>Capítulo 5: Inferencia y grados de libertad</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -333,19 +332,14 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">C5 · Inferencia de Parámetros</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">5.1 Grados de libertad</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">5.2 Errores estándar</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">5.3 Valores P</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#capitulo-5-inferencia-y-grados-de-libertad">Capítulo 5: Inferencia y grados de libertad</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">5.1 Grados de libertad</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">5.2 Errores estándar</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">5.3 Valores P</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
-</li>
-</ul>
-
             </nav>
         </div>
     </div>
@@ -356,8 +350,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="c5-inferencia-de-parametros">
-<h1>C5 · Inferencia de Parámetros<a class="headerlink" href="#c5-inferencia-de-parametros" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="capitulo-5-inferencia-y-grados-de-libertad">
+<h1>Capítulo 5: Inferencia y grados de libertad<a class="headerlink" href="#capitulo-5-inferencia-y-grados-de-libertad" title="Link to this heading">#</a></h1>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>Se realiza <strong>inferencia</strong>: intervalos de confianza, pruebas de hipótesis sobre coeficientes y ajuste global del modelo. Se reportan supuestos y su impacto en la validez inferencial.</p>
@@ -386,12 +380,8 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="capitulo-5-inferencia-y-grados-de-libertad">
-<h1>Capítulo 5: Inferencia y grados de libertad<a class="headerlink" href="#capitulo-5-inferencia-y-grados-de-libertad" title="Link to this heading">#</a></h1>
 <section id="grados-de-libertad">
-<h2>5.1 Grados de libertad<a class="headerlink" href="#grados-de-libertad" title="Link to this heading">#</a></h2>
+<h3>5.1 Grados de libertad<a class="headerlink" href="#grados-de-libertad" title="Link to this heading">#</a></h3>
 <p>En regresión lineal, sea:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(n\)</span> = número de observaciones</p></li>
@@ -424,7 +414,7 @@ document.write(`
 <p>Representa los grados de libertad restantes después de ajustar el modelo.</p>
 </section>
 <section id="errores-estandar">
-<h2>5.2 Errores estándar<a class="headerlink" href="#errores-estandar" title="Link to this heading">#</a></h2>
+<h3>5.2 Errores estándar<a class="headerlink" href="#errores-estandar" title="Link to this heading">#</a></h3>
 <p>En un modelo de regresión lineal, los <strong>errores estándar de los coeficientes</strong> miden la incertidumbre asociada a cada estimador <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span>.<br />
 En otras palabras, nos indican cuánto esperaríamos que varíen los coeficientes si repitiéramos el experimento con nuevas muestras del mismo tamaño. Coeficientes con errores estándar grandes son menos precisos y más sensibles al muestreo.</p>
 <p>La suma de cuadrados de los residuos se define como:</p>
@@ -487,27 +477,14 @@ SE(\hat{\beta}_j) = \sqrt{[\text{Var}(\hat{\beta})]_{jj}}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="n">vars_modelo</span> <span class="o">=</span> <span class="p">[</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span> <span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span> <span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span> <span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span> <span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span>     <span class="s1">&#39;Year Built&#39;</span><span class="p">,</span> <span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span> <span class="s1">&#39;Lot Area&#39;</span>
-<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="p">]</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;statsmodels&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2768
 </pre></div>
 </div>
 </div>
 </div>
 </section>
 <section id="valores-p">
-<h2>5.3 Valores P<a class="headerlink" href="#valores-p" title="Link to this heading">#</a></h2>
+<h3>5.3 Valores P<a class="headerlink" href="#valores-p" title="Link to this heading">#</a></h3>
 <p>Consecuentemente, los <strong>valores p</strong> permiten evaluar la significancia estadística de cada coeficiente <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span>.<br />
 En otras palabras, nos indican la probabilidad de obtener un coeficiente tan extremo como el observado si, en realidad, el coeficiente fuera cero (hipótesis nula <span class="math notranslate nohighlight">\(H_0: \beta_j = 0\)</span>).</p>
 <p>Para calcular el valor p, primero se construye el <strong>estadístico t</strong> de cada coeficiente:</p>
@@ -559,10 +536,132 @@ p_j = 2 \cdot P(T &gt; |t_j|)
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>coef</th>
+      <th>std err</th>
+      <th>t</th>
+      <th>p-value</th>
+      <th>[0.025</th>
+      <th>0.975]</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>const</th>
+      <td>912601.01</td>
+      <td>0.25</td>
+      <td>20.70</td>
+      <td>0.00</td>
+      <td>4.75</td>
+      <td>5.74</td>
+    </tr>
+    <tr>
+      <th>Overall Qual</th>
+      <td>17686.26</td>
+      <td>0.00</td>
+      <td>30.50</td>
+      <td>0.00</td>
+      <td>0.10</td>
+      <td>0.11</td>
+    </tr>
+    <tr>
+      <th>Gr Liv Area</th>
+      <td>41.72</td>
+      <td>0.00</td>
+      <td>23.97</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Garage Cars</th>
+      <td>8531.03</td>
+      <td>0.01</td>
+      <td>9.25</td>
+      <td>0.00</td>
+      <td>0.04</td>
+      <td>0.06</td>
+    </tr>
+    <tr>
+      <th>Total Bsmt SF</th>
+      <td>26.75</td>
+      <td>0.00</td>
+      <td>12.30</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>1st Flr SF</th>
+      <td>0.44</td>
+      <td>0.00</td>
+      <td>0.18</td>
+      <td>0.86</td>
+      <td>-0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Full Bath</th>
+      <td>-2348.34</td>
+      <td>0.01</td>
+      <td>-1.76</td>
+      <td>0.08</td>
+      <td>-0.03</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Year Built</th>
+      <td>480.51</td>
+      <td>0.00</td>
+      <td>20.69</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Fireplaces</th>
+      <td>8028.88</td>
+      <td>0.01</td>
+      <td>8.75</td>
+      <td>0.00</td>
+      <td>0.04</td>
+      <td>0.06</td>
+    </tr>
+    <tr>
+      <th>Lot Area</th>
+      <td>1.71</td>
+      <td>0.00</td>
+      <td>11.83</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p><strong>Tabla 5.3.1.</strong> Inferencia estadística del modelo 1.</p>
 <p>Coeficientes con <strong>errores estándar</strong> muy pequeños, como los de <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code> o <code class="docutils literal notranslate"><span class="pre">Year</span> <span class="pre">Built</span></code>, indican que estas estimaciones son bastante precisas. Por el contrario, un coeficiente con error estándar relativamente más grande, como <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> o <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code>, refleja mayor incertidumbre en la estimación de su efecto sobre el precio de la vivienda.</p>
 <p><strong>Valores p</strong> menores que 0.05 se consideran significativos, indicando que los coeficientes son distintos de 0. En este modelo, la mayoría de las variables cumplen este criterio, de forma que contribuyen significativamente a explicar <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>. Por el contrario, <code class="docutils literal notranslate"><span class="pre">1st</span> <span class="pre">Flr</span> <span class="pre">SF</span></code> y <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> tienen valores p mayores a 0.05, sugiriendo que su efecto podría no ser relevante al controlar por los demás predictores.</p>
+</section>
 </section>
 <section id="takeaways">
 <h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
@@ -638,19 +737,14 @@ p_j = 2 \cdot P(T &gt; |t_j|)
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">C5 · Inferencia de Parámetros</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">5.1 Grados de libertad</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">5.2 Errores estándar</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">5.3 Valores P</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#capitulo-5-inferencia-y-grados-de-libertad">Capítulo 5: Inferencia y grados de libertad</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">5.1 Grados de libertad</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">5.2 Errores estándar</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">5.3 Valores P</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
-</li>
-</ul>
-
   </nav></div>
 
 </div></div>
