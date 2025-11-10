@@ -13,8 +13,7 @@ ancho de intervalos de confianza bajo OLS, correcciones robustas a la heteroceda
 También se estiman modelos **RLM** (Huber y Tukey) para mitigar la influencia de outliers.
 Presentamos resultados en tablas y los discutimos, incluyendo recomendaciones prácticas.
 
-> Referencias internas: ver Tabla 7.1 (errores estándar comparados), Tabla 7.2 (anchos de IC),
-> Tabla 7.3 (coeficientes OLS vs. RLM), y Tabla 7.4 (resultados de bootstrap).
+
 
 ## Configuración de rutas
 

@@ -12,8 +12,6 @@ Este capítulo evalúa el desempeño del modelo mediante técnicas de **validaci
 *k*-fold cross-validation) y criterios de selección (AIC, BIC, errores de predicción).
 Se busca comparar configuraciones de modelos y reportar métricas de generalización.
 
-> Referencias: cite y numere sus tablas y figuras como «Tabla 8.1», «Figura 8.1», etc.
-
 ## Configuración de rutas
 
 ```{code-cell} ipython3
