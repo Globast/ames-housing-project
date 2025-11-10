@@ -438,7 +438,7 @@ document.write(`
 <span class="c1"># 1. Cargar dataset y metadatos</span>
 <span class="c1"># ===============================</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
 
 <span class="c1"># Fuente, tamaño, número de variables, licencia</span>
 <span class="n">fuente</span> <span class="o">=</span> <span class="s2">&quot;Ames Housing Dataset (De Cock, 2011) — Iowa State University&quot;</span>
@@ -466,19 +466,138 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">17</span>
-<span class="g g-Whitespace">     </span><span class="mi">15</span> <span class="c1"># Fuente, tamaño, número de variables, licencia</span>
-<span class="g g-Whitespace">     </span><span class="mi">16</span> <span class="n">fuente</span> <span class="o">=</span> <span class="s2">&quot;Ames Housing Dataset (De Cock, 2011) — Iowa State University&quot;</span>
-<span class="ne">---&gt; </span><span class="mi">17</span> <span class="n">tamano</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="g g-Whitespace">     </span><span class="mi">18</span> <span class="n">n_variables</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="n">licencia</span> <span class="o">=</span> <span class="s2">&quot;Open Data, libre uso académico&quot;</span>
-
-<span class="ne">NameError</span>: name &#39;data&#39; is not defined
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fuente: Ames Housing Dataset (De Cock, 2011) — Iowa State University
+Tamaño: 2930 registros
+Número de variables: 82
+Licencia: Open Data, libre uso académico
 </pre></div>
 </div>
-</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Tipo de variable</th>
+      <th>% Faltantes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1st Flr SF</th>
+      <td>int64</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>2nd Flr SF</th>
+      <td>int64</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>3Ssn Porch</th>
+      <td>int64</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Alley</th>
+      <td>object</td>
+      <td>93.24</td>
+    </tr>
+    <tr>
+      <th>Bedroom AbvGr</th>
+      <td>int64</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Bldg Type</th>
+      <td>object</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Bsmt Cond</th>
+      <td>object</td>
+      <td>2.73</td>
+    </tr>
+    <tr>
+      <th>Bsmt Exposure</th>
+      <td>object</td>
+      <td>2.83</td>
+    </tr>
+    <tr>
+      <th>Bsmt Full Bath</th>
+      <td>float64</td>
+      <td>0.07</td>
+    </tr>
+    <tr>
+      <th>Bsmt Half Bath</th>
+      <td>float64</td>
+      <td>0.07</td>
+    </tr>
+    <tr>
+      <th>Bsmt Qual</th>
+      <td>object</td>
+      <td>2.73</td>
+    </tr>
+    <tr>
+      <th>Bsmt Unf SF</th>
+      <td>float64</td>
+      <td>0.03</td>
+    </tr>
+    <tr>
+      <th>BsmtFin SF 1</th>
+      <td>float64</td>
+      <td>0.03</td>
+    </tr>
+    <tr>
+      <th>BsmtFin SF 2</th>
+      <td>float64</td>
+      <td>0.03</td>
+    </tr>
+    <tr>
+      <th>BsmtFin Type 1</th>
+      <td>object</td>
+      <td>2.73</td>
+    </tr>
+    <tr>
+      <th>BsmtFin Type 2</th>
+      <td>object</td>
+      <td>2.76</td>
+    </tr>
+    <tr>
+      <th>Central Air</th>
+      <td>object</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Condition 1</th>
+      <td>object</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Condition 2</th>
+      <td>object</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Electrical</th>
+      <td>object</td>
+      <td>0.03</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -503,6 +622,12 @@ document.write(`
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Faltantes después del tratamiento:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">data_limpia</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Faltantes después del tratamiento:
+0
 </pre></div>
 </div>
 </div>
@@ -549,6 +674,13 @@ document.write(`
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Registros antes: </span><span class="si">{</span><span class="n">antes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Outliers detectados (Mahalanobis): </span><span class="si">{</span><span class="n">outliers_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Registros después de eliminar outliers: </span><span class="si">{</span><span class="n">despues</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Registros antes: 2930
+Outliers detectados (Mahalanobis): 185
+Registros después de eliminar outliers: 2745
 </pre></div>
 </div>
 </div>
@@ -620,6 +752,13 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Variables ordinales transformadas a numéricas.
+Codificación de variables nominales completada.
+Forma final del dataset: (2745, 224)
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -638,6 +777,49 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Etapa</th>
+      <th>Registros</th>
+      <th>Columnas</th>
+      <th>Faltantes totales</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Original</td>
+      <td>2930</td>
+      <td>82</td>
+      <td>15749</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Después de limpieza</td>
+      <td>2745</td>
+      <td>224</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
