@@ -23,9 +23,9 @@ df = pd.read_csv(DATA_PATH)
 df.shape
 ```
 
-### 3.1 Distribución de la variable respuesta
+## 3.1 Distribución de la variable respuesta
 
-**Figura 3.1.** Visualización generada por el código siguiente. Ver interpretación posterior.
+
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -56,8 +56,6 @@ plt.tight_layout()
 plt.show()
 ```
 
-_Interpretación (Figura 3.1)._ Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.
-
 **Figura 3.1.1.** Histogramas y boxplots de SalePrice y SalePrice_log.
 
 La tabla muestra la distribución de la variable de respuesta `SalePrice` antes y después de aplicar la transformación logarítmica.  
@@ -66,7 +64,6 @@ La distribución original (panel superior) presenta una **asimetría positiva ma
 
 Tras aplicar la transformación logarítmica ([Ecuación 2.2.2](#eq-2-2-2)), la variable `SalePrice_log` adquiere una dispersión más homogénea y reducción significativa de los outliers.
 
-**Figura 3.2.** Visualización generada por el código siguiente. Ver interpretación posterior.
 
 ```{code-cell} ipython3
 plt.figure(figsize=(14,5))
@@ -87,7 +84,6 @@ plt.tight_layout()
 plt.show()
 ```
 
-_Interpretación (Figura 3.2)._ Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.
 
 **Figura 3.1.2.** Diagramas de dispersión Gr Liv Area vs. SalePrice.
 
@@ -95,13 +91,7 @@ Se compara la relación entre el **precio de venta** (`SalePrice`) y el **área 
 
 Inicialmente se observa una **dispersión notable en los valores altos**. Tras aplicar la transformación, el patrón muestra una **relación más lineal y estable**, reduciendo la asimetría y atenuando la influencia de valores extremos.
 
-### 3.2 Correlaciones entre variables numéricas
-
-**Tabla 3.1.** Vista/tabulación relevante del conjunto de datos. Se discute en el texto.
-
-_Comentario:_ Esta tabla resume aspectos clave para el capítulo; ver discusión inmediata.
-
-**Figura 3.3.** Visualización generada por el código siguiente. Ver interpretación posterior.
+## 3.2 Correlaciones entre variables numéricas
 
 ```{code-cell} ipython3
 import matplotlib.pyplot as plt
@@ -120,10 +110,6 @@ plt.title("Heatmap de correlaciones")
 plt.show()
 ```
 
-_Interpretación (Figura 3.3)._ Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.
-
-_Interpretación (Tabla 3.1)._ Comentar métricas clave (mediana, dispersión, conteos) y su impacto en el modelado.
-
 **Figura 3.2.1.** Heatmap de correlaciones.
 
 ```{code-cell} ipython3
@@ -131,15 +117,13 @@ print("Top correlaciones con SalePrice:")
 display(top_corr)
 ```
 
-**Tabla 3.2.1.** Correlaciones principales con SalePrice.
+**Tabla 3.2.2.** Correlaciones principales con SalePrice.
 
 Variables como `Overall Qual`, `Gr Liv Area`, `Exter Qual` y `Bsmt Qual` tienen una correlación alta con la variable de respuesta (`SalePrice`), por lo que son candidatas a elegirse para el modelo.
 
 Sin embargo, variables como `Garage Cars` y `Garage Area` tienen una correlación alta entre sí, de modo que puede no ser necesario incluir ambas.
 
-### 3.3 Relaciones de variables categóricas
-
-**Figura 3.4.** Visualización generada por el código siguiente. Ver interpretación posterior.
+## 3.4 Relaciones de variables categóricas
 
 ```{code-cell} ipython3
 data = pd.read_csv(DATA_PATH)
@@ -167,9 +151,7 @@ plt.title("SalePrice_log por calidad general (Overall Qual)")
 plt.show()
 ```
 
-_Interpretación (Figura 3.4)._ Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.
-
-**Tabla 3.3.1.** Boxplots de SalePrice y SalePrice_log vs. Neighborhood y Overall Qual.
+**Tabla 3.4.1.** Boxplots de SalePrice y SalePrice_log vs. Neighborhood y Overall Qual.
 
 De acuerdo con los diagramas de caja y bigote, parece haber una relación entre `SalePrice` y variables categóricas como `Neighborhood` y `Overall Qual`.
 

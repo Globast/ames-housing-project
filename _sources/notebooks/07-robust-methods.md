@@ -29,9 +29,8 @@ assert DATA_PATH.is_file(), "No se encontró '../data/AmesHousing_codificada.csv
 print("Usando CSV:", DATA_PATH.resolve())
 print("Archivo bootstrap se guardará en:", BOOTSTRAP_OUT.resolve())
 ```
-# Capítulo 7: Remedios y métodos robustos
 
-### 7.1 Correcciones para heterocedasticidad
+## 7.1 Correcciones para heterocedasticidad
 
 De acuerdo con el supuesto de homocedasticidad ([Ecuación 6.2.1](#ecuacion-621-varianza-errores)), la presencia de heterocedasticidad puede provocar que los errores estándar de los coeficientes estén subestimados, afectando los valores $t$ y las decisiones de significancia. Para corregir este problema, se utilizan los estimadores de varianza robusta **HC** (Heteroscedasticity-Consistent), que ajustan los errores estándar sin cambiar los coeficientes estimados. 
 
@@ -127,7 +126,7 @@ En contraste, intervalos de confianza prácticamente inalterados, como los de `G
 
 En general, aplicar correcciones HC permite obtener intervalos de confianza más robustos, proporcionando inferencias más conservadoras y fiables cuando se sospecha heterocedasticidad.
 
-### 7.2 Modelos robustos con funciones Huber/Tukey
+## 7.2 Modelos robustos con funciones Huber/Tukey
 
 Los **modelos de regresión robusta** son una extensión de la regresión lineal ordinaria diseñada para reducir la influencia de outliers o valores atípicos en la estimación de los coeficientes. Mientras que la regresión OLS pondera todos los residuales por igual, los modelos robustos asignan **menor peso a los residuales grandes**, permitiendo obtener estimaciones más confiables y estables.
 
@@ -198,7 +197,7 @@ Sin embargo, algunas observaciones presentan pesos menores, como la última fila
 
 Además, es evidente que Tukey aplica un castigo más fuerte a residuales extremos.
 
-### 7.3 Bootstrap
+## 7.3 Bootstrap
 
 El **bootstrap** es un método de remuestreo que permite estimar la variabilidad de los coeficientes de un modelo sin asumir una distribución específica de los errores. Consiste en generar múltiples muestras con reemplazo a partir de los datos originales y recalcular los estimadores para cada réplica, obteniendo así una **distribución empírica** de los coeficientes, a partir de la cual se calculan el error estándar y los intervalos de confianza.
 
@@ -233,18 +232,15 @@ bootstrap_df
 ```
 
 
-**Tabla 7.4 — Resumen de bootstrap de coeficientes.** Esta tabla resume los resultados producidos por el código anterior.
+**Tabla 7.3.1 — Resumen de bootstrap de coeficientes.** Esta tabla resume los resultados producidos por el código anterior.
 Discusión: compare magnitudes relativas. En presencia de heterocedasticidad,
 los SE HC3 suelen ser mayores que OLS. Si los IC se ensanchan (ver Tabla 7.2), las
 conclusiones sobre significancia pueden cambiar. Con bootstrap, valide la estabilidad
 de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
 
-
-**Tabla 7.3.1.** Resumen Bootstrap.
-
 Se observa que variables como `Overall Qual`, `Gr Liv Area`, `Garage Cars` y `Year Built` tienen coeficientes claramente distintos de cero, con intervalos de confianza estrechos y consistentes, lo que sugiere estimaciones robustas y estables. Por el contrario, `1st Flr SF` y `Full Bath` presentan intervalos que incluyen el cero, indicando que su efecto sobre la variable respuesta podría no ser significativo.
 
-### 7.4 OLS vs. HC3 vs. Bootstrap
+## 7.4 OLS vs. HC3 vs. Bootstrap
 
 ```{code-cell} ipython3
 
@@ -296,14 +292,11 @@ coef_df
 ```
 
 
-**Tabla 7.0 — Coeficientes OLS vs. Bootstrap.** Esta tabla resume los resultados producidos por el código anterior.
+**Tabla 7.4.1— Coeficientes OLS vs. Bootstrap.** *Valores en escala logarítmica.* Esta tabla resume los resultados producidos por el código anterior.
 Discusión: compare magnitudes relativas. En presencia de heterocedasticidad,
 los SE HC3 suelen ser mayores que OLS. Si los IC se ensanchan (ver Tabla 7.2), las
 conclusiones sobre significancia pueden cambiar. Con bootstrap, valide la estabilidad
 de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
-
-
-**Tabla 7.4.1.** Coeficientes OLS vs. Bootstrap. *Valores en escala logarítmica.*
 
 Se observa que la estimación de los parámetros es muy estable frente al remuestreo, lo que sugiere que la muestra utilizada es suficientemente representativa y que los coeficientes no dependen excesivamente de observaciones individuales.
 
@@ -314,14 +307,12 @@ se_df
 ```
 
 
-**Tabla 7.1 — Errores estándar comparados (OLS vs. HC0–HC3 vs. Bootstrap).** Esta tabla resume los resultados producidos por el código anterior.
+**Tabla 7.4.2 — Errores estándar comparados (OLS vs. HC0–HC3 vs. Bootstrap).** Esta tabla resume los resultados producidos por el código anterior.
 Discusión: compare magnitudes relativas. En presencia de heterocedasticidad,
 los SE HC3 suelen ser mayores que OLS. Si los IC se ensanchan (ver Tabla 7.2), las
 conclusiones sobre significancia pueden cambiar. Con bootstrap, valide la estabilidad
 de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
 
-
-**Tabla 7.4.2.** Errores estándar OLS vs. HC3 vs. Bootstrap.<a id="tabla-742-se-ols-hc3-boot"></a>
 
 Los errores estándar de OLS son generalmente menores que los obtenidos mediante HC3 o bootstrap, lo que sugiere que este modelo inicial podría subestimar la incertidumbre cuando hay heterocedasticidad presente o dependiendo de la muestra seleccionada.  
 
@@ -334,14 +325,11 @@ ic_df
 ```
 
 
-**Tabla 7.2 — Ancho de intervalos de confianza por método.** Esta tabla resume los resultados producidos por el código anterior.
+**Tabla 7.4.3 — Ancho de intervalos de confianza por método.** Esta tabla resume los resultados producidos por el código anterior.
 Discusión: compare magnitudes relativas. En presencia de heterocedasticidad,
 los SE HC3 suelen ser mayores que OLS. Si los IC se ensanchan (ver Tabla 7.2), las
 conclusiones sobre significancia pueden cambiar. Con bootstrap, valide la estabilidad
 de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
-
-
-**Tabla 7.4.3.** Amplitud intervalos de confianza OLS vs. HC3 vs. Bootstrap.
 
 Alineados con los errores estándar ([Tabla 7.4.2](#tabla-742-se-ols-hc3-boot)), los intervalos calculados con OLS son consistentemente más estrechos que los obtenidos con HC3 o bootstrap, llegando a la misma conclusión de que el OLS inicial es menos robusto.
 

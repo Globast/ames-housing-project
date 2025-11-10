@@ -78,7 +78,7 @@ x_{ij}^{*} =
 \end{cases}
 $$
 
-**Ecuación 2.1.1.** Regla imputación faltantes.
+**Ecuación 2.2.1.** Regla imputación faltantes.
 
 ```{code-cell} ipython3
 import warnings
@@ -97,7 +97,7 @@ for col in cat_cols:
 
 ```
 
-### 2.2 Tratamiento de outliers
+## 2.3 Tratamiento de outliers
 
 Se aplicó el criterio de **tres desviaciones estándar (3Z)** para identificar observaciones atípicas en las variables numéricas de interés, incluyendo la variable objetivo `SalePrice` y 13 predictoras potenciales.
 
@@ -107,7 +107,7 @@ $$
 |z_i| = \left| \frac{x_i - \bar{x}}{s} \right| > 3
 $$
 
-**Ecuación 2.2.2.** Outlier 3Z.
+**Ecuación 2.3.1.** Outlier 3Z.
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -141,7 +141,7 @@ print(f"Outliers detectados (3Z): {n_outliers}")
 print(f"Registros después de eliminar outliers: {despues}")
 ```
 
-**Tabla 2.2.1.** Resumen tratamiento de outliers.
+**Tabla 2.3.1.** Resumen tratamiento de outliers.
 
 En total, se detectaron **162 observaciones atípicas**, las cuales fueron eliminadas del conjunto de datos con el objetivo de reducir la influencia de valores extremos sobre el ajuste del modelo a aplicar.
 
@@ -151,14 +151,14 @@ $$
 Y' = \log(1 + Y)
 $$
 
-**Ecuación 2.2.3.** Transformación logarítmica. <a id="eq-2-2-2"></a>
+**Ecuación 2.3.2.** Transformación logarítmica. <a id="eq-2-2-2"></a>
 
 ```{code-cell} ipython3
 data_sin_outliers["SalePrice_log"] = np.log1p(data_sin_outliers["SalePrice"])
 data_sin_outliers.to_csv("../data/DATA_PATH.name", sep =",", index=False)
 ```
 
-### 2.3 Codificación de variables categóricas
+## 2.4 Codificación de variables categóricas
 
 Las variables categóricas se transformaron en valores numéricos para facilitar su uso en modelos.  
 
@@ -208,7 +208,7 @@ tabla_transformaciones = pd.DataFrame({
 display(tabla_transformaciones)
 ```
 
-**Tabla 2.3.1.** Resumen variables categóricas codificadas.
+**Tabla 2.4.1.** Resumen variables categóricas codificadas.
 
 El resultado muestra que se transformaron **12 variables ordinales** mediante recodificación numérica y **139 variables nominales** a través de codificación *dummy*.  
 
@@ -225,7 +225,7 @@ resumen = pd.DataFrame({
 resumen
 ```
 
-**Tabla 2.3.2.** Resumen genera limpieza de datos.
+**Tabla 2.4.2.** Resumen genera limpieza de datos.
 
 El conjunto original contenía **2930 registros y 82 variables**, con un total de **15 749 valores faltantes**.  
 Tras el proceso de imputación, eliminación de outliers, transformación logarítmica y codificación de variables, el dataset final quedó compuesto por **2768 observaciones y 222 variables**, sin valores ausentes.

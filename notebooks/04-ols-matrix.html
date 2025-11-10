@@ -180,8 +180,7 @@
 <li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7 — Remedios y métodos robustos</a></li>
-
-<li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capítulo 8 — Validación y selección de modelos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="09-monte-carlo.html">Capitulo 09. Montecarlo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="10-interpretation.html">Capitulo 10. Interpretacion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="11-conclusions.html">Capítulo 11 · Conclusiones y trabajo futuro</a></li>
@@ -333,10 +332,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1 Definición del modelo</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1 Definición del modelo</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
             </nav>
@@ -379,8 +376,9 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
 <section id="definicion-del-modelo">
-<h3>4.1 Definición del modelo<a class="headerlink" href="#definicion-del-modelo" title="Link to this heading">#</a></h3>
+<h2>4.1 Definición del modelo<a class="headerlink" href="#definicion-del-modelo" title="Link to this heading">#</a></h2>
 <p>El modelo de regresión lineal puede expresarse de forma matricial como:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -531,7 +529,6 @@ S(\beta) = (Y - X\beta)^\top (Y - X\beta)
 <p>Primero se calculan los coeficientes manualmente usando la formulación matricial de OLS, y luego se ajusta el mismo modelo con <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> para verificar los resultados. Se observan los mismos coeficientes.</p>
 <p>Cada coeficiente indica cuánto se espera que cambie el <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> por un incremento de una unidad en la variable correspondiente, manteniendo constantes las demás variables. Por ejemplo, el coeficiente de <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code> es aproximadamente 17 686. Esto significa que, en promedio, por cada punto adicional en la calificación general de la casa, se espera que el precio de venta aumente unos 17 686 dólares, manteniendo constantes las otras variables del modelo.</p>
 </section>
-</section>
 <section id="takeaways">
 <h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -606,10 +603,8 @@ S(\beta) = (Y - X\beta)^\top (Y - X\beta)
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1 Definición del modelo</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1 Definición del modelo</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
   </nav></div>
