@@ -11,21 +11,26 @@ kernelspec: {name: python3, display_name: Python 3}
 
 
 ```{code-cell} ipython3
+# Ruta fija del CSV (compilas desde 'book/')
 from pathlib import Path
-DATA_PATH = Path("../data/ames_housing.csv")  # relativo a book/notebooks/
-assert DATA_PATH.is_file(), "No se encontró '../data/ames_housing.csv'"
-print("Usando CSV:", DATA_PATH.resolve())
+DATA_PATH = Path("data/ames_housing.csv")
+assert DATA_PATH.is_file(), "No se encontró 'book/data/ames_housing.csv'"
+print("Usando CSV:", DATA_PATH.resolve()))
 ```
 ```{code-cell} ipython3
 import pandas as pd
 import numpy as np
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
+from sklearn.preprocessing import StandardScaler
+from scipy import stats
+from scipy.stats import zscore
 
 # ===============================
 # 1. Cargar dataset y metadatos
 # ===============================
 
-data = pd.read_csv("ames_housing.csv")
-
+data = pd.read_csv("AmesHousing.csv", sep = ",")
 # Fuente, tamaño, número de variables, licencia
 fuente = "Ames Housing Dataset (De Cock, 2011) — Iowa State University"
 tamano = data.shape[0]
