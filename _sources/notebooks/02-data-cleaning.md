@@ -93,7 +93,7 @@ for col in num_cols:
 cat_cols = data_limpia.select_dtypes(exclude=np.number).columns
 for col in cat_cols:
     data_limpia[col].fillna(data_limpia[col].mode()[0], inplace=True)
-data_limpia.head(20)
+
 
 ```
 
