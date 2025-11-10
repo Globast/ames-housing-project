@@ -134,6 +134,82 @@ print("Archivo Bootstrap:", BOOT_CSV_PATH.resolve())
 ```
 
 ```{code-cell} ipython3
+import pandas as pd
+
+# Si bootstrap_df no está en memoria, intenta cargarlo desde BOOT_CSV_PATH
+try:
+    bootstrap_df  # noqa: F821
+except NameError:
+    try:
+        bootstrap_df = pd.read_csv(BOOT_CSV_PATH)
+        print("Cargado bootstrap_df desde:", BOOT_CSV_PATH)
+    except Exception as e:
+        print("Aviso: no se pudo cargar bootstrap_df automáticamente:", e)
+
+# Series y CI de OLS
+coef_ols = modelo_base.params
+se_ols   = modelo_base.bse
+ci_ols   = modelo_base.conf_int()
+ic_ols_width = ci_ols.iloc[:, 1] - ci_ols.iloc[:, 0]
+
+# HC3
+se_hc3   = resultados_HC3.bse
+ci_hc3   = resultados_HC3.conf_int()
+ic_hc3_width = ci_hc3.iloc[:, 1] - ci_hc3.iloc[:, 0]
+
+# Normaliza bootstrap_df: índice por nombre de término si existe
+if isinstance(bootstrap_df, pd.DataFrame):
+    name_cols = [c for c in bootstrap_df.columns if c.lower() in ("term", "variable", "coef_name", "feature")]
+    if name_cols:
+        bootstrap_df = bootstrap_df.set_index(name_cols[0])
+
+    # Mapeo de columnas esperadas (ajústalo si tus nombres difieren)
+    col_mean = "Coef_mean"
+    col_se   = "SE_bootstrap"
+    col_l    = "IC_2.5%"
+    col_u    = "IC_97.5%"
+
+    # Series desde bootstrap
+    coef_boot_mean = bootstrap_df[col_mean] if col_mean in bootstrap_df.columns else pd.Series(dtype=float)
+    se_boot        = bootstrap_df[col_se]   if col_se   in bootstrap_df.columns else pd.Series(dtype=float)
+    if {col_l, col_u}.issubset(bootstrap_df.columns):
+        ic_boot_width = bootstrap_df[col_u] - bootstrap_df[col_l]
+    else:
+        ic_boot_width = pd.Series(dtype=float)
+
+    # Alinea con el orden de coef_ols
+    coef_boot_mean = coef_boot_mean.reindex(coef_ols.index)
+    se_boot        = se_boot.reindex(coef_ols.index)
+    ic_boot_width  = ic_boot_width.reindex(coef_ols.index)
+else:
+    coef_boot_mean = pd.Series(dtype=float, index=coef_ols.index)
+    se_boot        = pd.Series(dtype=float, index=coef_ols.index)
+    ic_boot_width  = pd.Series(dtype=float, index=coef_ols.index)
+
+# DataFrame comparativo
+comparative_df = pd.DataFrame({
+    "Coef_OLS": coef_ols,
+    "Coef_Bootstrap": coef_boot_mean,
+    "SE_OLS": se_ols,
+    "SE_HC3": se_hc3.reindex(coef_ols.index),
+    "SE_Bootstrap": se_boot,
+    "IC_width_OLS": ic_ols_width,
+    "IC_width_HC3": ic_hc3_width.reindex(coef_ols.index),
+    "IC_width_Bootstrap": ic_boot_width,
+})
+
+# Subconjuntos útiles
+coef_df = comparative_df[["Coef_OLS", "Coef_Bootstrap"]]
+se_df   = comparative_df[["SE_OLS", "SE_HC3", "SE_Bootstrap"]]
+ic_df   = comparative_df[["IC_width_OLS", "IC_width_HC3", "IC_width_Bootstrap"]]
+
+# Vista rápida
+comparative_df.head()
+```
+
+
+
+```{code-cell} ipython3
 from pathlib import Path
 import pandas as pd
 
