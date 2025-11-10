@@ -5,7 +5,7 @@ jupytext:
 kernelspec: {name: python3, display_name: Python 3}
 ---
 
-# Preprocesamiento de Ames Housing: limpieza, outliers (Mahalanobis), transformaciones y codificación
+# Capitulo 2
 
 **Overview.** Comparar un pipeline de preprocesamiento para housing que: (1) carga y diagnostica el CSV crudo, (2) **imputa faltantes** (mediana/moda), (3) **filtra outliers multivariados** vía distancia de **Mahalanobis** con umbral \(\chi^2\), (4) aplica **transformaciones logarítmicas** para estabilizar varianza, (5) **codifica** variables (ordinal + _one-hot_) y (6) **exporta** dos artefactos reproducibles para modelado:
 - `../data/ames_housing_clean.csv` → datos limpios **sin outliers** y con columnas log.

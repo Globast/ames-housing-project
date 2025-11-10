@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Preprocesamiento de Ames Housing: limpieza, outliers (Mahalanobis), transformaciones y codificación &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>Capitulo 2 &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -175,7 +175,7 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01-introduccion.html">Capítulo 1 · Introducción y pregunta de investigación</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Preprocesamiento de Ames Housing: limpieza, outliers (Mahalanobis), transformaciones y codificación</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capitulo 2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03-modelado.html">Capítulo 3 · Regresión lineal (OLS) e inferencia</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04-diagnostico.html">Capítulo 4 · Diagnóstico del modelo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05-metodos-robustos.html">Capítulo 5 · Métodos robustos</a></li>
@@ -382,7 +382,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Preprocesamiento de Ames Housing: limpieza, outliers (Mahalanobis), transformaciones y codificación</h1>
+    <h1>Capitulo 2</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -412,8 +412,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="preprocesamiento-de-ames-housing-limpieza-outliers-mahalanobis-transformaciones-y-codificacion">
-<h1>Preprocesamiento de Ames Housing: limpieza, outliers (Mahalanobis), transformaciones y codificación<a class="headerlink" href="#preprocesamiento-de-ames-housing-limpieza-outliers-mahalanobis-transformaciones-y-codificacion" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="capitulo-2">
+<h1>Capitulo 2<a class="headerlink" href="#capitulo-2" title="Link to this heading">#</a></h1>
 <p><strong>Overview.</strong> Comparar un pipeline de preprocesamiento para housing que: (1) carga y diagnostica el CSV crudo, (2) <strong>imputa faltantes</strong> (mediana/moda), (3) <strong>filtra outliers multivariados</strong> vía distancia de <strong>Mahalanobis</strong> con umbral (\chi^2), (4) aplica <strong>transformaciones logarítmicas</strong> para estabilizar varianza, (5) <strong>codifica</strong> variables (ordinal + <em>one-hot</em>) y (6) <strong>exporta</strong> dos artefactos reproducibles para modelado:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">../data/ames_housing_clean.csv</span></code> → datos limpios <strong>sin outliers</strong> y con columnas log.</p></li>
