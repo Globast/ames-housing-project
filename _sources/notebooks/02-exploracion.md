@@ -18,9 +18,6 @@ DATA_PATH = Path("../data/ames_housing.csv")  # relativo a book/notebooks/
 assert DATA_PATH.is_file(), "No se encontró '../data/ames_housing.csv'"
 print("Usando CSV:", DATA_PATH.resolve())
 ```
-
-# Capítulo 2: Descripción y limpieza del dataset
-
 ### 2.1 Carga del dataset
 
 ```{code-cell} ipython3
