@@ -2,6 +2,7 @@
 
 > **Overview**: Ajustar OLS con transformaciones razonables, obtener ICs y pruebas, y evaluar significancia y magnitud de efectos.
 
+**Lectura de datos detectada en el .ipynb:**
 ```{code-cell} python
 import pandas as pd
 import numpy as np

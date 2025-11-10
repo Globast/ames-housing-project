@@ -1,3 +1,9 @@
+---
+jupytext:
+  formats: md:myst
+  text_representation: {extension: .md, format_name: myst}
+kernelspec: {name: python3, display_name: Python 3}
+---
 # Capítulo 0 · Instrucciones de reproducción
 ## Instrucciones de reproducción y Demostraciones
 > **Overview**: Este capitulo presenta instrucciones de reproducción. Se muestran las demostraciones solicitadas.
@@ -33,195 +39,104 @@ book/
 
 
 ## Demostraciones solicitadas
-### Definición del modelo
-
-En regresión lineal, el modelo puede expresarse de forma matricial como:
-
-$$
-Y = X\beta + \varepsilon
-$$
-
-donde
-
-$$
-Y =
-\begin{bmatrix}
-y_1 \\ y_2 \\ \vdots \\ y_n
-\end{bmatrix},\quad
-X =
-\begin{bmatrix}
-1 & x_1 \\
-1 & x_2 \\
-\vdots & \vdots \\
-1 & x_n
-\end{bmatrix},\quad
-\beta =
-\begin{bmatrix}
-\beta_0 \\ \beta_1
-\end{bmatrix},\quad
-\varepsilon =
-\begin{bmatrix}
-\varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n
-\end{bmatrix}.
-$$
-
-Al realizar la multiplicación $X\beta + \varepsilon$, se obtiene:
-
-$$
-\begin{bmatrix}
-1 & x_1 \\
-1 & x_2 \\
-\vdots & \vdots \\
-1 & x_n
-\end{bmatrix}
-\begin{bmatrix}
-\beta_0 \\ \beta_1
-\end{bmatrix}
-+
-\begin{bmatrix}
-\varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n
-\end{bmatrix}
-=
-\begin{bmatrix}
-\beta_0 + \beta_1 x_1 + \varepsilon_1 \\
-\beta_0 + \beta_1 x_2 + \varepsilon_2 \\
-\vdots \\
-\beta_0 + \beta_1 x_n + \varepsilon_n
-\end{bmatrix}.
-$$
-
-Esto muestra que la expresión matricial $Y = X\beta + \varepsilon$ representa exactamente el modelo clásico:
-
-$$
-y_i = \beta_0 + \beta_1 x_i + \varepsilon_i
-$$
-
-# Función de pérdida
-
-La función de pérdida de mínimos cuadrados busca minimizar la suma de los errores al cuadrado:
-
-$$
-S(\beta) = (Y - X\beta)^\top (Y - X\beta)
-$$
-
-Al desarrollar el producto escalar, se obtiene:
-
-$$
-S(\beta) = Y^\top Y \;-\; 2\,\beta^\top X^\top Y \;+\; \beta^\top X^\top X\,\beta
-$$
-
-El término $\,\beta^\top X^\top Y\,$ es un escalar porque resulta del producto de un vector fila $Y^\top$ de dimensión $1\times n$, una matriz $X$ de $n\times p$, y un vector columna $\beta$ de $p\times 1$, dando un resultado $1\times 1$.
-
-# Estimador de mínimos cuadrados
-
-Para hallar los valores de $\beta$ que minimizan $S(\beta)$, se deriva con respecto a $\beta$:
-
-$$
-\frac{\partial S(\beta)}{\partial \beta}
-=
--2X^\top Y
-+
-\frac{\partial}{\partial \beta}\big(\beta^\top X^\top X\,\beta\big).
-$$
-
-Usando $\dfrac{\partial}{\partial \beta}(\beta^\top A\beta)=(A+A^\top)\beta$ y que $X^\top X$ es simétrica:
-
-$$
-\frac{\partial S(\beta)}{\partial \beta} = -2X^\top Y + 2X^\top X\,\beta
-$$
-
-Igualando a cero para minimizar:
-
-$$
--2X^\top Y + 2X^\top X\,\beta = 0
-\quad\Rightarrow\quad
-X^\top X\,\beta = X^\top Y
-$$
-
-Despejando:
-
-$$
-\hat{\beta} = (X^\top X)^{-1}X^\top Y
-$$
-
-# Desarrollo de los estimadores $\hat B_0$ y $\hat B_1$
-
-En la regresión simple, la matriz $X$ tiene dos columnas: una de unos (intercepto) y otra con los valores $x_i$. Entonces:
-
-$$
-X =
-\begin{bmatrix}
-1 & x_1 \\
-1 & x_2 \\
-\vdots & \vdots \\
-1 & x_n
-\end{bmatrix},
-\qquad
-X^\top X =
-\begin{bmatrix}
-n & \sum x_i \\
-\sum x_i & \sum x_i^2
-\end{bmatrix}.
-$$
-
-De este modo:
-
-$$
-(X^\top X)^{-1} =
-\frac{1}{\,n\sum x_i^2 - (\sum x_i)^2\,}
-\begin{bmatrix}
-\sum x_i^2 & -\sum x_i \\
--\sum x_i & n
-\end{bmatrix},
-\qquad
-X^\top Y =
-\begin{bmatrix}
-\sum y_i \\ \sum x_i y_i
-\end{bmatrix}.
-$$
-
-Multiplicando,
-
-$$
-\hat{\beta} =
-\frac{1}{\,n\sum x_i^2 - (\sum x_i)^2\,}
-\begin{bmatrix}
-\sum x_i^2 \sum y_i - (\sum x_i)(\sum x_i y_i) \\
-n\sum x_i y_i - (\sum x_i)(\sum y_i)
-\end{bmatrix}.
-$$
-
-Estas expresiones son equivalentes a las fórmulas clásicas:
-
-$$
-\hat{\beta}_1 =
-\frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2},
-\qquad
-\hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x}
-$$
-
-# Invertibilidad de $X^\top X$
-
-Para que la solución $\hat{\beta} = (X^\top X)^{-1}X^\top Y$ exista, $X^\top X$ debe ser invertible. En regresión simple:
-
-$$
-X^\top X =
-\begin{bmatrix}
-n & \sum x_i \\
-\sum x_i & \sum x_i^2
-\end{bmatrix},
-\qquad
-\det(X^\top X) = n\sum x_i^2 - (\sum x_i)^2 = n\sum (x_i - \bar{x})^2.
-$$
-
-El determinante de $X^\top X$ depende directamente de la variación de los $x_i$.  
-Si todos los valores $x_i$ fueran iguales, $\sum (x_i - \bar{x})^2 = 0$ y el determinante también, impidiendo la inversión. Por tanto, si
-
-$$
-\det(X^\top X) > 0 \;\Leftrightarrow\; \sum (x_i - \bar{x})^2 > 0,
-$$
-
-la matriz es **invertible** y la solución $\hat{\beta}$ está bien definida. En regresión múltiple, esto se traduce en la *ausencia de multicolinealidad perfecta* entre las variables explicativas.
+---
+jupytext:
+  formats: md:myst
+  text_representation: {extension: .md, format_name: myst}
+kernelspec: {name: python3, display_name: Python 3}
+---
 
 
-## Key takeaways
+### Enunciado
+
+1. Sea un modelo de regresión lineal simple; muestra que la suma de cuadrados de los residuos dividida por $\sigma^2$ puede escribirse como una **combinación cuadrática** de los errores $\varepsilon_i$ y, usando ese resultado, que su distribución es $\chi^2_{n-2}$.
+
+### Paso 1 — Modelo y notación matricial
+
+```{math}
+:label: eq:2.11.1-modelo
+\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}, \qquad
+\boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{0},\, \sigma^2 \mathbf{I}_n)
+```
+donde en regresión simple
+$\mathbf{X} = [\mathbf{1}\ \ \mathbf{x}] \in \mathbb{R}^{n\times 2}$
+(tiene **p = 2** columnas: intercepto y regresor).
+
+El estimador OLS es
+```{math}
+:label: eq:2.11.1-beta
+\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}.
+```
+El vector de **residuos** es
+```{math}
+:label: eq:2.11.1-residuos
+\mathbf{e} = \mathbf{y} - \hat{\mathbf{y}} = \mathbf{y} - \mathbf{X}\hat{\boldsymbol{\beta}}
+= \left(\mathbf{I}_n - \mathbf{H}\right)\mathbf{y},
+```
+con la **matriz sombrero** (proyección) definida por
+```{math}
+:label: eq:2.11.1-hat
+\mathbf{H} = \mathbf{X}(\mathbf{X}^\top \mathbf{X})^{-1}\mathbf{X}^\top, \qquad
+\mathbf{M} \equiv \mathbf{I}_n - \mathbf{H}.
+```
+
+### Paso 2 — Forma cuadrática
+
+Sustituyendo {eq}`eq:2.11.1-modelo` en {eq}`eq:2.11.1-residuos`,
+```{math}
+:label: eq:2.11.1-e-M-eps
+\mathbf{e} = \mathbf{M}\mathbf{y} = \mathbf{M}(\mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon})
+= \underbrace{\mathbf{M}\mathbf{X}}_{=\ \mathbf{0}} \boldsymbol{\beta} + \mathbf{M}\boldsymbol{\varepsilon}
+= \mathbf{M}\boldsymbol{\varepsilon},
+```
+pues $\mathbf{M}\mathbf{X} = (\mathbf{I}-\mathbf{H})\mathbf{X} = \mathbf{X} - \mathbf{X} = \mathbf{0}$.
+
+La **suma de cuadrados de residuos** es
+```{math}
+:label: eq:2.11.1-ssr
+SS_{\text{Res}} = \mathbf{e}^\top \mathbf{e} = (\mathbf{M}\boldsymbol{\varepsilon})^\top(\mathbf{M}\boldsymbol{\varepsilon})
+= \boldsymbol{\varepsilon}^\top \mathbf{M}^\top \mathbf{M}\,\boldsymbol{\varepsilon}.
+```
+Como $\mathbf{H}$ es simétrica e idempotente ($\mathbf{H}=\mathbf{H}^\top$, $\mathbf{H}^2=\mathbf{H}$),
+entonces $\mathbf{M}=\mathbf{I}-\mathbf{H}$ es también **simétrica** e **idempotente**:
+$\mathbf{M}^\top=\mathbf{M}$ y $\mathbf{M}^2=\mathbf{M}$.
+Por tanto,
+```{math}
+:label: eq:2.11.1-ssr-forma
+SS_{\text{Res}} = \boldsymbol{\varepsilon}^\top \mathbf{M}\,\boldsymbol{\varepsilon}
+\qquad\Longrightarrow\qquad
+\frac{SS_{\text{Res}}}{\sigma^2} = \left(\frac{\boldsymbol{\varepsilon}}{\sigma}\right)^\top
+\mathbf{M}\left(\frac{\boldsymbol{\varepsilon}}{\sigma}\right).
+```
+Esta es una **combinación cuadrática** de los errores, como se pedía.
+
+### Paso 3 — Distribución $\chi^2$ y grados de libertad
+
+Sea $\mathbf{z} \equiv \boldsymbol{\varepsilon}/\sigma \sim \mathcal{N}(\mathbf{0}, \mathbf{I}_n)$.
+Entonces, por {eq}`eq:2.11.1-ssr-forma`,
+```{math}
+:label: eq:2.11.1-qf
+\frac{SS_{\text{Res}}}{\sigma^2} = \mathbf{z}^\top \mathbf{M}\,\mathbf{z}.
+```
+Teorema clásico: si $\mathbf{A}$ es simétrica e idempotente con **rango $r$**, y $\mathbf{z}\sim\mathcal{N}(\mathbf{0},\mathbf{I})$,
+entonces $\mathbf{z}^\top \mathbf{A}\,\mathbf{z} \sim \chi^2_r$. Aquí $\mathbf{A}=\mathbf{M}$.
+
+En regresión simple ($p=2$), $\operatorname{rank}(\mathbf{H})=p=2$, por lo que
+```{math}
+:label: eq:2.11.1-rank
+\operatorname{rank}(\mathbf{M}) = \operatorname{rank}(\mathbf{I}-\mathbf{H}) = n - \operatorname{rank}(\mathbf{H}) = n-2.
+```
+Concluimos que
+```{math}
+:label: eq:2.11.1-chi2
+\frac{SS_{\text{Res}}}{\sigma^2} \sim \chi^2_{\,n-2}.
+```
+
+### Comentario final (intuición)
+
+- $\mathbf{H}$ proyecta $\mathbf{y}$ sobre el subespacio generado por las columnas de $\mathbf{X}$ (dimensión $p$).  
+- $\mathbf{M}$ proyecta sobre su **complemento ortogonal** (dimensión $n-p$), donde viven los residuos.  
+- Al estandarizar los errores por $\sigma$, la energía de la proyección en ese subespacio (forma cuadrática) sigue una $\chi^2$ con $n-p$ grados de libertad, que aquí es $n-2$.
+
+**Referencias internas.** De {eq}`eq:2.11.1-e-M-eps` y {eq}`eq:2.11.1-ssr` se obtiene la forma cuadrática {eq}`eq:2.11.1-ssr-forma`; usando {eq}`eq:2.11.1-rank` se deduce la distribución en {eq}`eq:2.11.1-chi2`.
+

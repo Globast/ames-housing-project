@@ -6,9 +6,7 @@ kernelspec: {name: python3, display_name: Python 3}
 ---
 # Capítulo 2: Descripción y limpieza del dataset
 
-**Notebook original:** Capítulo 2: Descripción y limpieza del dataset
-
-**Librerías usadas:** numpy, pandas, warnings
+> **Overview**:
 
 **Lectura de datos detectada en el .ipynb:** ../data/AmesHousing.csv
 
@@ -18,7 +16,7 @@ DATA_PATH = Path("../data/ames_housing.csv")  # relativo a book/notebooks/
 assert DATA_PATH.is_file(), "No se encontró '../data/ames_housing.csv'"
 print("Usando CSV:", DATA_PATH.resolve())
 ```
-### 2.1 Carga del dataset
+## Carga del dataset
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -94,7 +92,7 @@ for col in cat_cols:
     data_limpia[col].fillna(data_limpia[col].mode()[0], inplace=True)
 ```
 
-### 2.2 Tratamiento de outliers
+## 2.2 Tratamiento de outliers
 
 Se aplicó el criterio de **tres desviaciones estándar (3Z)** para identificar observaciones atípicas en las variables numéricas de interés, incluyendo la variable objetivo `SalePrice` y 13 predictoras potenciales.
 
@@ -155,7 +153,7 @@ data_sin_outliers["SalePrice_log"] = np.log1p(data_sin_outliers["SalePrice"])
 data_sin_outliers.to_csv("../data/AmesHousing_sin_outliers.csv", sep =",", index=False)
 ```
 
-### 2.3 Codificación de variables categóricas
+## 2.3 Codificación de variables categóricas
 
 Las variables categóricas se transformaron en valores numéricos para facilitar su uso en modelos.  
 

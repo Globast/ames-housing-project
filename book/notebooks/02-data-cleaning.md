@@ -6,10 +6,10 @@ kernelspec: {name: python3, display_name: Python 3}
 ---
 # Capítulo 2: Descripción y limpieza del dataset
 
-## Overview
+> **Overview**:
 En este capítulo se parte del CSV original **ames_housing.csv**, se realiza limpieza, codificación de variables categóricas y tratamiento de outliers. La salida produce **AmesHousing_codificada.csv** y **AmesHousing_sin_outliers.csv**. Se documentan las decisiones para garantizar reproducibilidad y coherencia para capítulos posteriores.
 
-## 2.1 Carga del dataset
+## Carga del dataset
 
 ```{code-cell} ipython3
 from pathlib import Path
@@ -42,7 +42,7 @@ print(f"Licencia: {licencia}")
 ```
 **Tabla 2.1.1** Vista/tabulación relevante del conjunto de datos *Ames Housing*. 
 
-## 2.2 Tratamiento de datos faltantes
+## Tratamiento de datos faltantes
 Se calcula el porcentaje de faltantes por variable
 
 ```{code-cell} ipython3
@@ -97,7 +97,7 @@ for col in cat_cols:
 
 ```
 
-## 2.3 Tratamiento de outliers
+## Tratamiento de outliers
 
 Se aplicó el criterio de **tres desviaciones estándar (3Z)** para identificar observaciones atípicas en las variables numéricas de interés, incluyendo la variable objetivo `SalePrice` y 13 predictoras potenciales.
 
@@ -158,7 +158,7 @@ data_sin_outliers["SalePrice_log"] = np.log1p(data_sin_outliers["SalePrice"])
 data_sin_outliers.to_csv("../data/DATA_PATH.name", sep =",", index=False)
 ```
 
-## 2.4 Codificación de variables categóricas
+## Codificación de variables categóricas
 
 Las variables categóricas se transformaron en valores numéricos para facilitar su uso en modelos.  
 
@@ -230,7 +230,7 @@ resumen
 El conjunto original contenía **2930 registros y 82 variables**, con un total de **15 749 valores faltantes**.  
 Tras el proceso de imputación, eliminación de outliers, transformación logarítmica y codificación de variables, el dataset final quedó compuesto por **2768 observaciones y 222 variables**, sin valores ausentes.
 
-## Takeaways
+> **Key takeaways**
 - El pipeline deja dos salidas canónicas: *AmesHousing_codificada.csv* y *AmesHousing_sin_outliers.csv*.
 - Las transformaciones son **deterministas** y documentadas para reproducibilidad.
 - Las decisiones sobre outliers afectan la estabilidad de coeficientes en capítulos posteriores.

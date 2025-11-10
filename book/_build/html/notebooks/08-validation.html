@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Capítulo 8 — Validación y selección de modelos &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>8. Capítulo 8 — Validación y selección de modelos &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -62,8 +62,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/08-validation';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Capítulo 9: Interpretación aplicada" href="09-interpretation.html" />
-    <link rel="prev" title="Capítulo 7 — Remedios y métodos robustos" href="07-robust-methods.html" />
+    <link rel="next" title="9. Capítulo 9: Interpretación aplicada" href="09-interpretation.html" />
+    <link rel="prev" title="7. Capítulo 7 — Remedios y métodos robustos" href="07-robust-methods.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -167,22 +167,22 @@
  </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        <ul class="current nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Prefacio</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="00-instructions.html">Capítulo 0 · Instrucciones de reproducción</a></li>
-
-
-
-
-<li class="toctree-l1"><a class="reference internal" href="01-introduction.html">Capítulo 1: Introduccióny pregunta de investigación</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">Capítulo 2: Descripción y limpieza del dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03-eda.html">Capítulo 3: Análisis exploratorio (EDA)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7 — Remedios y métodos robustos</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 8 — Validación y selección de modelos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-interpretation.html">Capítulo 9: Interpretación aplicada</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10-conclusions.html">Capítulo 10: Conclusiones y trabajo futuro</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contenido</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-introduction.html">1. Capítulo 1: Introduccióny pregunta de investigación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">2. Capítulo 2: Descripción y limpieza del dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-eda.html">3. Capítulo 3: Análisis exploratorio (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">4. Capítulo 4: Formulación matricial del modelo OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-inference.html">5. Capítulo 5: Inferencia y grados de libertad</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">6. Capítulo 6: Diagnóstico de supuestos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">7. Capítulo 7 — Remedios y métodos robustos</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">8. Capítulo 8 — Validación y selección de modelos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-interpretation.html">9. Capítulo 9: Interpretación aplicada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-conclusions.html">10. Capítulo 10: Conclusiones y trabajo futuro</a></li>
 </ul>
 
     </div>
@@ -331,14 +331,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-rutas">Configuración de rutas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validacion-train-test">8.1 Validación train/test</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regresion-ridge">8.2 Regresión Ridge</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regresion-lasso">8.3 Regresión Lasso</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-ridge-vs-lasso">8.4 OLS vs. Ridge vs. Lasso</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discusion-y-analisis">Discusión y análisis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validacion-train-test">8.1. Validación train/test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regresion-ridge">8.2. Regresión Ridge</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regresion-lasso">8.3. Regresión Lasso</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-ridge-vs-lasso">8.4. OLS vs. Ridge vs. Lasso</a></li>
 </ul>
             </nav>
         </div>
@@ -351,15 +347,14 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-8-validacion-y-seleccion-de-modelos">
-<h1>Capítulo 8 — Validación y selección de modelos<a class="headerlink" href="#capitulo-8-validacion-y-seleccion-de-modelos" title="Link to this heading">#</a></h1>
-<section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<h1><span class="section-number">8. </span>Capítulo 8 — Validación y selección de modelos<a class="headerlink" href="#capitulo-8-validacion-y-seleccion-de-modelos" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p><strong>Overview</strong>:</p>
+</div></blockquote>
 <p>Este capítulo evalúa el desempeño del modelo mediante técnicas de <strong>validación</strong> (p. ej., holdout,
 <em>k</em>-fold cross-validation) y criterios de selección (AIC, BIC, errores de predicción).
 Se busca comparar configuraciones de modelos y reportar métricas de generalización.</p>
-</section>
-<section id="configuracion-de-rutas">
-<h2>Configuración de rutas<a class="headerlink" href="#configuracion-de-rutas" title="Link to this heading">#</a></h2>
+<p><strong>Definir ruta de datos</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -377,9 +372,8 @@ Se busca comparar configuraciones de modelos y reportar métricas de generalizac
 </div>
 </div>
 </div>
-</section>
 <section id="validacion-train-test">
-<h2>8.1 Validación train/test<a class="headerlink" href="#validacion-train-test" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">8.1. </span>Validación train/test<a class="headerlink" href="#validacion-train-test" title="Link to this heading">#</a></h2>
 <p>Al evaluar un modelo de regresión, es fundamental medir qué tan bien predice datos que no ha visto durante su entrenamiento. Para ello, se suele dividir el conjunto de datos en dos partes: <strong>entrenamiento (train)</strong> y <strong>prueba (test)</strong>, donde el primero se utiliza para ajustar los parámetros del modelo y aprender patrones en los datos, y el de prueba se reserva para evaluar la capacidad de generalización del modelo, es decir, qué tan bien puede predecir datos nuevos.</p>
 <p>De esta forma es posible detectar problemas como el <strong>sobreajuste</strong> (overfitting), donde el modelo se ajusta demasiado a los datos de entrenamiento y falla al generalizar.</p>
 <p>Para cuantificar este desempeño se utilizan métricas de error y de ajuste. Las más comunes son <strong>R²</strong>, <strong>RMSE</strong> y <strong>MAE</strong>.</p>
@@ -517,7 +511,7 @@ R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y
 <p>En cuanto a los errores, tanto el RMSE como el MAE presentan valores muy similares entre entrenamiento y prueba. Esto indica que el modelo mantiene un buen nivel de precisión al predecir datos no vistos.</p>
 </section>
 <section id="regresion-ridge">
-<h2>8.2 Regresión Ridge<a class="headerlink" href="#regresion-ridge" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">8.2. </span>Regresión Ridge<a class="headerlink" href="#regresion-ridge" title="Link to this heading">#</a></h2>
 <p>La <strong>regresión Ridge</strong> es una extensión de la regresión lineal que incorpora un término de regularización L2 para controlar el sobreajuste y estabilizar los coeficientes cuando existe <strong>colinealidad</strong> entre las variables predictoras.</p>
 <p>La función de pérdida de Ridge modifica la función de mínimos cuadrados para incluir la penalización sobre los coeficientes:</p>
 <div class="math notranslate nohighlight">
@@ -795,7 +789,7 @@ S_{\text{Ridge}}(\beta) = (Y - X \beta)^\top (Y - X \beta) + \alpha \, \beta^\to
 <p>El modelo muestra un desempeño sólido tanto en el conjunto de entrenamiento como en el de prueba. En el conjunto de entrenamiento, el <strong>R²</strong> es 0.8485, con un <strong>RMSE</strong> de 0.1462 y un <strong>MAE</strong> de 0.1024, mientras que en el conjunto de prueba el <strong>R²</strong> aumenta ligeramente a 0.8554, con un <strong>RMSE</strong> de 0.1454 y un <strong>MAE</strong> de 0.1055. Además, la diferencia absoluta entre el R² de entrenamiento y prueba es muy baja (0.00699), lo que indica que el modelo generaliza de manera adecuada a datos no vistos.</p>
 </section>
 <section id="regresion-lasso">
-<h2>8.3 Regresión Lasso<a class="headerlink" href="#regresion-lasso" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">8.3. </span>Regresión Lasso<a class="headerlink" href="#regresion-lasso" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -1138,7 +1132,7 @@ S_{\text{Ridge}}(\beta) = (Y - X \beta)^\top (Y - X \beta) + \alpha \, \beta^\to
 <p>En conjunto, estas métricas confirman que el modelo Lasso logra un ajuste consistente y preciso, con la ventaja adicional de haber reducido algunos coeficientes a cero, mejorando la interpretabilidad del modelo.</p>
 </section>
 <section id="ols-vs-ridge-vs-lasso">
-<h2>8.4 OLS vs. Ridge vs. Lasso<a class="headerlink" href="#ols-vs-ridge-vs-lasso" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">8.4. </span>OLS vs. Ridge vs. Lasso<a class="headerlink" href="#ols-vs-ridge-vs-lasso" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">comparativa</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
@@ -1180,41 +1174,41 @@ S_{\text{Ridge}}(\beta) = (Y - X \beta)^\top (Y - X \beta) + \alpha \, \beta^\to
 <div class="cell_output docutils container">
 <div class="output text_html"><style type="text/css">
 </style>
-<table id="T_096d3">
+<table id="T_022cc">
   <thead>
     <tr>
       <th class="blank level0" >&nbsp;</th>
-      <th id="T_096d3_level0_col0" class="col_heading level0 col0" >Modelo</th>
-      <th id="T_096d3_level0_col1" class="col_heading level0 col1" >R2_Test</th>
-      <th id="T_096d3_level0_col2" class="col_heading level0 col2" >RMSE_Test</th>
-      <th id="T_096d3_level0_col3" class="col_heading level0 col3" >MAE_Test</th>
-      <th id="T_096d3_level0_col4" class="col_heading level0 col4" >Overfitting_R2</th>
+      <th id="T_022cc_level0_col0" class="col_heading level0 col0" >Modelo</th>
+      <th id="T_022cc_level0_col1" class="col_heading level0 col1" >R2_Test</th>
+      <th id="T_022cc_level0_col2" class="col_heading level0 col2" >RMSE_Test</th>
+      <th id="T_022cc_level0_col3" class="col_heading level0 col3" >MAE_Test</th>
+      <th id="T_022cc_level0_col4" class="col_heading level0 col4" >Overfitting_R2</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th id="T_096d3_level0_row0" class="row_heading level0 row0" >0</th>
-      <td id="T_096d3_row0_col0" class="data row0 col0" >OLS</td>
-      <td id="T_096d3_row0_col1" class="data row0 col1" >0.8553</td>
-      <td id="T_096d3_row0_col2" class="data row0 col2" >0.1455</td>
-      <td id="T_096d3_row0_col3" class="data row0 col3" >0.1056</td>
-      <td id="T_096d3_row0_col4" class="data row0 col4" >-0.0068</td>
+      <th id="T_022cc_level0_row0" class="row_heading level0 row0" >0</th>
+      <td id="T_022cc_row0_col0" class="data row0 col0" >OLS</td>
+      <td id="T_022cc_row0_col1" class="data row0 col1" >0.8553</td>
+      <td id="T_022cc_row0_col2" class="data row0 col2" >0.1455</td>
+      <td id="T_022cc_row0_col3" class="data row0 col3" >0.1056</td>
+      <td id="T_022cc_row0_col4" class="data row0 col4" >-0.0068</td>
     </tr>
     <tr>
-      <th id="T_096d3_level0_row1" class="row_heading level0 row1" >1</th>
-      <td id="T_096d3_row1_col0" class="data row1 col0" >Ridge</td>
-      <td id="T_096d3_row1_col1" class="data row1 col1" >0.8554</td>
-      <td id="T_096d3_row1_col2" class="data row1 col2" >0.1454</td>
-      <td id="T_096d3_row1_col3" class="data row1 col3" >0.1055</td>
-      <td id="T_096d3_row1_col4" class="data row1 col4" >0.0070</td>
+      <th id="T_022cc_level0_row1" class="row_heading level0 row1" >1</th>
+      <td id="T_022cc_row1_col0" class="data row1 col0" >Ridge</td>
+      <td id="T_022cc_row1_col1" class="data row1 col1" >0.8554</td>
+      <td id="T_022cc_row1_col2" class="data row1 col2" >0.1454</td>
+      <td id="T_022cc_row1_col3" class="data row1 col3" >0.1055</td>
+      <td id="T_022cc_row1_col4" class="data row1 col4" >0.0070</td>
     </tr>
     <tr>
-      <th id="T_096d3_level0_row2" class="row_heading level0 row2" >2</th>
-      <td id="T_096d3_row2_col0" class="data row2 col0" >Lasso</td>
-      <td id="T_096d3_row2_col1" class="data row2 col1" >0.8566</td>
-      <td id="T_096d3_row2_col2" class="data row2 col2" >0.1448</td>
-      <td id="T_096d3_row2_col3" class="data row2 col3" >0.1053</td>
-      <td id="T_096d3_row2_col4" class="data row2 col4" >0.0087</td>
+      <th id="T_022cc_level0_row2" class="row_heading level0 row2" >2</th>
+      <td id="T_022cc_row2_col0" class="data row2 col0" >Lasso</td>
+      <td id="T_022cc_row2_col1" class="data row2 col1" >0.8566</td>
+      <td id="T_022cc_row2_col2" class="data row2 col2" >0.1448</td>
+      <td id="T_022cc_row2_col3" class="data row2 col3" >0.1053</td>
+      <td id="T_022cc_row2_col4" class="data row2 col4" >0.0087</td>
     </tr>
   </tbody>
 </table>
@@ -1223,20 +1217,19 @@ S_{\text{Ridge}}(\beta) = (Y - X \beta)^\top (Y - X \beta) + \alpha \, \beta^\to
 <p><strong>Tabla 8.4.1.</strong> Métricas de evaluación OLS vs. Ridge vs. Lasso.</p>
 <p>Todos los modelos presentan valores de R² muy similares, alrededor de 0.855–0.857, indicando que los tres explican aproximadamente el 85–86% de la variabilidad de los datos de prueba. Los errores de predicción son también comparables entre los modelos, con RMSE ≈ 0.145 y MAE ≈ 0.105.</p>
 <p>En el caso de estudio Lasso logra el valor ligeramente más bajo en ambas métricas, sugiriendo un ajuste marginalmente más preciso. Además, simplifica el modelo al eliminar variables menos relevantes, mejorando la interpretabilidad sin sacrificar precisión.</p>
-</section>
-<section id="discusion-y-analisis">
-<h2>Discusión y análisis<a class="headerlink" href="#discusion-y-analisis" title="Link to this heading">#</a></h2>
-<p><strong>Validez externa.</strong> Compare las métricas de error entre entrenamiento y validación. Diferencias grandes sugieren sobreajuste.
+<blockquote>
+<div><p><strong>Key takeaways</strong></p>
+<blockquote>
+<div><p><strong>Validez externa.</strong> Compare las métricas de error entre entrenamiento y validación. Diferencias grandes sugieren sobreajuste.
 <strong>Selección de modelo.</strong> Use criterios comparables (AIC/BIC) y valide con <em>k</em>-fold para evitar conclusiones por azar.
 <strong>Reporte.</strong> Numere y cite cada tabla/figura en el texto (p. ej., «ver Tabla 8.1»). No deje resultados sin interpretación.</p>
-</section>
-<section id="takeaways">
-<h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
 <li><p><strong>Use validación cruzada</strong> para estimar el error de generalización con menor varianza que un único split.</p></li>
 <li><p><strong>Contraste AIC/BIC</strong> con desempeño de validación; no se quede solo con un criterio.</p></li>
 <li><p><strong>Rutas deterministas:</strong> Los datos se cargan desde <code class="docutils literal notranslate"><span class="pre">DATA_PATH</span></code> y toda salida se guarda en <code class="docutils literal notranslate"><span class="pre">../data/</span></code>.</p></li>
 </ol>
+</div></blockquote>
+</div></blockquote>
 </section>
 </section>
 
@@ -1276,7 +1269,7 @@ S_{\text{Ridge}}(\beta) = (Y - X \beta)^\top (Y - X \beta) + \alpha \, \beta^\to
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Capítulo 7 — Remedios y métodos robustos</p>
+        <p class="prev-next-title"><span class="section-number">7. </span>Capítulo 7 — Remedios y métodos robustos</p>
       </div>
     </a>
     <a class="right-next"
@@ -1284,7 +1277,7 @@ S_{\text{Ridge}}(\beta) = (Y - X \beta)^\top (Y - X \beta) + \alpha \, \beta^\to
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Capítulo 9: Interpretación aplicada</p>
+        <p class="prev-next-title"><span class="section-number">9. </span>Capítulo 9: Interpretación aplicada</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1304,14 +1297,10 @@ S_{\text{Ridge}}(\beta) = (Y - X \beta)^\top (Y - X \beta) + \alpha \, \beta^\to
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-rutas">Configuración de rutas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validacion-train-test">8.1 Validación train/test</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regresion-ridge">8.2 Regresión Ridge</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regresion-lasso">8.3 Regresión Lasso</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-ridge-vs-lasso">8.4 OLS vs. Ridge vs. Lasso</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discusion-y-analisis">Discusión y análisis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validacion-train-test">8.1. Validación train/test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regresion-ridge">8.2. Regresión Ridge</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regresion-lasso">8.3. Regresión Lasso</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ols-vs-ridge-vs-lasso">8.4. OLS vs. Ridge vs. Lasso</a></li>
 </ul>
   </nav></div>
 

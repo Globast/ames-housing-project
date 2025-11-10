@@ -33,195 +33,69 @@ book/
 
 
 ## Demostraciones solicitadas
-### Definición del modelo
 
-En regresión lineal, el modelo puede expresarse de forma matricial como:
+1. Sea un modelo de regresión lineal simple
 
+```{math}
+:label: eq:modelo_simple
+y_i = \beta_0 + \beta_1 x_i + \varepsilon_i,\quad i=1,\ldots,n
+```
+
+donde los errores aleatorios cumplen $\mathbb{E}(\varepsilon_i)=0$ y $\operatorname{Var}(\varepsilon_i)=\sigma^2$.
+
+**(a)** Demuestra que la suma de cuadrados de los residuos dividida por $\sigma^2$,
+
+```{math}
+:label: eq:ssres_def
+\frac{SS_{\text{Res}}}{\sigma^2}
+\;=\;
+\frac{\sum_{i=1}^n e_i^2}{\sigma^2},
+```
+
+puede escribirse como una **combinación cuadrática** de los errores $\varepsilon_i$.
+
+**(b)** Usando el resultado anterior, muestra que
+
+```{math}
+:label: eq:ssres_chi2
+\frac{SS_{\text{Res}}}{\sigma^2}\;\sim\; \chi^2_{\,n-2},
+```
+
+y explica por qué se restan **dos grados de libertad** en el modelo de regresión simple (los asociados a $\hat\beta_0$ y $\hat\beta_1$).
+
+---
+
+### Solución 
+
+Sea $ \mathbf{y} = (y_1,\ldots,y_n)^\top$, $ \mathbf{X}=[\mathbf{1},\,\mathbf{x}]$ (columna de 1s y la de $x_i$),
+$\boldsymbol\varepsilon=(\varepsilon_1,\ldots,\varepsilon_n)^\top$ con $\boldsymbol\varepsilon\sim \mathcal N(\mathbf{0},\sigma^2\mathbf{I})$.
+El proyector sobre el espacio columna de $\mathbf{X}$ es $\mathbf{H}=\mathbf{X}(\mathbf{X}^\top \mathbf{X})^{-1}\mathbf{X}^\top$ y el **proyector al complemento** es $\mathbf{M}=\mathbf{I}-\mathbf{H}$.
+
+Los residuos cumplen $\mathbf{e}=\mathbf{y}-\hat{\mathbf{y}}=\mathbf{M}\mathbf{y}=\mathbf{M}\boldsymbol\varepsilon$, luego
+
+```{math}
+:label: eq:ssres_quad
+SS_{\text{Res}}
+= \mathbf{e}^\top \mathbf{e}
+= \boldsymbol\varepsilon^\top \mathbf{M}\,\boldsymbol\varepsilon,
+```
+
+que es una **forma cuadrática** en $\boldsymbol\varepsilon$ (simétrica porque $\mathbf{M}$ es simétrica).
+
+Propiedades clave:
+- $\mathbf{M}$ es **idempotente** y simétrica: $\mathbf{M}^2=\mathbf{M}$, $\mathbf{M}^\top=\mathbf{M}$.
+- $\operatorname{rango}(\mathbf{M}) = n - \operatorname{rango}(\mathbf{X}) = n-2$ (en regresión simple hay dos parámetros: $\beta_0,\beta_1$).
+
+Entonces, por el resultado clásico sobre formas cuadráticas de normales, si $\boldsymbol\varepsilon\sim \mathcal N(\mathbf{0},\sigma^2\mathbf{I})$ y
+$\mathbf{A}$ es idempotente simétrica de rango $r$, se tiene
 $$
-Y = X\beta + \varepsilon
+\frac{\boldsymbol\varepsilon^\top \mathbf{A}\,\boldsymbol\varepsilon}{\sigma^2}\sim \chi^2_r.
 $$
+Aplicándolo con $\mathbf{A}=\mathbf{M}$ y $r=n-2$, se obtiene {eq}`eq:ssres_chi2`.
 
-donde
+**¿Por qué se restan dos grados de libertad?**  
+Porque el ajuste consume dos parámetros libres ($\beta_0$ y $\beta_1$), reduciendo la dimensión del subespacio de residuos de $n$ a $n-2$. Por eso el **ancho** del espacio donde viven los residuos (y, por ende, de $SS_{\text{Res}}$) es $n-2$.
 
-$$
-Y =
-\begin{bmatrix}
-y_1 \\ y_2 \\ \vdots \\ y_n
-\end{bmatrix},\quad
-X =
-\begin{bmatrix}
-1 & x_1 \\
-1 & x_2 \\
-\vdots & \vdots \\
-1 & x_n
-\end{bmatrix},\quad
-\beta =
-\begin{bmatrix}
-\beta_0 \\ \beta_1
-\end{bmatrix},\quad
-\varepsilon =
-\begin{bmatrix}
-\varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n
-\end{bmatrix}.
-$$
-
-Al realizar la multiplicación $X\beta + \varepsilon$, se obtiene:
-
-$$
-\begin{bmatrix}
-1 & x_1 \\
-1 & x_2 \\
-\vdots & \vdots \\
-1 & x_n
-\end{bmatrix}
-\begin{bmatrix}
-\beta_0 \\ \beta_1
-\end{bmatrix}
-+
-\begin{bmatrix}
-\varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n
-\end{bmatrix}
-=
-\begin{bmatrix}
-\beta_0 + \beta_1 x_1 + \varepsilon_1 \\
-\beta_0 + \beta_1 x_2 + \varepsilon_2 \\
-\vdots \\
-\beta_0 + \beta_1 x_n + \varepsilon_n
-\end{bmatrix}.
-$$
-
-Esto muestra que la expresión matricial $Y = X\beta + \varepsilon$ representa exactamente el modelo clásico:
-
-$$
-y_i = \beta_0 + \beta_1 x_i + \varepsilon_i
-$$
-
-# Función de pérdida
-
-La función de pérdida de mínimos cuadrados busca minimizar la suma de los errores al cuadrado:
-
-$$
-S(\beta) = (Y - X\beta)^\top (Y - X\beta)
-$$
-
-Al desarrollar el producto escalar, se obtiene:
-
-$$
-S(\beta) = Y^\top Y \;-\; 2\,\beta^\top X^\top Y \;+\; \beta^\top X^\top X\,\beta
-$$
-
-El término $\,\beta^\top X^\top Y\,$ es un escalar porque resulta del producto de un vector fila $Y^\top$ de dimensión $1\times n$, una matriz $X$ de $n\times p$, y un vector columna $\beta$ de $p\times 1$, dando un resultado $1\times 1$.
-
-# Estimador de mínimos cuadrados
-
-Para hallar los valores de $\beta$ que minimizan $S(\beta)$, se deriva con respecto a $\beta$:
-
-$$
-\frac{\partial S(\beta)}{\partial \beta}
-=
--2X^\top Y
-+
-\frac{\partial}{\partial \beta}\big(\beta^\top X^\top X\,\beta\big).
-$$
-
-Usando $\dfrac{\partial}{\partial \beta}(\beta^\top A\beta)=(A+A^\top)\beta$ y que $X^\top X$ es simétrica:
-
-$$
-\frac{\partial S(\beta)}{\partial \beta} = -2X^\top Y + 2X^\top X\,\beta
-$$
-
-Igualando a cero para minimizar:
-
-$$
--2X^\top Y + 2X^\top X\,\beta = 0
-\quad\Rightarrow\quad
-X^\top X\,\beta = X^\top Y
-$$
-
-Despejando:
-
-$$
-\hat{\beta} = (X^\top X)^{-1}X^\top Y
-$$
-
-# Desarrollo de los estimadores $\hat B_0$ y $\hat B_1$
-
-En la regresión simple, la matriz $X$ tiene dos columnas: una de unos (intercepto) y otra con los valores $x_i$. Entonces:
-
-$$
-X =
-\begin{bmatrix}
-1 & x_1 \\
-1 & x_2 \\
-\vdots & \vdots \\
-1 & x_n
-\end{bmatrix},
-\qquad
-X^\top X =
-\begin{bmatrix}
-n & \sum x_i \\
-\sum x_i & \sum x_i^2
-\end{bmatrix}.
-$$
-
-De este modo:
-
-$$
-(X^\top X)^{-1} =
-\frac{1}{\,n\sum x_i^2 - (\sum x_i)^2\,}
-\begin{bmatrix}
-\sum x_i^2 & -\sum x_i \\
--\sum x_i & n
-\end{bmatrix},
-\qquad
-X^\top Y =
-\begin{bmatrix}
-\sum y_i \\ \sum x_i y_i
-\end{bmatrix}.
-$$
-
-Multiplicando,
-
-$$
-\hat{\beta} =
-\frac{1}{\,n\sum x_i^2 - (\sum x_i)^2\,}
-\begin{bmatrix}
-\sum x_i^2 \sum y_i - (\sum x_i)(\sum x_i y_i) \\
-n\sum x_i y_i - (\sum x_i)(\sum y_i)
-\end{bmatrix}.
-$$
-
-Estas expresiones son equivalentes a las fórmulas clásicas:
-
-$$
-\hat{\beta}_1 =
-\frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2},
-\qquad
-\hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x}
-$$
-
-# Invertibilidad de $X^\top X$
-
-Para que la solución $\hat{\beta} = (X^\top X)^{-1}X^\top Y$ exista, $X^\top X$ debe ser invertible. En regresión simple:
-
-$$
-X^\top X =
-\begin{bmatrix}
-n & \sum x_i \\
-\sum x_i & \sum x_i^2
-\end{bmatrix},
-\qquad
-\det(X^\top X) = n\sum x_i^2 - (\sum x_i)^2 = n\sum (x_i - \bar{x})^2.
-$$
-
-El determinante de $X^\top X$ depende directamente de la variación de los $x_i$.  
-Si todos los valores $x_i$ fueran iguales, $\sum (x_i - \bar{x})^2 = 0$ y el determinante también, impidiendo la inversión. Por tanto, si
-
-$$
-\det(X^\top X) > 0 \;\Leftrightarrow\; \sum (x_i - \bar{x})^2 > 0,
-$$
-
-la matriz es **invertible** y la solución $\hat{\beta}$ está bien definida. En regresión múltiple, esto se traduce en la *ausencia de multicolinealidad perfecta* entre las variables explicativas.
+_Referencia sugerida:_ [@DraperSmith1998].
 
 
-## Key takeaways

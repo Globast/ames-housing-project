@@ -6,9 +6,10 @@ kernelspec: {name: python3, display_name: Python 3}
 ---
 # Capítulo 3: Análisis exploratorio (EDA)
 
-## Overview
+> **Overview**:
 Incluye distribución de variables, relaciones bivariadas y detección preliminar de colinealidad. 
 
+**Definir ruta de datos**
 ```{code-cell} ipython3
 from pathlib import Path
 import pandas as pd
@@ -23,7 +24,7 @@ df = pd.read_csv(DATA_PATH)
 df.shape
 ```
 
-## 3.1 Distribución de la variable respuesta
+## Distribución de la variable respuesta
 
 
 
@@ -91,7 +92,7 @@ Se compara la relación entre el **precio de venta** (`SalePrice`) y el **área 
 
 Inicialmente se observa una **dispersión notable en los valores altos**. Tras aplicar la transformación, el patrón muestra una **relación más lineal y estable**, reduciendo la asimetría y atenuando la influencia de valores extremos.
 
-## 3.2 Correlaciones entre variables numéricas
+## Correlaciones entre variables numéricas
 
 ```{code-cell} ipython3
 import matplotlib.pyplot as plt
@@ -123,7 +124,7 @@ Variables como `Overall Qual`, `Gr Liv Area`, `Exter Qual` y `Bsmt Qual` tienen 
 
 Sin embargo, variables como `Garage Cars` y `Garage Area` tienen una correlación alta entre sí, de modo que puede no ser necesario incluir ambas.
 
-## 3.4 Relaciones de variables categóricas
+## Relaciones de variables categóricas
 
 ```{code-cell} ipython3
 data = pd.read_csv(DATA_PATH)
@@ -177,7 +178,7 @@ for v in vars_candidatas:
 
 Se eligen 9 variables predictoras, teniendo en cuenta una **alta correlación con la variable de respuesta**, **baja correlación entre ellas** (para evitar redundancia en el modelo) y **sentido práctico**.
 
-## Takeaways
+> **Key takeaways**
 - Las distribuciones sugieren posibles transformaciones para linealidad/normalidad.
 - Se identifican variables con fuerte asociación a la respuesta (útiles para el modelo base).
 - Se detectan indicios de colinealidad que se confirman en C6.

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Capítulo 4: Formulación matricial del modelo OLS &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>4. Capítulo 4: Formulación matricial del modelo OLS &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -62,8 +62,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/04-ols-matrix';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Capítulo 5: Inferencia y grados de libertad" href="05-inference.html" />
-    <link rel="prev" title="Capítulo 3: Análisis exploratorio (EDA)" href="03-eda.html" />
+    <link rel="next" title="5. Capítulo 5: Inferencia y grados de libertad" href="05-inference.html" />
+    <link rel="prev" title="3. Capítulo 3: Análisis exploratorio (EDA)" href="03-eda.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -167,22 +167,22 @@
  </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        <ul class="current nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Prefacio</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="00-instructions.html">Capítulo 0 · Instrucciones de reproducción</a></li>
-
-
-
-
-<li class="toctree-l1"><a class="reference internal" href="01-introduction.html">Capítulo 1: Introduccióny pregunta de investigación</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">Capítulo 2: Descripción y limpieza del dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03-eda.html">Capítulo 3: Análisis exploratorio (EDA)</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 4: Formulación matricial del modelo OLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7 — Remedios y métodos robustos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capítulo 8 — Validación y selección de modelos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-interpretation.html">Capítulo 9: Interpretación aplicada</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10-conclusions.html">Capítulo 10: Conclusiones y trabajo futuro</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contenido</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-introduction.html">1. Capítulo 1: Introduccióny pregunta de investigación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">2. Capítulo 2: Descripción y limpieza del dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-eda.html">3. Capítulo 3: Análisis exploratorio (EDA)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">4. Capítulo 4: Formulación matricial del modelo OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-inference.html">5. Capítulo 5: Inferencia y grados de libertad</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">6. Capítulo 6: Diagnóstico de supuestos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">7. Capítulo 7 — Remedios y métodos robustos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-validation.html">8. Capítulo 8 — Validación y selección de modelos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-interpretation.html">9. Capítulo 9: Interpretación aplicada</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-conclusions.html">10. Capítulo 10: Conclusiones y trabajo futuro</a></li>
 </ul>
 
     </div>
@@ -331,9 +331,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1 Definición del modelo</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1. Definición del modelo</a></li>
 </ul>
             </nav>
         </div>
@@ -346,10 +344,12 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-4-formulacion-matricial-del-modelo-ols">
-<h1>Capítulo 4: Formulación matricial del modelo OLS<a class="headerlink" href="#capitulo-4-formulacion-matricial-del-modelo-ols" title="Link to this heading">#</a></h1>
-<section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
-<p>Se formula y ajusta un modelo OLS usando álgebra matricial. Se presentan las ecuaciones clave (normal equations) y se verifica la equivalencia con APIs de alto nivel.</p>
+<h1><span class="section-number">4. </span>Capítulo 4: Formulación matricial del modelo OLS<a class="headerlink" href="#capitulo-4-formulacion-matricial-del-modelo-ols" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p><strong>Overview</strong>:
+Se formula y ajusta un modelo OLS usando álgebra matricial. Se presentan las ecuaciones clave (normal equations) y se verifica la equivalencia con APIs de alto nivel.</p>
+</div></blockquote>
+<p><strong>Definir ruta de datos</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -375,9 +375,8 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
 <section id="definicion-del-modelo">
-<h2>4.1 Definición del modelo<a class="headerlink" href="#definicion-del-modelo" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">4.1. </span>Definición del modelo<a class="headerlink" href="#definicion-del-modelo" title="Link to this heading">#</a></h2>
 <p>El modelo de regresión lineal puede expresarse de forma matricial como:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -527,9 +526,9 @@ S(\beta) = (Y - X\beta)^\top (Y - X\beta)
 <p>Se construye un modelo de regresión lineal para predecir <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> a partir de nueve variables predictoras.</p>
 <p>Primero se calculan los coeficientes manualmente usando la formulación matricial de OLS, y luego se ajusta el mismo modelo con <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> para verificar los resultados. Se observan los mismos coeficientes.</p>
 <p>Cada coeficiente indica cuánto se espera que cambie el <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> por un incremento de una unidad en la variable correspondiente, manteniendo constantes las demás variables. Por ejemplo, el coeficiente de <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code> es aproximadamente 17 686. Esto significa que, en promedio, por cada punto adicional en la calificación general de la casa, se espera que el precio de venta aumente unos 17 686 dólares, manteniendo constantes las otras variables del modelo.</p>
-</section>
-<section id="takeaways">
-<h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p><strong>Key takeaways</strong></p>
+</div></blockquote>
 <ul class="simple">
 <li><p>La solución matricial (\hat{\beta}=(X^TX)^{-1}X^Ty) coincide con la obtenida vía librerías.</p></li>
 <li><p>El condicionamiento de (X^TX) anticipa problemas de varianza de coeficientes.</p></li>
@@ -574,7 +573,7 @@ S(\beta) = (Y - X\beta)^\top (Y - X\beta)
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Capítulo 3: Análisis exploratorio (EDA)</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Capítulo 3: Análisis exploratorio (EDA)</p>
       </div>
     </a>
     <a class="right-next"
@@ -582,7 +581,7 @@ S(\beta) = (Y - X\beta)^\top (Y - X\beta)
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Capítulo 5: Inferencia y grados de libertad</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>Capítulo 5: Inferencia y grados de libertad</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -602,9 +601,7 @@ S(\beta) = (Y - X\beta)^\top (Y - X\beta)
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1 Definición del modelo</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-modelo">4.1. Definición del modelo</a></li>
 </ul>
   </nav></div>
 

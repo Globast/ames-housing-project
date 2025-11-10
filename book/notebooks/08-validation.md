@@ -6,13 +6,13 @@ kernelspec: {name: python3, display_name: Python 3}
 ---
 # Capítulo 8 — Validación y selección de modelos
 
-## Overview
+> **Overview**:
 
 Este capítulo evalúa el desempeño del modelo mediante técnicas de **validación** (p. ej., holdout,
 *k*-fold cross-validation) y criterios de selección (AIC, BIC, errores de predicción).
 Se busca comparar configuraciones de modelos y reportar métricas de generalización.
 
-## Configuración de rutas
+**Definir ruta de datos**
 
 ```{code-cell} ipython3
 from pathlib import Path
@@ -22,7 +22,7 @@ DATA_PATH = Path("../data/AmesHousing_codificada.csv")  # relativo a book/notebo
 assert DATA_PATH.is_file(), "No se encontró '../data/AmesHousing_codificada.csv'"
 print("Usando CSV:", DATA_PATH.resolve())
 ```
-## 8.1 Validación train/test
+## Validación train/test
 
 Al evaluar un modelo de regresión, es fundamental medir qué tan bien predice datos que no ha visto durante su entrenamiento. Para ello, se suele dividir el conjunto de datos en dos partes: **entrenamiento (train)** y **prueba (test)**, donde el primero se utiliza para ajustar los parámetros del modelo y aprender patrones en los datos, y el de prueba se reserva para evaluar la capacidad de generalización del modelo, es decir, qué tan bien puede predecir datos nuevos.  
 
@@ -121,7 +121,7 @@ Los resultados indican que, en el conjunto de entrenamiento, el modelo es capaz 
 
 En cuanto a los errores, tanto el RMSE como el MAE presentan valores muy similares entre entrenamiento y prueba. Esto indica que el modelo mantiene un buen nivel de precisión al predecir datos no vistos.
 
-## 8.2 Regresión Ridge
+## Regresión Ridge
 
 La **regresión Ridge** es una extensión de la regresión lineal que incorpora un término de regularización L2 para controlar el sobreajuste y estabilizar los coeficientes cuando existe **colinealidad** entre las variables predictoras.
 
@@ -229,7 +229,7 @@ display(resultados_eval_ridge)
 
 El modelo muestra un desempeño sólido tanto en el conjunto de entrenamiento como en el de prueba. En el conjunto de entrenamiento, el **R²** es 0.8485, con un **RMSE** de 0.1462 y un **MAE** de 0.1024, mientras que en el conjunto de prueba el **R²** aumenta ligeramente a 0.8554, con un **RMSE** de 0.1454 y un **MAE** de 0.1055. Además, la diferencia absoluta entre el R² de entrenamiento y prueba es muy baja (0.00699), lo que indica que el modelo generaliza de manera adecuada a datos no vistos.
 
-## 8.3 Regresión Lasso
+## Regresión Lasso
 
 ```{code-cell} ipython3
 import numpy as np
@@ -338,7 +338,7 @@ En el **conjunto de entrenamiento**, el **R²** es 0.8479, con un **RMSE** de 0.
 
 En conjunto, estas métricas confirman que el modelo Lasso logra un ajuste consistente y preciso, con la ventaja adicional de haber reducido algunos coeficientes a cero, mejorando la interpretabilidad del modelo.
 
-## 8.4 OLS vs. Ridge vs. Lasso
+## OLS vs. Ridge vs. Lasso
 
 ```{code-cell} ipython3
 comparativa = pd.DataFrame({
@@ -382,14 +382,10 @@ Todos los modelos presentan valores de R² muy similares, alrededor de 0.855–0
 
 En el caso de estudio Lasso logra el valor ligeramente más bajo en ambas métricas, sugiriendo un ajuste marginalmente más preciso. Además, simplifica el modelo al eliminar variables menos relevantes, mejorando la interpretabilidad sin sacrificar precisión.
 
-## Discusión y análisis
-
-**Validez externa.** Compare las métricas de error entre entrenamiento y validación. Diferencias grandes sugieren sobreajuste.
+> **Key takeaways**
+>>**Validez externa.** Compare las métricas de error entre entrenamiento y validación. Diferencias grandes sugieren sobreajuste.
 **Selección de modelo.** Use criterios comparables (AIC/BIC) y valide con *k*-fold para evitar conclusiones por azar.
 **Reporte.** Numere y cite cada tabla/figura en el texto (p. ej., «ver Tabla 8.1»). No deje resultados sin interpretación.
-
-## Takeaways
-
-1. **Use validación cruzada** para estimar el error de generalización con menor varianza que un único split.
-2. **Contraste AIC/BIC** con desempeño de validación; no se quede solo con un criterio.
-3. **Rutas deterministas:** Los datos se cargan desde `DATA_PATH` y toda salida se guarda en `../data/`.
+>>1. **Use validación cruzada** para estimar el error de generalización con menor varianza que un único split.
+>>2. **Contraste AIC/BIC** con desempeño de validación; no se quede solo con un criterio.
+>>3. **Rutas deterministas:** Los datos se cargan desde `DATA_PATH` y toda salida se guarda en `../data/`.
