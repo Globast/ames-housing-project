@@ -27,10 +27,10 @@ parse:
 
 sphinx:
   config:
-    numfig: true                  # numera Figuras/Tablas (si tienen caption)
-    numfig_secnum_depth: 2        # usa hasta nivel H2 → 7.2.x
+    numfig: true                  
+    numfig_secnum_depth: 3        
     mathjax3_config:
       tex:
-        tags: 'all'               # numera TODAS las ecuaciones (no solo las AMS)
+        tags: 'all'               
         inlineMath: [['$', '$'], ['\\(', '\\)']]
 
