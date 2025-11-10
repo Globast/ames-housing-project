@@ -200,6 +200,8 @@ display(resultados_df)
 Se observa que para los valores pequeños de $ \alpha\ $ probados (0.001 a 10), las métricas de validación son prácticamente constantes, con un **R²** cercano a 0.8857, un **RMSE** alrededor de 0.1239 y un **MAE** cerca de 0.0944. El mejor desempeño se alcanza con el alpha mínimo evaluado, **0.001**, lo que indica que el modelo obtiene un buen ajuste incluso con **regularización casi nula**, es decir, prácticamente sin penalización sobre los coeficientes. A medida que la penalización aumenta ($ \alpha \ge 100 $), el desempeño comienza a deteriorarse, reflejando que la regularización excesiva provoca que el modelo pierda capacidad para capturar la variabilidad de los datos.
 
 ```{code-cell} ipython3
+best_row = resultados_df.loc[resultados_df["R2_val"].idxmax()]
+best_alpha = best_row["alpha"]
 ridge_final = Ridge(alpha=best_alpha, random_state=42)
 ridge_final.fit(X_train_scaled, y_train)
 
