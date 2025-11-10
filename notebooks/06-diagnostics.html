@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Capítulo 4 · Diagnóstico del modelo &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>Capítulo 6: Diagnóstico de supuestos &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -61,7 +61,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Capítulo 5 · Métodos robustos" href="07-robust-methods.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="05-inference.html" />
+    <link rel="prev" title="Capítulo 5: Inferencia y grados de libertad" href="05-inference.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -175,7 +175,8 @@
 <li class="toctree-l1"><a class="reference internal" href="02-data-cleaning.html">Capítulo 2: Descripción y limpieza del dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03-eda.html">Capítulo 3: Análisis exploratorio (EDA)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 4 · Diagnóstico del modelo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 6: Diagnóstico de supuestos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 5 · Métodos robustos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="11-conclusions.html">Capítulo 6 · Conclusiones y trabajo futuro</a></li>
 </ul>
@@ -303,7 +304,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -314,11 +317,19 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Capítulo 4 · Diagnóstico del modelo</h1>
+    <h1>Capítulo 6: Diagnóstico de supuestos</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -328,114 +339,241 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="capitulo-4-diagnostico-del-modelo">
-<h1>Capítulo 4 · Diagnóstico del modelo<a class="headerlink" href="#capitulo-4-diagnostico-del-modelo" title="Link to this heading">#</a></h1>
-<blockquote>
-<div><p><strong>Overview</strong>: Evaluar supuestos (linealidad, homocedasticidad, normalidad de residuos, influencia) y proponer correcciones.</p>
-</div></blockquote>
+  <section class="tex2jax_ignore mathjax_ignore" id="capitulo-6-diagnostico-de-supuestos">
+<h1>Capítulo 6: Diagnóstico de supuestos<a class="headerlink" href="#capitulo-6-diagnostico-de-supuestos" title="Link to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data/ames_housing.csv&#39;</span><span class="p">))</span>
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;log_SalePrice&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;SalePrice&#39;</span><span class="p">])</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span><span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span><span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span><span class="s1">&#39;Year Built&#39;</span><span class="p">]])</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;log_SalePrice&#39;</span><span class="p">]</span>
-<span class="n">ols</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-
-<span class="n">resid</span> <span class="o">=</span> <span class="n">ols</span><span class="o">.</span><span class="n">resid</span>
-<span class="n">fitted</span> <span class="o">=</span> <span class="n">ols</span><span class="o">.</span><span class="n">fittedvalues</span>
-
-<span class="c1"># Residuos vs ajustados</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">fitted</span><span class="p">,</span> <span class="n">resid</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Residuos vs Ajustados&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Ajustados&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Residuos&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="c1"># QQ-plot</span>
-<span class="n">sm</span><span class="o">.</span><span class="n">qqplot</span><span class="p">(</span><span class="n">resid</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s1">&#39;45&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;QQ-plot de residuos&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/AmesHousing_codificada.csv&quot;</span><span class="p">)</span>  <span class="c1"># relativo a book/notebooks/</span>
+<span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="s2">&quot;No se encontró &#39;../data/AmesHousing_codificada.csv&#39;&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usando CSV:&quot;</span><span class="p">,</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">7</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="ne">----&gt; </span><span class="mi">7</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data/ames_housing.csv&#39;</span><span class="p">))</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;log_SalePrice&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;SalePrice&#39;</span><span class="p">])</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="n">X</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span><span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span><span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span><span class="s1">&#39;Year Built&#39;</span><span class="p">]])</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/parsers/readers.py:1026,</span> in <span class="ni">read_csv</span><span class="nt">(filepath_or_buffer, sep, delimiter, header, names, index_col, usecols, dtype, engine, converters, true_values, false_values, skipinitialspace, skiprows, skipfooter, nrows, na_values, keep_default_na, na_filter, verbose, skip_blank_lines, parse_dates, infer_datetime_format, keep_date_col, date_parser, date_format, dayfirst, cache_dates, iterator, chunksize, compression, thousands, decimal, lineterminator, quotechar, quoting, doublequote, escapechar, comment, encoding, encoding_errors, dialect, on_bad_lines, delim_whitespace, low_memory, memory_map, float_precision, storage_options, dtype_backend)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1013</span> <span class="n">kwds_defaults</span> <span class="o">=</span> <span class="n">_refine_defaults_read</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1014</span>     <span class="n">dialect</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1015</span>     <span class="n">delimiter</span><span class="p">,</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>   <span class="mi">1022</span>     <span class="n">dtype_backend</span><span class="o">=</span><span class="n">dtype_backend</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1023</span> <span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1024</span> <span class="n">kwds</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwds_defaults</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">1026</span> <span class="k">return</span> <span class="n">_read</span><span class="p">(</span><span class="n">filepath_or_buffer</span><span class="p">,</span> <span class="n">kwds</span><span class="p">)</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/parsers/readers.py:620,</span> in <span class="ni">_read</span><span class="nt">(filepath_or_buffer, kwds)</span>
-<span class="g g-Whitespace">    </span><span class="mi">617</span> <span class="n">_validate_names</span><span class="p">(</span><span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;names&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-<span class="g g-Whitespace">    </span><span class="mi">619</span> <span class="c1"># Create the parser.</span>
-<span class="ne">--&gt; </span><span class="mi">620</span> <span class="n">parser</span> <span class="o">=</span> <span class="n">TextFileReader</span><span class="p">(</span><span class="n">filepath_or_buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">622</span> <span class="k">if</span> <span class="n">chunksize</span> <span class="ow">or</span> <span class="n">iterator</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">623</span>     <span class="k">return</span> <span class="n">parser</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/parsers/readers.py:1620,</span> in <span class="ni">TextFileReader.__init__</span><span class="nt">(self, f, engine, **kwds)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1617</span>     <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;has_index_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwds</span><span class="p">[</span><span class="s2">&quot;has_index_names&quot;</span><span class="p">]</span>
-<span class="g g-Whitespace">   </span><span class="mi">1619</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span><span class="p">:</span> <span class="n">IOHandles</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="ne">-&gt; </span><span class="mi">1620</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_engine</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/parsers/readers.py:1880,</span> in <span class="ni">TextFileReader._make_engine</span><span class="nt">(self, f, engine)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1878</span>     <span class="k">if</span> <span class="s2">&quot;b&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mode</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1879</span>         <span class="n">mode</span> <span class="o">+=</span> <span class="s2">&quot;b&quot;</span>
-<span class="ne">-&gt; </span><span class="mi">1880</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span> <span class="o">=</span> <span class="n">get_handle</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1881</span>     <span class="n">f</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1882</span>     <span class="n">mode</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1883</span>     <span class="n">encoding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;encoding&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1884</span>     <span class="n">compression</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1885</span>     <span class="n">memory_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;memory_map&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1886</span>     <span class="n">is_text</span><span class="o">=</span><span class="n">is_text</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1887</span>     <span class="n">errors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;encoding_errors&quot;</span><span class="p">,</span> <span class="s2">&quot;strict&quot;</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1888</span>     <span class="n">storage_options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;storage_options&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">1889</span> <span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1890</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<span class="g g-Whitespace">   </span><span class="mi">1891</span> <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span><span class="o">.</span><span class="n">handle</span>
-
-<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/common.py:873,</span> in <span class="ni">get_handle</span><span class="nt">(path_or_buf, mode, encoding, compression, memory_map, is_text, errors, storage_options)</span>
-<span class="g g-Whitespace">    </span><span class="mi">868</span> <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">869</span>     <span class="c1"># Check whether the filename is to be opened in binary mode.</span>
-<span class="g g-Whitespace">    </span><span class="mi">870</span>     <span class="c1"># Binary mode does not support &#39;encoding&#39; and &#39;newline&#39;.</span>
-<span class="g g-Whitespace">    </span><span class="mi">871</span>     <span class="k">if</span> <span class="n">ioargs</span><span class="o">.</span><span class="n">encoding</span> <span class="ow">and</span> <span class="s2">&quot;b&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ioargs</span><span class="o">.</span><span class="n">mode</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">872</span>         <span class="c1"># Encoding</span>
-<span class="ne">--&gt; </span><span class="mi">873</span>         <span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">874</span>             <span class="n">handle</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">875</span>             <span class="n">ioargs</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">876</span>             <span class="n">encoding</span><span class="o">=</span><span class="n">ioargs</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">877</span>             <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">878</span>             <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">879</span>         <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">880</span>     <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">881</span>         <span class="c1"># Binary mode</span>
-<span class="g g-Whitespace">    </span><span class="mi">882</span>         <span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">ioargs</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
-
-<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;data/ames_housing.csv&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Usando CSV: /workspaces/ames-housing-project/book/data/AmesHousing_codificada.csv
 </pre></div>
 </div>
 </div>
 </div>
-<p>Incluye referencias a figuras (p. ej., <code class="xref std std-numref docutils literal notranslate"><span class="pre">fig:diag-resid</span></code>) y discute patrones, heterocedasticidad y outliers (DFBETAs, leverage, Cook).</p>
-<p>{takeaways}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_modelo_final</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
+
+<span class="n">data_modelo_final</span> <span class="o">=</span> <span class="n">data_modelo_final</span><span class="p">[[</span><span class="s1">&#39;SalePrice&#39;</span><span class="p">,</span><span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span><span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Area&#39;</span><span class="p">,</span><span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span><span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span><span class="s1">&#39;Year Built&#39;</span><span class="p">,</span><span class="s1">&#39;Year Remod/Add&#39;</span><span class="p">,</span><span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Yr Blt&#39;</span><span class="p">,</span><span class="s1">&#39;TotRms AbvGrd&#39;</span><span class="p">,</span><span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span><span class="s1">&#39;Mas Vnr Area&#39;</span><span class="p">,</span><span class="s1">&#39;BsmtFin SF 1&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Separar variable dependiente e independientes</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data_modelo_final</span><span class="p">[[</span><span class="s1">&#39;Overall Qual&#39;</span><span class="p">,</span><span class="s1">&#39;Gr Liv Area&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Cars&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Area&#39;</span><span class="p">,</span><span class="s1">&#39;Year Built&#39;</span><span class="p">,</span><span class="s1">&#39;Total Bsmt SF&#39;</span><span class="p">,</span><span class="s1">&#39;Year Remod/Add&#39;</span><span class="p">,</span><span class="s1">&#39;1st Flr SF&#39;</span><span class="p">,</span><span class="s1">&#39;Full Bath&#39;</span><span class="p">,</span><span class="s1">&#39;Garage Yr Blt&#39;</span><span class="p">,</span><span class="s1">&#39;Fireplaces&#39;</span><span class="p">,</span><span class="s1">&#39;TotRms AbvGrd&#39;</span><span class="p">]]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data_modelo_final</span><span class="p">[[</span><span class="s1">&#39;SalePrice&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Agregar la constante (intercepto)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Crear el modelo_final</span>
+<span class="n">modelo_final</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Ajustar (fit)</span>
+<span class="n">resultados</span> <span class="o">=</span> <span class="n">modelo_final</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Imprimir resumen</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              SalePrice   R-squared:                       0.845
+Model:                            OLS   Adj. R-squared:                  0.845
+Method:                 Least Squares   F-statistic:                     1255.
+Date:                Mon, 10 Nov 2025   Prob (F-statistic):               0.00
+Time:                        04:08:08   Log-Likelihood:                -32098.
+No. Observations:                2768   AIC:                         6.422e+04
+Df Residuals:                    2755   BIC:                         6.430e+04
+Df Model:                          12                                         
+Covariance Type:            nonrobust                                         
+==================================================================================
+                     coef    std err          t      P&gt;|t|      [0.025      0.975]
+----------------------------------------------------------------------------------
+const          -1.388e+06   6.77e+04    -20.497      0.000   -1.52e+06   -1.26e+06
+Overall Qual    1.548e+04    612.228     25.282      0.000    1.43e+04    1.67e+04
+Gr Liv Area       50.9544      2.445     20.841      0.000      46.160      55.748
+Garage Cars      865.8764   1636.248      0.529      0.597   -2342.520    4074.273
+Garage Area       38.4294      5.743      6.692      0.000      27.169      49.690
+Year Built       266.8266     31.535      8.461      0.000     204.991     328.662
+Total Bsmt SF     27.1376      2.264     11.988      0.000      22.699      31.576
+Year Remod/Add   357.9672     33.590     10.657      0.000     292.103     423.831
+1st Flr SF        10.6326      2.576      4.127      0.000       5.581      15.684
+Full Bath      -7030.8661   1412.992     -4.976      0.000   -9801.496   -4260.236
+Garage Yr Blt     55.9347     35.708      1.566      0.117     -14.083     125.952
+Fireplaces      8865.1262    960.246      9.232      0.000    6982.251    1.07e+04
+TotRms AbvGrd   -825.2572    605.818     -1.362      0.173   -2013.160     362.646
+==============================================================================
+Omnibus:                      245.293   Durbin-Watson:                   1.590
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              936.365
+Skew:                           0.377   Prob(JB):                    4.69e-204
+Kurtosis:                       5.748   Cond. No.                     5.49e+05
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 5.49e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.stats.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sms</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.outliers_influence</span><span class="w"> </span><span class="kn">import</span> <span class="n">variance_inflation_factor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+
+<span class="c1"># === 1️⃣ Linealidad ===</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">resultados</span><span class="o">.</span><span class="n">fittedvalues</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Linealidad: Residuales vs Fitted&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Valores ajustados&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Residuales&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># === 2️⃣ Homocedasticidad ===</span>
+<span class="n">bp_test</span> <span class="o">=</span> <span class="n">sms</span><span class="o">.</span><span class="n">het_breuschpagan</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">)</span>
+<span class="n">white_test</span> <span class="o">=</span> <span class="n">sms</span><span class="o">.</span><span class="n">het_white</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">)</span>
+
+<span class="n">bp_pvalue</span> <span class="o">=</span> <span class="n">bp_test</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">white_pvalue</span> <span class="o">=</span> <span class="n">white_test</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🟩 Homocedasticidad:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Breusch–Pagan p-value: </span><span class="si">{</span><span class="n">bp_pvalue</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;White p-value: </span><span class="si">{</span><span class="n">white_pvalue</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">bp_pvalue</span> <span class="o">&gt;</span> <span class="mf">0.05</span> <span class="ow">and</span> <span class="n">white_pvalue</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ No hay evidencia de heterocedasticidad.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Posible heterocedasticidad detectada.&quot;</span><span class="p">)</span>
+
+<span class="c1"># === 3️⃣ Normalidad ===</span>
+<span class="n">sm</span><span class="o">.</span><span class="n">qqplot</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;45&quot;</span><span class="p">,</span> <span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Normalidad: QQ-plot de los residuos&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">shapiro_test</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">shapiro</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🟩 Normalidad:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shapiro-Wilk p-value: </span><span class="si">{</span><span class="n">shapiro_test</span><span class="o">.</span><span class="n">pvalue</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">shapiro_test</span><span class="o">.</span><span class="n">pvalue</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Los residuos parecen normales.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Los residuos no son perfectamente normales.&quot;</span><span class="p">)</span>
+
+<span class="c1"># === 4️⃣ Autocorrelación ===</span>
+<span class="n">dw</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stattools</span><span class="o">.</span><span class="n">durbin_watson</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">resid</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🟩 Autocorrelación:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Durbin–Watson: </span><span class="si">{</span><span class="n">dw</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="mf">1.5</span> <span class="o">&lt;</span> <span class="n">dw</span> <span class="o">&lt;</span> <span class="mf">2.5</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ No hay autocorrelación significativa.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Posible autocorrelación en los residuos.&quot;</span><span class="p">)</span>
+
+<span class="c1"># === 5️⃣ Multicolinealidad ===</span>
+<span class="n">vif_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">vif_data</span><span class="p">[</span><span class="s2">&quot;Variable&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog_names</span>
+<span class="n">vif_data</span><span class="p">[</span><span class="s2">&quot;VIF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">variance_inflation_factor</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">resultados</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🟩 Multicolinealidad (VIF):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vif_data</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ VIF &lt; 5 indica multicolinealidad aceptable.&quot;</span><span class="p">)</span>
+
+<span class="c1"># === 6️⃣ Resumen interpretativo ===</span>
+<span class="n">resumen</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;Supuesto&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Linealidad&quot;</span><span class="p">,</span> <span class="s2">&quot;Homocedasticidad&quot;</span><span class="p">,</span> <span class="s2">&quot;Normalidad&quot;</span><span class="p">,</span> <span class="s2">&quot;Autocorrelación&quot;</span><span class="p">,</span> <span class="s2">&quot;Multicolinealidad&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;Método&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Residual vs Fitted&quot;</span><span class="p">,</span> <span class="s2">&quot;Breusch–Pagan / White&quot;</span><span class="p">,</span> <span class="s2">&quot;QQ-plot / Shapiro&quot;</span><span class="p">,</span> <span class="s2">&quot;Durbin–Watson&quot;</span><span class="p">,</span> <span class="s2">&quot;VIF&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;Criterio esperado&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Distribución aleatoria alrededor de 0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;p &gt; 0.05 → ok&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Puntos ~ línea / p &gt; 0.05 → ok&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;~2 → ok&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&lt;5 → aceptable&quot;</span>
+    <span class="p">]</span>
+<span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📋 Resumen esperado:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resumen</span><span class="o">.</span><span class="n">to_markdown</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a219f57286e699ac50ab951228b920523a34c843488e446b81feaeec35503c04.png" src="../_images/a219f57286e699ac50ab951228b920523a34c843488e446b81feaeec35503c04.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>🟩 Homocedasticidad:
+Breusch–Pagan p-value: 0.0000
+White p-value: 0.0000
+⚠️ Posible heterocedasticidad detectada.
+</pre></div>
+</div>
+<img alt="../_images/02e2d9529fbc6dfd876e6378ca00e0a2bf8f4cd1178fcdfeccbcddd22308fd3a.png" src="../_images/02e2d9529fbc6dfd876e6378ca00e0a2bf8f4cd1178fcdfeccbcddd22308fd3a.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>🟩 Normalidad:
+Shapiro-Wilk p-value: 0.0000
+⚠️ Los residuos no son perfectamente normales.
+
+🟩 Autocorrelación:
+Durbin–Watson: 1.59
+✅ No hay autocorrelación significativa.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>🟩 Multicolinealidad (VIF):
+          Variable           VIF
+0            const  18276.768957
+1     Overall Qual      2.676051
+2      Gr Liv Area      4.561283
+3      Garage Cars      5.686113
+4      Garage Area      5.260232
+5       Year Built      3.538977
+6    Total Bsmt SF      3.065366
+7   Year Remod/Add      1.965601
+8       1st Flr SF      3.061355
+9        Full Bath      2.208047
+10   Garage Yr Blt      3.141189
+11      Fireplaces      1.359936
+12   TotRms AbvGrd      2.970047
+
+✅ VIF &lt; 5 indica multicolinealidad aceptable.
+
+📋 Resumen esperado:
+| Supuesto          | Método                | Criterio esperado                     |
+|:------------------|:----------------------|:--------------------------------------|
+| Linealidad        | Residual vs Fitted    | Distribución aleatoria alrededor de 0 |
+| Homocedasticidad  | Breusch–Pagan / White | p &gt; 0.05 → ok                         |
+| Normalidad        | QQ-plot / Shapiro     | Puntos ~ línea / p &gt; 0.05 → ok        |
+| Autocorrelación   | Durbin–Watson         | ~2 → ok                               |
+| Multicolinealidad | VIF                   | &lt;5 → aceptable                        |
+</pre></div>
+</div>
+</div>
+</div>
+<section id="takeaways">
+<h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<p>Síntesis de aprendizajes y decisiones reproducibles del notebook:</p>
+<ul class="simple">
+<li><p>MyST/Jupytext requiere el encabezado YAML al inicio del archivo.</p></li>
+<li><p>Todas las celdas ejecutables usan bloques <code class="docutils literal notranslate"><span class="pre">{code-cell}</span> <span class="pre">ipython3</span></code> en la columna 0.</p></li>
+<li><p>Definimos <code class="docutils literal notranslate"><span class="pre">DATA_PATH</span></code> una sola vez y unificamos el nombre del CSV a <code class="docutils literal notranslate"><span class="pre">ames_housing_clean.csv</span></code>.</p></li>
+<li><p>Evitamos rutas absolutas (p. ej., <code class="docutils literal notranslate"><span class="pre">/workspaces/...</span></code>) para compatibilidad con Codespaces y GitHub Pages.</p></li>
+<li><p>Mensajes narrativos con <code class="docutils literal notranslate"><span class="pre">print()</span></code> fueron pasados a Markdown fuera de cajita.</p></li>
+</ul>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -474,7 +612,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">&lt;no title&gt;</p>
+        <p class="prev-next-title">Capítulo 5: Inferencia y grados de libertad</p>
       </div>
     </a>
     <a class="right-next"
@@ -492,6 +630,21 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
