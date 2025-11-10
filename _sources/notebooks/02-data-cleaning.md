@@ -9,28 +9,19 @@ kernelspec: {name: python3, display_name: Python 3}
 ## Overview
 En este capítulo se parte del CSV original **ames_housing.csv**, se realiza limpieza, codificación de variables categóricas y tratamiento de outliers. La salida produce **AmesHousing_codificada.csv** y **AmesHousing_sin_outliers.csv**. Se documentan las decisiones para garantizar reproducibilidad y coherencia para capítulos posteriores.
 
-
-
+## 2.1 Carga del dataset
 
 ```{code-cell} ipython3
 from pathlib import Path
 import pandas as pd
 
-# Definir ruta de datos relativa al capítulo (ejecutado desde book/notebooks/)
+# Definir ruta de datos relativa al capítulo 
 DATA_PATH = Path("../data/ames_housing.csv")
 assert DATA_PATH.is_file(), f"No se encontró '{DATA_PATH}'"
 print("Usando CSV:", DATA_PATH.resolve())
-
-# Lectura canónica a reutilizar en el capítulo
-df = pd.read_csv(DATA_PATH)
-df.shape
 ```
 
-### 2.1 Carga del dataset
-
-**Tabla 2.1.** Vista/tabulación relevante del conjunto de datos. Se discute en el texto.
-
-_Comentario:_ Esta tabla resume aspectos clave para el capítulo; ver discusión inmediata.
+Esta tabla muestra las primeras observaciones del dataset original, permitiendo verificar la correcta carga de los datos y la estructura general de las variables.
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -38,15 +29,7 @@ import numpy as np
 
 data = pd.read_csv(DATA_PATH)
 display(data.head())
-```
 
-_Interpretación (Tabla 2.1)._ Comentar métricas clave (mediana, dispersión, conteos) y su impacto en el modelado.
-
-**Tabla 2.1.1.** Conjunto de datos *Ames Housing*.
-
-Esta tabla muestra las primeras observaciones del dataset original, permitiendo verificar la correcta carga de los datos y la estructura general de las variables.
-
-```{code-cell} ipython3
 fuente = "Ames Housing Dataset (De Cock, 2011) — Iowa State University"
 tamano = data.shape[0]
 n_variables = data.shape[1]
@@ -57,12 +40,10 @@ print(f"Tamaño: {tamano} registros")
 print(f"Número de variables: {n_variables}")
 print(f"Licencia: {licencia}")
 ```
+**Tabla 2.1.1** Vista/tabulación relevante del conjunto de datos *Ames Housing*. 
 
-**Tabla 2.1.2.** Metadatos *Ames Housing*.
-
-**Tabla 2.2.** Vista/tabulación relevante del conjunto de datos. Se discute en el texto.
-
-_Comentario:_ Esta tabla resume aspectos clave para el capítulo; ver discusión inmediata.
+## 2.2 Tratamiento de datos faltantes
+Se calcula el porcentaje de faltantes por variable
 
 ```{code-cell} ipython3
 faltantes = data.isna().mean() * 100
@@ -81,9 +62,7 @@ tabla_faltantes = (
 tabla_faltantes.head(20)
 ```
 
-_Interpretación (Tabla 2.2)._ Comentar métricas clave (mediana, dispersión, conteos) y su impacto en el modelado.
-
-**Tabla 2.1.3.** Valores faltantes por variable.
+**Tabla 2.2.1** Porcentaje de Valores faltantes por variable.
 
 El tratamiento de valores faltantes se realizó de forma diferenciada según el tipo de variable.  
 Para las **variables numéricas**, se imputó la **mediana**, una medida robusta frente a valores extremos.  
@@ -114,6 +93,8 @@ for col in num_cols:
 cat_cols = data_limpia.select_dtypes(exclude=np.number).columns
 for col in cat_cols:
     data_limpia[col].fillna(data_limpia[col].mode()[0], inplace=True)
+data_limpia.head(20)
+
 ```
 
 ### 2.2 Tratamiento de outliers

@@ -333,8 +333,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset">2.1 Carga del dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset">2.1 Carga del dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-datos-faltantes">2.2 Tratamiento de datos faltantes</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers">2.2 Tratamiento de outliers</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-de-variables-categoricas">2.3 Codificación de variables categóricas</a></li>
 </ul>
@@ -356,19 +357,18 @@ document.write(`
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>En este capítulo se parte del CSV original <strong>ames_housing.csv</strong>, se realiza limpieza, codificación de variables categóricas y tratamiento de outliers. La salida produce <strong>AmesHousing_codificada.csv</strong> y <strong>AmesHousing_sin_outliers.csv</strong>. Se documentan las decisiones para garantizar reproducibilidad y coherencia para capítulos posteriores.</p>
+</section>
+<section id="carga-del-dataset">
+<h2>2.1 Carga del dataset<a class="headerlink" href="#carga-del-dataset" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Definir ruta de datos relativa al capítulo (ejecutado desde book/notebooks/)</span>
+<span class="c1"># Definir ruta de datos relativa al capítulo </span>
 <span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/ames_housing.csv&quot;</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;No se encontró &#39;</span><span class="si">{</span><span class="n">DATA_PATH</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usando CSV:&quot;</span><span class="p">,</span> <span class="n">DATA_PATH</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
-
-<span class="c1"># Lectura canónica a reutilizar en el capítulo</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
-<span class="n">df</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 </div>
 </div>
@@ -376,15 +376,9 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Usando CSV: /workspaces/ames-housing-project/book/data/ames_housing.csv
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2930, 82)
-</pre></div>
 </div>
 </div>
-</div>
-<section id="carga-del-dataset">
-<h3>2.1 Carga del dataset<a class="headerlink" href="#carga-del-dataset" title="Link to this heading">#</a></h3>
-<p><strong>Tabla 2.1.</strong> Vista/tabulación relevante del conjunto de datos. Se discute en el texto.</p>
-<p><em>Comentario:</em> Esta tabla resume aspectos clave para el capítulo; ver discusión inmediata.</p>
+<p>Esta tabla muestra las primeras observaciones del dataset original, permitiendo verificar la correcta carga de los datos y la estructura general de las variables.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -392,6 +386,16 @@ document.write(`
 
 <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="n">fuente</span> <span class="o">=</span> <span class="s2">&quot;Ames Housing Dataset (De Cock, 2011) — Iowa State University&quot;</span>
+<span class="n">tamano</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">n_variables</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">licencia</span> <span class="o">=</span> <span class="s2">&quot;Open Data, libre uso académico&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fuente: </span><span class="si">{</span><span class="n">fuente</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tamaño: </span><span class="si">{</span><span class="n">tamano</span><span class="si">}</span><span class="s2"> registros&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Número de variables: </span><span class="si">{</span><span class="n">n_variables</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Licencia: </span><span class="si">{</span><span class="n">licencia</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -561,27 +565,7 @@ document.write(`
   </tbody>
 </table>
 <p>5 rows × 82 columns</p>
-</div></div></div>
-</div>
-<p><em>Interpretación (Tabla 2.1).</em> Comentar métricas clave (mediana, dispersión, conteos) y su impacto en el modelado.</p>
-<p><strong>Tabla 2.1.1.</strong> Conjunto de datos <em>Ames Housing</em>.</p>
-<p>Esta tabla muestra las primeras observaciones del dataset original, permitiendo verificar la correcta carga de los datos y la estructura general de las variables.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fuente</span> <span class="o">=</span> <span class="s2">&quot;Ames Housing Dataset (De Cock, 2011) — Iowa State University&quot;</span>
-<span class="n">tamano</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">n_variables</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">licencia</span> <span class="o">=</span> <span class="s2">&quot;Open Data, libre uso académico&quot;</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fuente: </span><span class="si">{</span><span class="n">fuente</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tamaño: </span><span class="si">{</span><span class="n">tamano</span><span class="si">}</span><span class="s2"> registros&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Número de variables: </span><span class="si">{</span><span class="n">n_variables</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Licencia: </span><span class="si">{</span><span class="n">licencia</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fuente: Ames Housing Dataset (De Cock, 2011) — Iowa State University
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fuente: Ames Housing Dataset (De Cock, 2011) — Iowa State University
 Tamaño: 2930 registros
 Número de variables: 82
 Licencia: Open Data, libre uso académico
@@ -589,9 +573,11 @@ Licencia: Open Data, libre uso académico
 </div>
 </div>
 </div>
-<p><strong>Tabla 2.1.2.</strong> Metadatos <em>Ames Housing</em>.</p>
-<p><strong>Tabla 2.2.</strong> Vista/tabulación relevante del conjunto de datos. Se discute en el texto.</p>
-<p><em>Comentario:</em> Esta tabla resume aspectos clave para el capítulo; ver discusión inmediata.</p>
+<p><strong>Tabla 2.1.1</strong> Vista/tabulación relevante del conjunto de datos <em>Ames Housing</em>.</p>
+</section>
+<section id="tratamiento-de-datos-faltantes">
+<h2>2.2 Tratamiento de datos faltantes<a class="headerlink" href="#tratamiento-de-datos-faltantes" title="Link to this heading">#</a></h2>
+<p>Se calcula el porcentaje de faltantes por variable</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">faltantes</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
@@ -739,8 +725,7 @@ Licencia: Open Data, libre uso académico
 </table>
 </div></div></div>
 </div>
-<p><em>Interpretación (Tabla 2.2).</em> Comentar métricas clave (mediana, dispersión, conteos) y su impacto en el modelado.</p>
-<p><strong>Tabla 2.1.3.</strong> Valores faltantes por variable.</p>
+<p><strong>Tabla 2.2.1</strong> Porcentaje de Valores faltantes por variable.</p>
 <p>El tratamiento de valores faltantes se realizó de forma diferenciada según el tipo de variable.<br />
 Para las <strong>variables numéricas</strong>, se imputó la <strong>mediana</strong>, una medida robusta frente a valores extremos.<br />
 En las <strong>variables categóricas</strong>, se reemplazaron los valores ausentes por la <strong>moda</strong>, preservando la categoría más frecuente.</p>
@@ -768,11 +753,538 @@ x_{ij}^{*} =
 <span class="n">cat_cols</span> <span class="o">=</span> <span class="n">data_limpia</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span>
 <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cat_cols</span><span class="p">:</span>
     <span class="n">data_limpia</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">data_limpia</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">mode</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">data_limpia</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Order</th>
+      <th>PID</th>
+      <th>MS SubClass</th>
+      <th>MS Zoning</th>
+      <th>Lot Frontage</th>
+      <th>Lot Area</th>
+      <th>Street</th>
+      <th>Alley</th>
+      <th>Lot Shape</th>
+      <th>Land Contour</th>
+      <th>...</th>
+      <th>Pool Area</th>
+      <th>Pool QC</th>
+      <th>Fence</th>
+      <th>Misc Feature</th>
+      <th>Misc Val</th>
+      <th>Mo Sold</th>
+      <th>Yr Sold</th>
+      <th>Sale Type</th>
+      <th>Sale Condition</th>
+      <th>SalePrice</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>526301100</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>141.0</td>
+      <td>31770</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>5</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>215000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>526350040</td>
+      <td>20</td>
+      <td>RH</td>
+      <td>80.0</td>
+      <td>11622</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>105000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>526351010</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>81.0</td>
+      <td>14267</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Gar2</td>
+      <td>12500</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>172000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>526353030</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>93.0</td>
+      <td>11160</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>244000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>527105010</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>74.0</td>
+      <td>13830</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>189900</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>527105030</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>78.0</td>
+      <td>9978</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>195500</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7</td>
+      <td>527127150</td>
+      <td>120</td>
+      <td>RL</td>
+      <td>41.0</td>
+      <td>4920</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>213500</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>527145080</td>
+      <td>120</td>
+      <td>RL</td>
+      <td>43.0</td>
+      <td>5005</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>IR1</td>
+      <td>HLS</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>191500</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>9</td>
+      <td>527146030</td>
+      <td>120</td>
+      <td>RL</td>
+      <td>39.0</td>
+      <td>5389</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>236500</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>10</td>
+      <td>527162130</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>60.0</td>
+      <td>7500</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>189000</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>11</td>
+      <td>527163010</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>75.0</td>
+      <td>10000</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>175900</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>12</td>
+      <td>527165230</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>68.0</td>
+      <td>7980</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>GdPrv</td>
+      <td>Shed</td>
+      <td>500</td>
+      <td>3</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>185000</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>13</td>
+      <td>527166040</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>63.0</td>
+      <td>8402</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>5</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>180400</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>14</td>
+      <td>527180040</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>85.0</td>
+      <td>10176</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>171500</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>15</td>
+      <td>527182190</td>
+      <td>120</td>
+      <td>RL</td>
+      <td>68.0</td>
+      <td>6820</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>212000</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>16</td>
+      <td>527216070</td>
+      <td>60</td>
+      <td>RL</td>
+      <td>47.0</td>
+      <td>53504</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>IR2</td>
+      <td>HLS</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>538000</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>17</td>
+      <td>527225035</td>
+      <td>50</td>
+      <td>RL</td>
+      <td>152.0</td>
+      <td>12134</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>IR1</td>
+      <td>Bnk</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>164000</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>18</td>
+      <td>527258010</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>88.0</td>
+      <td>11394</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>New</td>
+      <td>Partial</td>
+      <td>394432</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>19</td>
+      <td>527276150</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>140.0</td>
+      <td>19138</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>141000</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>20</td>
+      <td>527302110</td>
+      <td>20</td>
+      <td>RL</td>
+      <td>85.0</td>
+      <td>13175</td>
+      <td>Pave</td>
+      <td>Grvl</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>...</td>
+      <td>0</td>
+      <td>Ex</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+      <td>210000</td>
+    </tr>
+  </tbody>
+</table>
+<p>20 rows × 82 columns</p>
+</div></div></div>
 </div>
-</section>
 <section id="tratamiento-de-outliers">
 <h3>2.2 Tratamiento de outliers<a class="headerlink" href="#tratamiento-de-outliers" title="Link to this heading">#</a></h3>
 <p>Se aplicó el criterio de <strong>tres desviaciones estándar (3Z)</strong> para identificar observaciones atípicas en las variables numéricas de interés, incluyendo la variable objetivo <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> y 13 predictoras potenciales.</p>
@@ -1067,8 +1579,9 @@ Tras el proceso de imputación, eliminación de outliers, transformación logar�
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset">2.1 Carga del dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset">2.1 Carga del dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-datos-faltantes">2.2 Tratamiento de datos faltantes</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers">2.2 Tratamiento de outliers</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-de-variables-categoricas">2.3 Codificación de variables categóricas</a></li>
 </ul>
