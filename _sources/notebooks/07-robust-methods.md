@@ -78,14 +78,13 @@ $$
 **Ecuación 7.2.2.** Función de pérdida Tukey.
 
 Limita el impacto de observaciones lejanas sin eliminarlas completamente.
-
+```{code-cell} ipython3
 import statsmodels.api as sm
 import pandas as pd
 
 rlm_huber = sm.RLM(y, X, M=sm.robust.norms.HuberT()).fit()       # Función de pérdida Huber
 rlm_tukey = sm.RLM(y, X, M=sm.robust.norms.TukeyBiweight()).fit() # Función de pérdida Tukey Biweight
 
-```{code-cell} ipython3
 rlm_df = pd.DataFrame({
     'OLS': modelo_base.params,
     'RLM_Huber': rlm_huber.params,

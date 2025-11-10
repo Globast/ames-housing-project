@@ -25,6 +25,12 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
+import statsmodels.api as sm
+import pandas as pd
+
+rlm_huber = sm.RLM(y, X, M=sm.robust.norms.HuberT()).fit()       # Función de pérdida Huber
+rlm_tukey = sm.RLM(y, X, M=sm.robust.norms.TukeyBiweight()).fit() # Función de pérdida Tukey Biweight
+
 rlm_df = pd.DataFrame({
     'OLS': modelo_base.params,
     'RLM_Huber': rlm_huber.params,
@@ -42,17 +48,16 @@ display(rlm_df)
 
 [31m---------------------------------------------------------------------------[39m
 [31mNameError[39m                                 Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[2][39m[32m, line 2[39m
-[32m      1[39m rlm_df = pd.DataFrame({
-[32m----> [39m[32m2[39m     [33m'[39m[33mOLS[39m[33m'[39m: [43mmodelo_base[49m.params,
-[32m      3[39m     [33m'[39m[33mRLM_Huber[39m[33m'[39m: rlm_huber.params,
-[32m      4[39m     [33m'[39m[33mRLM_Tukey[39m[33m'[39m: rlm_tukey.params
-[32m      5[39m })
-[32m      7[39m weights_df = pd.DataFrame({
-[32m      8[39m     [33m'[39m[33mHuber_weights[39m[33m'[39m: rlm_huber.weights,
-[32m      9[39m     [33m'[39m[33mTukey_weights[39m[33m'[39m: rlm_tukey.weights
-[32m     10[39m })
-[32m     12[39m display(rlm_df)
+[36mCell[39m[36m [39m[32mIn[2][39m[32m, line 4[39m
+[32m      1[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mstatsmodels[39;00m[34;01m.[39;00m[34;01mapi[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01msm[39;00m
+[32m      2[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mpandas[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mpd[39;00m
+[32m----> [39m[32m4[39m rlm_huber = sm.RLM([43my[49m, X, M=sm.robust.norms.HuberT()).fit()       [38;5;66;03m# Función de pérdida Huber[39;00m
+[32m      5[39m rlm_tukey = sm.RLM(y, X, M=sm.robust.norms.TukeyBiweight()).fit() [38;5;66;03m# Función de pérdida Tukey Biweight[39;00m
+[32m      7[39m rlm_df = pd.DataFrame({
+[32m      8[39m     [33m'[39m[33mOLS[39m[33m'[39m: modelo_base.params,
+[32m      9[39m     [33m'[39m[33mRLM_Huber[39m[33m'[39m: rlm_huber.params,
+[32m     10[39m     [33m'[39m[33mRLM_Tukey[39m[33m'[39m: rlm_tukey.params
+[32m     11[39m })
 
-[31mNameError[39m: name 'modelo_base' is not defined
+[31mNameError[39m: name 'y' is not defined
 
