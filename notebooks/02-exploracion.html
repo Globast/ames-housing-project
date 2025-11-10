@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Capítulo 2 · Exploración de datos (EDA) &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
+    <title>Preprocesamiento de Ames Housing: limpieza, outliers (Mahalanobis), transformaciones y codificación &#8212; Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos</title>
   
   
   
@@ -175,7 +175,7 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01-introduccion.html">Capítulo 1 · Introducción y pregunta de investigación</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 2 · Exploración de datos (EDA)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Preprocesamiento de Ames Housing: limpieza, outliers (Mahalanobis), transformaciones y codificación</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03-modelado.html">Capítulo 3 · Regresión lineal (OLS) e inferencia</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04-diagnostico.html">Capítulo 4 · Diagnóstico del modelo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05-metodos-robustos.html">Capítulo 5 · Métodos robustos</a></li>
@@ -382,7 +382,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Capítulo 2 · Exploración de datos (EDA)</h1>
+    <h1>Preprocesamiento de Ames Housing: limpieza, outliers (Mahalanobis), transformaciones y codificación</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -392,10 +392,15 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-de-datos">Carga de datos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limpieza-minima">Limpieza mínima</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figura-2-1-distribucion-de-precios">Figura 2.1 · Distribución de precios</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-2-1-correlaciones">Tabla 2.1 · Correlaciones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rutas-y-utilidades">Rutas y utilidades</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importaciones">Importaciones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-y-diagnostico-rapido">1) Carga y diagnóstico rápido</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imputacion-de-valores-faltantes-mediana-moda">2) Imputación de valores faltantes (mediana/moda)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outliers-multivariados-con-distancia-de-mahalanobis">3) Outliers multivariados con distancia de Mahalanobis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transformaciones-logaritmicas-estabilizar-varianza">4) Transformaciones logarítmicas (estabilizar varianza)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-ordinal-one-hot">5) Codificación: ordinal + one-hot</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exportar-artefactos">6) Exportar artefactos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways-para-modelado-lineal">Takeaways (para modelado lineal)</a></li>
 </ul>
             </nav>
         </div>
@@ -407,51 +412,296 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="capitulo-2-exploracion-de-datos-eda">
-<h1>Capítulo 2 · Exploración de datos (EDA)<a class="headerlink" href="#capitulo-2-exploracion-de-datos-eda" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="preprocesamiento-de-ames-housing-limpieza-outliers-mahalanobis-transformaciones-y-codificacion">
+<h1>Preprocesamiento de Ames Housing: limpieza, outliers (Mahalanobis), transformaciones y codificación<a class="headerlink" href="#preprocesamiento-de-ames-housing-limpieza-outliers-mahalanobis-transformaciones-y-codificacion" title="Link to this heading">#</a></h1>
+<p><strong>Overview.</strong> Comparar un pipeline de preprocesamiento para housing que: (1) carga y diagnostica el CSV crudo, (2) <strong>imputa faltantes</strong> (mediana/moda), (3) <strong>filtra outliers multivariados</strong> vía distancia de <strong>Mahalanobis</strong> con umbral (\chi^2), (4) aplica <strong>transformaciones logarítmicas</strong> para estabilizar varianza, (5) <strong>codifica</strong> variables (ordinal + <em>one-hot</em>) y (6) <strong>exporta</strong> dos artefactos reproducibles para modelado:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">../data/ames_housing_clean.csv</span></code> → datos limpios <strong>sin outliers</strong> y con columnas log.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">../data/ames_housing_cod.csv</span></code> → versión <strong>codificada</strong> (ordinal + dummies) lista para modelos lineales.</p></li>
+</ul>
 <blockquote>
-<div><p><strong>Overview</strong>: Explorar la distribución de <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> y relaciones con predictores clave; detectar valores atípicos y datos faltantes.</p>
+<div><p>El capítulo se ejecuta desde <code class="docutils literal notranslate"><span class="pre">book/notebooks/</span></code>. Por eso las rutas apuntan a <code class="docutils literal notranslate"><span class="pre">../data/...</span></code>.</p>
 </div></blockquote>
-<section id="carga-de-datos">
-<h2>Carga de datos<a class="headerlink" href="#carga-de-datos" title="Link to this heading">#</a></h2>
-</section>
-<section id="limpieza-minima">
-<h2>Limpieza mínima<a class="headerlink" href="#limpieza-minima" title="Link to this heading">#</a></h2>
-</section>
-<section id="figura-2-1-distribucion-de-precios">
-<h2>Figura 2.1 · Distribución de precios<a class="headerlink" href="#figura-2-1-distribucion-de-precios" title="Link to this heading">#</a></h2>
-<p>Como se observa en <a class="reference internal" href="#fig-eda-hist"><span class="std std-numref">Fig. 1</span></a>, la distribución es asimétrica a la derecha, lo que motiva transformar <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>.</p>
-<figure class="align-center" id="fig-eda-hist">
-<a class="reference internal image-reference" href="../_images/placeholder.png"><img alt="../_images/placeholder.png" src="../_images/placeholder.png" style="width: 600px;" /></a>
-<figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Ejemplo de referencia cruzada a una figura numerada. Reemplaza por gráficos reales generados arriba (exportados con <code class="docutils literal notranslate"><span class="pre">plt.savefig(...)</span></code>).</span><a class="headerlink" href="#fig-eda-hist" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-</section>
-<section id="tabla-2-1-correlaciones">
-<h2>Tabla 2.1 · Correlaciones<a class="headerlink" href="#tabla-2-1-correlaciones" title="Link to this heading">#</a></h2>
-<p>En la <a class="reference internal" href="#tab-corr"><span class="std std-numref">Table 1</span></a>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code> y <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code> muestran las correlaciones más altas con el precio.</p>
-<div class="pst-scrollable-table-container"><table class="table table-center" id="tab-corr">
-<caption><span class="caption-number">Table 1 </span><span class="caption-text">Correlaciones con SalePrice</span><a class="headerlink" href="#tab-corr" title="Link to this table">#</a></caption>
-<thead>
-<tr class="row-odd"><th class="head"><p>Variable</p></th>
-<th class="head"><p>Corr con SalePrice</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Gr Liv Area</p></td>
-<td><p>(completar)</p></td>
-</tr>
-<tr class="row-odd"><td><p>Overall Qual</p></td>
-<td><p>(completar)</p></td>
-</tr>
-<tr class="row-even"><td><p>Garage Cars</p></td>
-<td><p>(completar)</p></td>
-</tr>
-</tbody>
-</table>
+<section id="rutas-y-utilidades">
+<h2>Rutas y utilidades<a class="headerlink" href="#rutas-y-utilidades" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Directorio de trabajo esperado: book/notebooks/</span>
+<span class="n">DATA_IN</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/ames_housing.csv&quot;</span><span class="p">)</span>
+<span class="n">DATA_OUT_CLEAN</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/ames_housing_clean.csv&quot;</span><span class="p">)</span>
+<span class="n">DATA_OUT_COD</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/ames_housing_cod.csv&quot;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">DATA_IN</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> <span class="s2">&quot;No se encontró el archivo de entrada &#39;../data/ames_housing.csv&#39;. Verifica la ruta relativa desde book/notebooks/.&quot;</span>
+
+<span class="n">DATA_IN</span><span class="p">,</span> <span class="n">DATA_OUT_CLEAN</span><span class="p">,</span> <span class="n">DATA_OUT_COD</span>
+</pre></div>
 </div>
-<p>{takeaways}</p>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(PosixPath(&#39;../data/ames_housing.csv&#39;),
+ PosixPath(&#39;../data/ames_housing_clean.csv&#39;),
+ PosixPath(&#39;../data/ames_housing_cod.csv&#39;))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="importaciones">
+<h2>Importaciones<a class="headerlink" href="#importaciones" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># SciPy es útil para el umbral chi-cuadrado; incluimos alternativa por si no está disponible.</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">chi2</span>
+    <span class="n">SCIPY_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="n">SCIPY_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="carga-y-diagnostico-rapido">
+<h2>1) Carga y diagnóstico rápido<a class="headerlink" href="#carga-y-diagnostico-rapido" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_IN</span><span class="p">)</span>
+
+<span class="n">n_rows</span><span class="p">,</span> <span class="n">n_cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">missing_pct</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">diagnostico</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;filas&quot;</span><span class="p">:</span> <span class="n">n_rows</span><span class="p">,</span>
+    <span class="s2">&quot;columnas&quot;</span><span class="p">:</span> <span class="n">n_cols</span><span class="p">,</span>
+    <span class="s2">&quot;columnas_con_faltantes&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">((</span><span class="n">missing_pct</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+    <span class="s2">&quot;porcentaje_faltantes_max&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">missing_pct</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="k">if</span> <span class="n">n_cols</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">diagnostico</span><span class="p">,</span> <span class="n">missing_pct</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>({&#39;filas&#39;: 2930,
+  &#39;columnas&#39;: 82,
+  &#39;columnas_con_faltantes&#39;: 27,
+  &#39;porcentaje_faltantes_max&#39;: 99.55631399317406},
+ Pool QC          0.995563
+ Misc Feature     0.963823
+ Alley            0.932423
+ Fence            0.804778
+ Mas Vnr Type     0.605802
+ Fireplace Qu     0.485324
+ Lot Frontage     0.167235
+ Garage Qual      0.054266
+ Garage Yr Blt    0.054266
+ Garage Cond      0.054266
+ dtype: float64)
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Descripción:</strong> Leemos el CSV crudo, contamos filas y columnas y calculamos el porcentaje de <code class="docutils literal notranslate"><span class="pre">NaN</span></code> por variable.</p>
+</section>
+<section id="imputacion-de-valores-faltantes-mediana-moda">
+<h2>2) Imputación de valores faltantes (mediana/moda)<a class="headerlink" href="#imputacion-de-valores-faltantes-mediana-moda" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_imputed</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">num_cols</span> <span class="o">=</span> <span class="n">df_imputed</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">cat_cols</span> <span class="o">=</span> <span class="n">df_imputed</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="c1"># Numéricas → mediana</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">num_cols</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">df_imputed</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">df_imputed</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_imputed</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_imputed</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">())</span>
+
+<span class="c1"># Categóricas → moda</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cat_cols</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">df_imputed</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">moda</span> <span class="o">=</span> <span class="n">df_imputed</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="n">dropna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">moda</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">df_imputed</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_imputed</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">moda</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">df_imputed</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_imputed</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">&quot;Missing&quot;</span><span class="p">)</span>
+
+<span class="n">df_imputed</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(0)
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Descripción:</strong> Reemplazamos <code class="docutils literal notranslate"><span class="pre">NaN</span></code> numéricos por la <strong>mediana</strong> y categóricos por la <strong>moda</strong>. El resultado debe quedar sin faltantes.</p>
+</section>
+<section id="outliers-multivariados-con-distancia-de-mahalanobis">
+<h2>3) Outliers multivariados con distancia de Mahalanobis<a class="headerlink" href="#outliers-multivariados-con-distancia-de-mahalanobis" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_maha</span> <span class="o">=</span> <span class="n">df_imputed</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Usamos solo columnas numéricas para Mahalanobis</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df_maha</span><span class="p">[</span><span class="n">num_cols</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">Xc</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="n">mu</span>
+
+<span class="c1"># Covarianza y su inversa (pseudoinversa para mayor estabilidad numérica)</span>
+<span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">Xc</span><span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">cov_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">cov</span><span class="p">)</span>
+
+<span class="c1"># Distancia de Mahalanobis al cuadrado: d^2 = x&#39; S^{-1} x</span>
+<span class="n">d2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ij,jk,ik-&gt;i&quot;</span><span class="p">,</span> <span class="n">Xc</span><span class="p">,</span> <span class="n">cov_inv</span><span class="p">,</span> <span class="n">Xc</span><span class="p">)</span>
+
+<span class="c1"># Umbral Chi^2 con p grados de libertad y alfa=0.999 (robusto). Si no hay SciPy, usamos cuantiles empíricos.</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">SCIPY_AVAILABLE</span><span class="p">:</span>
+    <span class="n">thr</span> <span class="o">=</span> <span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.999</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">thr</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">))</span>
+
+<span class="n">mask_inliers</span> <span class="o">=</span> <span class="n">d2</span> <span class="o">&lt;=</span> <span class="n">thr</span>
+<span class="n">outliers_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="o">~</span><span class="n">mask_inliers</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+<span class="n">df_clean</span> <span class="o">=</span> <span class="n">df_maha</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_inliers</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">outliers_count</span><span class="p">,</span> <span class="n">df_clean</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(95, (2835, 82))
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Descripción:</strong> Calculamos (d^2) de Mahalanobis con pseudoinversa para evitar problemas de multicolinealidad. Eliminamos observaciones con (d^2) por encima del umbral (\chi^2) al 99.9%.</p>
+</section>
+<section id="transformaciones-logaritmicas-estabilizar-varianza">
+<h2>4) Transformaciones logarítmicas (estabilizar varianza)<a class="headerlink" href="#transformaciones-logaritmicas-estabilizar-varianza" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_log</span> <span class="o">=</span> <span class="n">df_clean</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Algunas bases Ames nombran &#39;GrLivArea&#39; y otras &#39;Gr Liv Area&#39;.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pick_first_existing</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">candidates</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">name</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+<span class="n">sale_col</span> <span class="o">=</span> <span class="n">pick_first_existing</span><span class="p">(</span><span class="n">df_log</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;SalePrice&quot;</span><span class="p">,</span> <span class="s2">&quot;Sale Price&quot;</span><span class="p">])</span>
+<span class="n">grliv_col</span> <span class="o">=</span> <span class="n">pick_first_existing</span><span class="p">(</span><span class="n">df_log</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;GrLivArea&quot;</span><span class="p">,</span> <span class="s2">&quot;Gr Liv Area&quot;</span><span class="p">])</span>
+
+<span class="c1"># Aplicamos log1p si existen (evita log(0))</span>
+<span class="k">if</span> <span class="n">sale_col</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df_log</span><span class="p">[</span><span class="n">sale_col</span> <span class="o">+</span> <span class="s2">&quot;_log&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">df_log</span><span class="p">[</span><span class="n">sale_col</span><span class="p">])</span>
+
+<span class="k">if</span> <span class="n">grliv_col</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df_log</span><span class="p">[</span><span class="n">grliv_col</span> <span class="o">+</span> <span class="s2">&quot;_log&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">df_log</span><span class="p">[</span><span class="n">grliv_col</span><span class="p">])</span>
+
+<span class="n">sale_col</span><span class="p">,</span> <span class="n">grliv_col</span><span class="p">,</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_log</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_log&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;SalePrice&#39;, &#39;Gr Liv Area&#39;, [&#39;SalePrice_log&#39;, &#39;Gr Liv Area_log&#39;])
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Descripción:</strong> Creamos columnas <code class="docutils literal notranslate"><span class="pre">_log</span></code> para precios y área habitable si están presentes.</p>
+</section>
+<section id="codificacion-ordinal-one-hot">
+<h2>5) Codificación: ordinal + one-hot<a class="headerlink" href="#codificacion-ordinal-one-hot" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_enc</span> <span class="o">=</span> <span class="n">df_log</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Mapeos ordinales típicos en Ames; se aplican solo si la columna existe.</span>
+<span class="n">qual_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Po&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Fa&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;TA&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Gd&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Ex&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">}</span>
+<span class="n">exposure_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;No&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Mn&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Av&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Gd&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">}</span>
+<span class="n">bsmtfin_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Unf&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;LwQ&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Rec&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;BLQ&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;ALQ&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;GLQ&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">}</span>
+<span class="n">functional_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Sal&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Sev&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Mod&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Min2&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Min1&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;Typ&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">}</span>
+
+<span class="n">ordinal_candidates</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Exter Qual&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span> <span class="s2">&quot;Exter Cond&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span>
+    <span class="s2">&quot;Bsmt Qual&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span> <span class="s2">&quot;Bsmt Cond&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span> <span class="s2">&quot;Bsmt Exposure&quot;</span><span class="p">:</span> <span class="n">exposure_map</span><span class="p">,</span>
+    <span class="s2">&quot;Kitchen Qual&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span> <span class="s2">&quot;Fireplace Qu&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span>
+    <span class="s2">&quot;Garage Qual&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span> <span class="s2">&quot;Garage Cond&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span>
+    <span class="s2">&quot;Pool QC&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span> <span class="s2">&quot;Functional&quot;</span><span class="p">:</span> <span class="n">functional_map</span><span class="p">,</span>
+    <span class="s2">&quot;BsmtFin Type 1&quot;</span><span class="p">:</span> <span class="n">bsmtfin_map</span><span class="p">,</span> <span class="s2">&quot;BsmtFin Type 2&quot;</span><span class="p">:</span> <span class="n">bsmtfin_map</span><span class="p">,</span>
+    <span class="c1"># variantes sin espacio:</span>
+    <span class="s2">&quot;ExterQual&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span> <span class="s2">&quot;ExterCond&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span>
+    <span class="s2">&quot;BsmtQual&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span> <span class="s2">&quot;BsmtCond&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span> <span class="s2">&quot;BsmtExposure&quot;</span><span class="p">:</span> <span class="n">exposure_map</span><span class="p">,</span>
+    <span class="s2">&quot;KitchenQual&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span> <span class="s2">&quot;FireplaceQu&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span>
+    <span class="s2">&quot;GarageQual&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span> <span class="s2">&quot;GarageCond&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span>
+    <span class="s2">&quot;PoolQC&quot;</span><span class="p">:</span> <span class="n">qual_map</span><span class="p">,</span> <span class="s2">&quot;Functional&quot;</span><span class="p">:</span> <span class="n">functional_map</span><span class="p">,</span>
+    <span class="s2">&quot;BsmtFinType1&quot;</span><span class="p">:</span> <span class="n">bsmtfin_map</span><span class="p">,</span> <span class="s2">&quot;BsmtFinType2&quot;</span><span class="p">:</span> <span class="n">bsmtfin_map</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">ordinal_candidates</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df_enc</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df_enc</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_enc</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
+
+<span class="c1"># Identificamos categóricas después del mapeo (las que siguen siendo object o category)</span>
+<span class="n">cat_after</span> <span class="o">=</span> <span class="n">df_enc</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="s2">&quot;category&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="n">df_dum</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">df_enc</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cat_after</span><span class="p">,</span> <span class="n">drop_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">df_log</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">df_dum</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>((2835, 84), (2835, 219))
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Descripción:</strong> Mapeamos ordinales (si existen) y luego aplicamos <em>one-hot</em> al resto (con <code class="docutils literal notranslate"><span class="pre">drop_first=True</span></code> para evitar colinealidad perfecta).</p>
+</section>
+<section id="exportar-artefactos">
+<h2>6) Exportar artefactos<a class="headerlink" href="#exportar-artefactos" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Guardamos &#39;clean&#39; (sin outliers + con columnas _log, antes de dummies)</span>
+<span class="n">df_log</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">DATA_OUT_CLEAN</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Guardamos &#39;cod&#39; (lista para modelado)</span>
+<span class="n">df_dum</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">DATA_OUT_COD</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">DATA_OUT_CLEAN</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="n">DATA_OUT_COD</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="p">(</span><span class="n">df_log</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">df_dum</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(True, True, ((2835, 84), (2835, 219)))
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Descripción:</strong> Escribimos <code class="docutils literal notranslate"><span class="pre">../data/ames_housing_clean.csv</span></code> y <code class="docutils literal notranslate"><span class="pre">../data/ames_housing_cod.csv</span></code>. Los tamaños deben coincidir con lo reportado arriba.</p>
+</section>
+<section id="takeaways-para-modelado-lineal">
+<h2>Takeaways (para modelado lineal)<a class="headerlink" href="#takeaways-para-modelado-lineal" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Imputación simple (mediana/moda)</strong> reduce varianza de estimadores frente a <em>listwise deletion</em> y mantiene el tamaño muestral.</p></li>
+<li><p><strong>Mahalanobis + umbral (\chi^2)</strong> proporciona una regla <strong>multivariada</strong> (no univariante) para outliers; usar <strong>pseudoinversa</strong> mejora estabilidad con multicolinealidad.</p></li>
+<li><p><strong>Transformaciones logarítmicas</strong> (p. ej., <code class="docutils literal notranslate"><span class="pre">SalePrice_log</span></code>) ayudan a aproximar <strong>normalidad de residuos</strong> y <strong>homocedasticidad</strong>, claves para OLS.</p></li>
+<li><p><strong>Codificación ordinal</strong> preserva el <strong>orden semántico</strong> de calidades; <em>one-hot</em> con <code class="docutils literal notranslate"><span class="pre">drop_first=True</span></code> evita <strong>trampas de la variable ficticia</strong>.</p></li>
+<li><p>Exportar <strong>dos capas</strong> (clean vs codificada) agiliza la comparación entre <strong>OLS</strong> y <strong>métodos robustos</strong> en capítulos posteriores.</p></li>
+</ul>
 </section>
 </section>
 
@@ -519,10 +769,15 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-de-datos">Carga de datos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limpieza-minima">Limpieza mínima</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figura-2-1-distribucion-de-precios">Figura 2.1 · Distribución de precios</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-2-1-correlaciones">Tabla 2.1 · Correlaciones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rutas-y-utilidades">Rutas y utilidades</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importaciones">Importaciones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-y-diagnostico-rapido">1) Carga y diagnóstico rápido</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imputacion-de-valores-faltantes-mediana-moda">2) Imputación de valores faltantes (mediana/moda)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outliers-multivariados-con-distancia-de-mahalanobis">3) Outliers multivariados con distancia de Mahalanobis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transformaciones-logaritmicas-estabilizar-varianza">4) Transformaciones logarítmicas (estabilizar varianza)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-ordinal-one-hot">5) Codificación: ordinal + one-hot</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exportar-artefactos">6) Exportar artefactos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways-para-modelado-lineal">Takeaways (para modelado lineal)</a></li>
 </ul>
   </nav></div>
 
