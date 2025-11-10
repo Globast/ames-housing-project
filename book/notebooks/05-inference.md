@@ -22,7 +22,7 @@ df.shape
 ```
 
 
-### 5.1 Grados de libertad
+## 5.1 Grados de libertad
 
 En regresión lineal, sea:
 
@@ -34,7 +34,7 @@ Se definen:
 $$
 \text{Df}_{\text{model}} = k
 $$
-**Ecuación 4.1.2.** Grados de libertad del modelo.
+**Ecuación 5.1.2.** Grados de libertad del modelo.
 
 $$
 \text{Df}_{\text{model}} = 9
@@ -45,7 +45,7 @@ Representa la cantidad de información utilizada para estimar los $k$ coeficient
 $$
 \text{Df}_{\text{residual}} = n - k - 1
 $$
-**Ecuación 4.1.2.** Grados de libertad de los residuos.
+**Ecuación 5.1.2.** Grados de libertad de los residuos.
 
 $$
 \text{Df}_{\text{residual}} = 2768 - 9 - 1
@@ -57,7 +57,7 @@ $$
 
 Representa los grados de libertad restantes después de ajustar el modelo.
 
-### 5.2 Errores estándar
+## 5.2 Errores estándar
 
 En un modelo de regresión lineal, los **errores estándar de los coeficientes** miden la incertidumbre asociada a cada estimador $\hat{\beta}_j$.  
 En otras palabras, nos indican cuánto esperaríamos que varíen los coeficientes si repitiéramos el experimento con nuevas muestras del mismo tamaño. Coeficientes con errores estándar grandes son menos precisos y más sensibles al muestreo.
@@ -68,7 +68,7 @@ $$
 SS_{\text{Res}} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
 $$
 
-**Ecuación 5.1.1.** Suma de cuadrados de los residuos.
+**Ecuación 5.2.1.** Suma de cuadrados de los residuos.
 
 Esta cantidad representa la **variabilidad de `y` no explicada por el modelo**.
 
@@ -78,7 +78,7 @@ $$
 \hat{\sigma}^2 = \frac{SS_{\text{Res}}}{\text{Df}_{\text{residual}}}
 $$
 
-**Ecuación 5.1.2.** Estimación de la varianza de los errores.
+**Ecuación 5.2.2.** Estimación de la varianza de los errores.
 
 La matriz de varianzas-covarianzas de los coeficientes se calcula como:
 
@@ -86,7 +86,7 @@ $$
 \text{Var}(\hat{\beta}) = \hat{\sigma}^2 (X^\top X)^{-1}
 $$
 
-**Ecuación 5.1.3.** Matriz de varianzas-covarianzas de los coeficientes.
+**Ecuación 5.2.3.** Matriz de varianzas-covarianzas de los coeficientes.
 
 Finalmente, el **error estándar** de cada coeficiente $\hat{\beta}_j$ se obtiene tomando la raíz cuadrada de la diagonal correspondiente:
 
@@ -94,7 +94,7 @@ $$
 SE(\hat{\beta}_j) = \sqrt{[\text{Var}(\hat{\beta})]_{jj}}
 $$
 
-**Ecuación 5.1.4.** Error estándar de los coeficientes.
+**Ecuación 5.2.4.** Error estándar de los coeficientes.
 
 ```{code-cell} ipython3
 import pandas as pd
@@ -128,7 +128,7 @@ n = df.shape[0]
 print(n)
 ```
 
-### 5.3 Valores P
+## 5.3 Valores P
 
 Consecuentemente, los **valores p** permiten evaluar la significancia estadística de cada coeficiente $\hat{\beta}_j$.  
 En otras palabras, nos indican la probabilidad de obtener un coeficiente tan extremo como el observado si, en realidad, el coeficiente fuera cero (hipótesis nula $H_0: \beta_j = 0$).

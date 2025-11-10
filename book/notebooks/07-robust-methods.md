@@ -4,25 +4,32 @@ jupytext:
   text_representation: {extension: .md, format_name: myst}
 kernelspec: {name: python3, display_name: Python 3}
 ---
-# Capítulo 7: Remedios y métodos robustos
+# Capítulo 7 — Remedios y métodos robustos
+
 ## Overview
-Se exploran **estimadores robustos** (p. ej., Huber/RLM, Quantile Regression) y/o **validación** (holdout/K-fold). Se compara la estabilidad de coeficientes y el desempeño predictivo frente a OLS.
+
+En este capítulo se ajusta un modelo lineal OLS para **Ames Housing** y se comparan errores estándar y
+ancho de intervalos de confianza bajo OLS, correcciones robustas a la heterocedasticidad (HC0–HC3) y **bootstrap**.
+También se estiman modelos **RLM** (Huber y Tukey) para mitigar la influencia de outliers.
+Presentamos resultados en tablas y los discutimos, incluyendo recomendaciones prácticas.
+
+
+
+## Configuración de rutas
+
 ```{code-cell} ipython3
 from pathlib import Path
-import pandas as pd
 
-# Definir ruta de datos relativa al capítulo (ejecutado desde book/notebooks/)
-DATA_PATH = Path("../data/AmesHousing_codificada.csv")
-assert DATA_PATH.is_file(), f"No se encontró '{DATA_PATH}'"
+# Rutas deterministas: el capítulo se ejecuta desde la carpeta donde está este .md (p.ej. book/notebooks/)
+DATA_PATH = Path("../data/AmesHousing_codificada.csv")  # relativo a book/notebooks/
+BOOTSTRAP_OUT = Path("../data/bootstrap_df.csv")        # salida persistente en book/data/
+
+assert DATA_PATH.is_file(), "No se encontró '../data/AmesHousing_codificada.csv'"
 print("Usando CSV:", DATA_PATH.resolve())
-
-# Lectura canónica a reutilizar en el capítulo
-df = pd.read_csv(DATA_PATH)
-df.shape
+print("Archivo bootstrap se guardará en:", BOOTSTRAP_OUT.resolve())
 ```
 
-
-### 7.1 Correcciones para heterocedasticidad
+## 7.1 Correcciones para heterocedasticidad
 
 De acuerdo con el supuesto de homocedasticidad ([Ecuación 6.2.1](#ecuacion-621-varianza-errores)), la presencia de heterocedasticidad puede provocar que los errores estándar de los coeficientes estén subestimados, afectando los valores $t$ y las decisiones de significancia. Para corregir este problema, se utilizan los estimadores de varianza robusta **HC** (Heteroscedasticity-Consistent), que ajustan los errores estándar sin cambiar los coeficientes estimados. 
 
@@ -118,7 +125,7 @@ En contraste, intervalos de confianza prácticamente inalterados, como los de `G
 
 En general, aplicar correcciones HC permite obtener intervalos de confianza más robustos, proporcionando inferencias más conservadoras y fiables cuando se sospecha heterocedasticidad.
 
-### 7.2 Modelos robustos con funciones Huber/Tukey
+## 7.2 Modelos robustos con funciones Huber/Tukey
 
 Los **modelos de regresión robusta** son una extensión de la regresión lineal ordinaria diseñada para reducir la influencia de outliers o valores atípicos en la estimación de los coeficientes. Mientras que la regresión OLS pondera todos los residuales por igual, los modelos robustos asignan **menor peso a los residuales grandes**, permitiendo obtener estimaciones más confiables y estables.
 
@@ -189,7 +196,7 @@ Sin embargo, algunas observaciones presentan pesos menores, como la última fila
 
 Además, es evidente que Tukey aplica un castigo más fuerte a residuales extremos.
 
-### 7.3 Bootstrap
+## 7.3 Bootstrap
 
 El **bootstrap** es un método de remuestreo que permite estimar la variabilidad de los coeficientes de un modelo sin asumir una distribución específica de los errores. Consiste en generar múltiples muestras con reemplazo a partir de los datos originales y recalcular los estimadores para cada réplica, obteniendo así una **distribución empírica** de los coeficientes, a partir de la cual se calculan el error estándar y los intervalos de confianza.
 
@@ -223,36 +230,72 @@ bootstrap_df.to_csv('bootstrap_df.csv', sep=",", index=False)
 bootstrap_df
 ```
 
-**Tabla 7.3.1.** Resumen Bootstrap.
+
+**Tabla 7.3.1 — Resumen de bootstrap de coeficientes.** Esta tabla resume los resultados producidos por el código anterior.
+Discusión: compare magnitudes relativas. En presencia de heterocedasticidad,
+los SE HC3 suelen ser mayores que OLS. Si los IC se ensanchan (ver Tabla 7.2), las
+conclusiones sobre significancia pueden cambiar. Con bootstrap, valide la estabilidad
+de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
 
 Se observa que variables como `Overall Qual`, `Gr Liv Area`, `Garage Cars` y `Year Built` tienen coeficientes claramente distintos de cero, con intervalos de confianza estrechos y consistentes, lo que sugiere estimaciones robustas y estables. Por el contrario, `1st Flr SF` y `Full Bath` presentan intervalos que incluyen el cero, indicando que su efecto sobre la variable respuesta podría no ser significativo.
 
-### 7.4 OLS vs. HC3 vs. Bootstrap
+## 7.4 OLS vs. HC3 vs. Bootstrap
 
 ```{code-cell} ipython3
+
 import pandas as pd
+# 1Extraer y alinear objetos base
+coef_ols = modelo_base.params
+se_ols = modelo_base.bse
+se_hc3 = resultados_HC3.bse
 
-coef_ols = modelo_base.params         
-se_ols = modelo_base.bse               
+# Asegurar que bootstrap_df esté indexado por el nombre del coeficiente (si aplica)
+if isinstance(bootstrap_df, pd.DataFrame) and 'variable' in bootstrap_df.columns and bootstrap_df.index.name != 'variable':
+    bootstrap_df = bootstrap_df.set_index('variable')
 
-se_hc3 = resultados_HC3.bse            
+coef_boot_mean = bootstrap_df['Coef_mean'].reindex(coef_ols.index)
+se_boot = bootstrap_df['SE_bootstrap'].reindex(coef_ols.index)
 
-coef_boot_mean = bootstrap_df['Coef_mean']  
-se_boot = bootstrap_df['SE_bootstrap']  
+# 2 Anchuras de IC (97.5 - 2.5) para cada método
+ic_ols_width = (modelo_base.conf_int().iloc[:, 1] - modelo_base.conf_int().iloc[:, 0]).reindex(coef_ols.index)
 
-ic_ols = modelo_base.conf_int().iloc[:,1] - modelo_base.conf_int().iloc[:,0]
+hc3_ci = resultados_HC3.conf_int()
+# Normalizar a DataFrame con el mismo índice
+if isinstance(hc3_ci, pd.DataFrame):
+    hc3_ci_df = hc3_ci
+else:
+    hc3_ci_df = pd.DataFrame(hc3_ci, index=coef_ols.index, columns=[0, 1])
 
-ic_hc3 = resultados_HC3.conf_int()[:,1] - resultados_HC3.conf_int()[:,0]
+ic_hc3_width = (hc3_ci_df.iloc[:, 1] - hc3_ci_df.iloc[:, 0]).reindex(coef_ols.index)
+ic_boot_width = (bootstrap_df['IC_97.5%'] - bootstrap_df['IC_2.5%']).reindex(coef_ols.index)
 
-ic_boot = bootstrap_df['IC_97.5%'] - bootstrap_df['IC_2.5%']
+# 3 Tabla maestra comparativa
+comparative_df = pd.DataFrame({
+    'Coef_OLS': coef_ols,
+    'Coef_Bootstrap': coef_boot_mean,
+    'SE_OLS': se_ols,
+    'SE_HC3': se_hc3,
+    'SE_Bootstrap': se_boot,
+    'IC_width_OLS': ic_ols_width,
+    'IC_width_HC3': ic_hc3_width,
+    'IC_width_Bootstrap': ic_boot_width
+})
 
+# 4 Subtablas
 coef_df = comparative_df[['Coef_OLS', 'Coef_Bootstrap']]
 se_df = comparative_df[['SE_OLS', 'SE_HC3', 'SE_Bootstrap']]
 ic_df = comparative_df[['IC_width_OLS', 'IC_width_HC3', 'IC_width_Bootstrap']]
+
+# Mostrar por conveniencia
 coef_df
 ```
 
-**Tabla 7.4.1.** Coeficientes OLS vs. Bootstrap. *Valores en escala logarítmica.*
+
+**Tabla 7.4.1— Coeficientes OLS vs. Bootstrap.** *Valores en escala logarítmica.* Esta tabla resume los resultados producidos por el código anterior.
+Discusión: compare magnitudes relativas. En presencia de heterocedasticidad,
+los SE HC3 suelen ser mayores que OLS. Si los IC se ensanchan (ver Tabla 7.2), las
+conclusiones sobre significancia pueden cambiar. Con bootstrap, valide la estabilidad
+de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
 
 Se observa que la estimación de los parámetros es muy estable frente al remuestreo, lo que sugiere que la muestra utilizada es suficientemente representativa y que los coeficientes no dependen excesivamente de observaciones individuales.
 
@@ -262,7 +305,13 @@ En particular, las variables como `Overall Qual`, `Gr Liv Area` y `Fireplaces` m
 se_df
 ```
 
-**Tabla 7.4.2.** Errores estándar OLS vs. HC3 vs. Bootstrap.<a id="tabla-742-se-ols-hc3-boot"></a>
+
+**Tabla 7.4.2 — Errores estándar comparados (OLS vs. HC0–HC3 vs. Bootstrap).** Esta tabla resume los resultados producidos por el código anterior.
+Discusión: compare magnitudes relativas. En presencia de heterocedasticidad,
+los SE HC3 suelen ser mayores que OLS. Si los IC se ensanchan (ver Tabla 7.2), las
+conclusiones sobre significancia pueden cambiar. Con bootstrap, valide la estabilidad
+de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
+
 
 Los errores estándar de OLS son generalmente menores que los obtenidos mediante HC3 o bootstrap, lo que sugiere que este modelo inicial podría subestimar la incertidumbre cuando hay heterocedasticidad presente o dependiendo de la muestra seleccionada.  
 
@@ -274,11 +323,32 @@ Es notable que las variables con errores estándar relativamente bajos (`Gr Liv 
 ic_df
 ```
 
-**Tabla 7.4.3.** Amplitud intervalos de confianza OLS vs. HC3 vs. Bootstrap.
+
+**Tabla 7.4.3 — Ancho de intervalos de confianza por método.** Esta tabla resume los resultados producidos por el código anterior.
+Discusión: compare magnitudes relativas. En presencia de heterocedasticidad,
+los SE HC3 suelen ser mayores que OLS. Si los IC se ensanchan (ver Tabla 7.2), las
+conclusiones sobre significancia pueden cambiar. Con bootstrap, valide la estabilidad
+de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
 
 Alineados con los errores estándar ([Tabla 7.4.2](#tabla-742-se-ols-hc3-boot)), los intervalos calculados con OLS son consistentemente más estrechos que los obtenidos con HC3 o bootstrap, llegando a la misma conclusión de que el OLS inicial es menos robusto.
 
+## Discusión y análisis
+
+**Sobre heterocedasticidad.** Si los errores estándar HC3 (o HC2) superan de manera consistente a los de OLS,
+esto sugiere varianza no constante. En tal caso, la inferencia debe basarse en versiones robustas (HC3 recomendado).
+Además, el **ancho de los IC** (Tabla 7.2) es un buen indicador del impacto en la precisión de la estimación.
+
+**Sobre RLM (Huber/Tukey).** Cuando existen outliers influyentes, RLM puede reducir su peso (ver Tabla 7.3 y, si corresponde,
+los pesos por observación). Cambios sustanciales en coeficientes o en su significancia, frente a OLS, ameritan diagnosticar
+casos influyentes y revisar la especificación.
+
+**Sobre bootstrap.** El bootstrap (Tabla 7.4) brinda una validación empírica de la variabilidad de los parámetros.
+Considere comparar los percentiles 2.5%/97.5% de bootstrap con los IC teóricos; discrepancias marcadas sugieren
+sensibilidad a supuestos o a la muestra.
+
 ## Takeaways
-- Los estimadores robustos mitigan la sensibilidad a outliers e incumplimientos de supuestos.
-- La regresión cuantílica describe efectos a lo largo de la distribución de la respuesta.
-- Se comparan *RMSE/MAE* y estabilidad de coeficientes versus OLS.
+
+1. **Inferencia robusta:** En presencia de heterocedasticidad, utilice **HC3** para SE e IC; valide conclusiones frente a OLS.
+2. **Diagnóstico de outliers:** Si RLM re-pondera fuertemente algunos casos, investigue esas observaciones (posibles errores o segmentos distintos).
+3. **Validación por remuestreo:** Use **bootstrap** para verificar estabilidad de coeficientes y anchos de IC.
+4. **Rutas deterministas:** Los datos se leen desde `DATA_PATH` y los resultados de bootstrap se guardan en `BOOTSTRAP_OUT` (book/data/).

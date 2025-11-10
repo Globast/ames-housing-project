@@ -179,8 +179,8 @@
 <li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7: Remedios y métodos robustos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7 — Remedios y métodos robustos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capítulo 8 — Validación y selección de modelos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="09-monte-carlo.html">Capitulo 09. Montecarlo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="10-interpretation.html">Capitulo 10. Interpretacion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="11-conclusions.html">Capítulo 11 · Conclusiones y trabajo futuro</a></li>
@@ -334,11 +334,9 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset">2.1 Carga del dataset</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-datos-faltantes">2.2 Tratamiento de datos faltantes</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers">2.2 Tratamiento de outliers</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-de-variables-categoricas">2.3 Codificación de variables categóricas</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-datos-faltantes">2.2 Tratamiento de datos faltantes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers">2.3 Tratamiento de outliers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-de-variables-categoricas">2.4 Codificación de variables categóricas</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
             </nav>
@@ -737,7 +735,7 @@ x_{ij}^{*} =
 \text{Moda}(X_j) &amp; \text{si } X_j \text{ es categórica}
 \end{cases}
 \end{split}\]</div>
-<p><strong>Ecuación 2.1.1.</strong> Regla imputación faltantes.</p>
+<p><strong>Ecuación 2.2.1.</strong> Regla imputación faltantes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
@@ -756,15 +754,16 @@ x_{ij}^{*} =
 </div>
 </div>
 </div>
+</section>
 <section id="tratamiento-de-outliers">
-<h3>2.2 Tratamiento de outliers<a class="headerlink" href="#tratamiento-de-outliers" title="Link to this heading">#</a></h3>
+<h2>2.3 Tratamiento de outliers<a class="headerlink" href="#tratamiento-de-outliers" title="Link to this heading">#</a></h2>
 <p>Se aplicó el criterio de <strong>tres desviaciones estándar (3Z)</strong> para identificar observaciones atípicas en las variables numéricas de interés, incluyendo la variable objetivo <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> y 13 predictoras potenciales.</p>
 <p>Bajo este método, un dato se considera <em>outlier</em> si su distancia a la media supera tres desviaciones estándar:</p>
 <div class="math notranslate nohighlight">
 \[
 |z_i| = \left| \frac{x_i - \bar{x}}{s} \right| &gt; 3
 \]</div>
-<p><strong>Ecuación 2.2.2.</strong> Outlier 3Z.</p>
+<p><strong>Ecuación 2.3.1.</strong> Outlier 3Z.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -807,14 +806,14 @@ Registros después de eliminar outliers: 2768
 </div>
 </div>
 </div>
-<p><strong>Tabla 2.2.1.</strong> Resumen tratamiento de outliers.</p>
+<p><strong>Tabla 2.3.1.</strong> Resumen tratamiento de outliers.</p>
 <p>En total, se detectaron <strong>162 observaciones atípicas</strong>, las cuales fueron eliminadas del conjunto de datos con el objetivo de reducir la influencia de valores extremos sobre el ajuste del modelo a aplicar.</p>
 <p>Además, se aplicó una transformación logarítmica natural a la variable <strong>SalePrice</strong> con el fin de mejorar la relación lineal entre esta y las variables predictoras, reduciendo cualquier sesgo presente en la distribución original.</p>
 <div class="math notranslate nohighlight">
 \[
 Y' = \log(1 + Y)
 \]</div>
-<p><strong>Ecuación 2.2.3.</strong> Transformación logarítmica. <a id="eq-2-2-2"></a></p>
+<p><strong>Ecuación 2.3.2.</strong> Transformación logarítmica. <a id="eq-2-2-2"></a></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_sin_outliers</span><span class="p">[</span><span class="s2">&quot;SalePrice_log&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">data_sin_outliers</span><span class="p">[</span><span class="s2">&quot;SalePrice&quot;</span><span class="p">])</span>
@@ -825,7 +824,7 @@ Y' = \log(1 + Y)
 </div>
 </section>
 <section id="codificacion-de-variables-categoricas">
-<h3>2.3 Codificación de variables categóricas<a class="headerlink" href="#codificacion-de-variables-categoricas" title="Link to this heading">#</a></h3>
+<h2>2.4 Codificación de variables categóricas<a class="headerlink" href="#codificacion-de-variables-categoricas" title="Link to this heading">#</a></h2>
 <p>Las variables categóricas se transformaron en valores numéricos para facilitar su uso en modelos.</p>
 <p>Primero se codificaron las <strong>variables ordinales</strong> según su nivel, asignando valores enteros que respetan el orden lógico de las categorías (por ejemplo, <em>Po</em> &lt; <em>Fa</em> &lt; <em>TA</em> &lt; <em>Gd</em> &lt; <em>Ex</em>).</p>
 <p>Posteriormente, las <strong>variables nominales</strong> (sin orden inherente) se codificaron mediante variables <em>dummy</em>, creando una representación binaria para cada categoría (y una nueva columna).</p>
@@ -911,7 +910,7 @@ Y' = \log(1 + Y)
 </table>
 </div></div></div>
 </div>
-<p><strong>Tabla 2.3.1.</strong> Resumen variables categóricas codificadas.</p>
+<p><strong>Tabla 2.4.1.</strong> Resumen variables categóricas codificadas.</p>
 <p>El resultado muestra que se transformaron <strong>12 variables ordinales</strong> mediante recodificación numérica y <strong>139 variables nominales</strong> a través de codificación <em>dummy</em>.</p>
 <p>Con estas transformaciones, el dataset quedó sin valores faltantes, sin outliers y con todas las variables en formato adecuado para su modelación.</p>
 <div class="cell docutils container">
@@ -971,10 +970,9 @@ Y' = \log(1 + Y)
 </table>
 </div></div></div>
 </div>
-<p><strong>Tabla 2.3.2.</strong> Resumen genera limpieza de datos.</p>
+<p><strong>Tabla 2.4.2.</strong> Resumen genera limpieza de datos.</p>
 <p>El conjunto original contenía <strong>2930 registros y 82 variables</strong>, con un total de <strong>15 749 valores faltantes</strong>.<br />
 Tras el proceso de imputación, eliminación de outliers, transformación logarítmica y codificación de variables, el dataset final quedó compuesto por <strong>2768 observaciones y 222 variables</strong>, sin valores ausentes.</p>
-</section>
 </section>
 <section id="takeaways">
 <h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
@@ -1052,11 +1050,9 @@ Tras el proceso de imputación, eliminación de outliers, transformación logar�
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset">2.1 Carga del dataset</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-datos-faltantes">2.2 Tratamiento de datos faltantes</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers">2.2 Tratamiento de outliers</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-de-variables-categoricas">2.3 Codificación de variables categóricas</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-datos-faltantes">2.2 Tratamiento de datos faltantes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers">2.3 Tratamiento de outliers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-de-variables-categoricas">2.4 Codificación de variables categóricas</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
   </nav></div>

@@ -62,7 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/06-diagnostics';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Capítulo 7: Remedios y métodos robustos" href="07-robust-methods.html" />
+    <link rel="next" title="Capítulo 7 — Remedios y métodos robustos" href="07-robust-methods.html" />
     <link rel="prev" title="Capítulo 5: Inferencia y grados de libertad" href="05-inference.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -179,8 +179,8 @@
 <li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 6: Diagnóstico de supuestos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7: Remedios y métodos robustos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7 — Remedios y métodos robustos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capítulo 8 — Validación y selección de modelos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="09-monte-carlo.html">Capitulo 09. Montecarlo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="10-interpretation.html">Capitulo 10. Interpretacion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="11-conclusions.html">Capítulo 11 · Conclusiones y trabajo futuro</a></li>
@@ -332,8 +332,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linealidad-y-normalidad">6.1 Linealidad y normalidad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linealidad-y-normalidad">6.1 Linealidad y normalidad</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#homocedasticidad-autocorrelacion-y-multicolinealidad">6.2 Homocedasticidad, autocorrelación y multicolinealidad</a></li>
 </ul>
 </li>
@@ -379,8 +379,9 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
 <section id="linealidad-y-normalidad">
-<h3>6.1 Linealidad y normalidad<a class="headerlink" href="#linealidad-y-normalidad" title="Link to this heading">#</a></h3>
+<h2>6.1 Linealidad y normalidad<a class="headerlink" href="#linealidad-y-normalidad" title="Link to this heading">#</a></h2>
 <p>El supuesto de <strong>linealidad</strong> indica que la relación entre las variables predictoras y la respuesta es aproximadamente lineal. Representado en la ecuación de regresión lineal (<a class="reference internal" href="#ecuacion-411-regresion-lineal"><span class="xref myst">Ecuación 4.1.1</span></a>), se evalúa con un gráfico de residuales vs valores ajustados; una dispersión aleatoria alrededor de cero sin patrones sugiere que se cumple, desviaciones sugieren una relación no lineal o la necesidad de alguna transformación.</p>
 <p>La <strong>normalidad de los residuos</strong> implica que <span class="math notranslate nohighlight">\(\varepsilon \sim N(0, \sigma^2)\)</span>.
 <strong>Ecuación 6.1.1.</strong> Normalidad de los residuos.</p>
@@ -432,15 +433,13 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2c31d4edb61616a3ccba2331b2af534990887d55f874941d0d036dbd6e53a642.png" src="../_images/2c31d4edb61616a3ccba2331b2af534990887d55f874941d0d036dbd6e53a642.png" />
-<img alt="../_images/69f8edb34e0de9a6a0d7a2811ed6e49afef82242509c6e230fecccbdfd4db3e6.png" src="../_images/69f8edb34e0de9a6a0d7a2811ed6e49afef82242509c6e230fecccbdfd4db3e6.png" />
+<img alt="../_images/cc3b2638dabb3baa7130c8e71b9da5a61ef4939ce2811950e02a4dfdeec0d672.png" src="../_images/cc3b2638dabb3baa7130c8e71b9da5a61ef4939ce2811950e02a4dfdeec0d672.png" />
+<img alt="../_images/fecd6dad5b7b9b215f1badb216201d2228532851d0df78be1bc1942d75c68ea6.png" src="../_images/fecd6dad5b7b9b215f1badb216201d2228532851d0df78be1bc1942d75c68ea6.png" />
 </div>
 </div>
-<p><em>Interpretación (Figura 6.1).</em> Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.</p>
 <p><strong>Figura 6.1.1.</strong> Linealidad y normalidad del modelo 1.</p>
 <p>En cuanto a la linealidad, la mayoría de los residuales se distribuyen de manera aleatoria alrededor de 0, lo que indica que el modelo captura correctamente la tendencia general. Sin embargo, se observan algunos valores extremos a lo largo del eje x, incluyendo un residual notablemente por debajo de los demás.</p>
 <p>El QQ-plot muestra que a partir de aproximadamente -2 los datos siguen de manera bastante cercana la línea de referencia. Para valores menores a -2, los residuales se curvan hacia abajo y se desvían de la línea, lo que sugiere cierta no normalidad en los extremos. Esto puede afectar la validez de los intervalos de confianza y de las pruebas de significancia, aunque el ajuste de los coeficientes sigue siendo consistente bajo mínimos cuadrados.</p>
-</section>
 <section id="homocedasticidad-autocorrelacion-y-multicolinealidad">
 <h3>6.2 Homocedasticidad, autocorrelación y multicolinealidad<a class="headerlink" href="#homocedasticidad-autocorrelacion-y-multicolinealidad" title="Link to this heading">#</a></h3>
 <p>La <strong>homocedasticidad</strong> indica que la varianza de los errores debe ser constante a lo largo de todos los valores de las variables predictoras. Se suele evaluar mediante pruebas como Breusch–Pagan o White. Su incumplimiento puede conducir a errores estándar incorrectos y, por lo tanto, a inferencias poco confiables sobre los coeficientes. Matemáticamente, se espera que:</p>
@@ -610,7 +609,7 @@ r_{jk} = \frac{\text{Cov}(X_j, X_k)}{\sigma_{X_j} \, \sigma_{X_k}}
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Capítulo 7: Remedios y métodos robustos</p>
+        <p class="prev-next-title">Capítulo 7 — Remedios y métodos robustos</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -630,8 +629,8 @@ r_{jk} = \frac{\text{Cov}(X_j, X_k)}{\sigma_{X_j} \, \sigma_{X_k}}
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linealidad-y-normalidad">6.1 Linealidad y normalidad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linealidad-y-normalidad">6.1 Linealidad y normalidad</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#homocedasticidad-autocorrelacion-y-multicolinealidad">6.2 Homocedasticidad, autocorrelación y multicolinealidad</a></li>
 </ul>
 </li>

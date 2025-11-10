@@ -179,8 +179,8 @@
 <li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Capítulo 5: Inferencia y grados de libertad</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7: Remedios y métodos robustos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7 — Remedios y métodos robustos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capítulo 8 — Validación y selección de modelos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="09-monte-carlo.html">Capitulo 09. Montecarlo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="10-interpretation.html">Capitulo 10. Interpretacion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="11-conclusions.html">Capítulo 11 · Conclusiones y trabajo futuro</a></li>
@@ -332,12 +332,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">5.1 Grados de libertad</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">5.2 Errores estándar</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">5.3 Valores P</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">5.1 Grados de libertad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">5.2 Errores estándar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">5.3 Valores P</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
             </nav>
@@ -380,8 +378,9 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
 <section id="grados-de-libertad">
-<h3>5.1 Grados de libertad<a class="headerlink" href="#grados-de-libertad" title="Link to this heading">#</a></h3>
+<h2>5.1 Grados de libertad<a class="headerlink" href="#grados-de-libertad" title="Link to this heading">#</a></h2>
 <p>En regresión lineal, sea:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(n\)</span> = número de observaciones</p></li>
@@ -392,7 +391,7 @@ document.write(`
 \[
 \text{Df}_{\text{model}} = k
 \]</div>
-<p><strong>Ecuación 4.1.2.</strong> Grados de libertad del modelo.</p>
+<p><strong>Ecuación 5.1.2.</strong> Grados de libertad del modelo.</p>
 <div class="math notranslate nohighlight">
 \[
 \text{Df}_{\text{model}} = 9
@@ -402,7 +401,7 @@ document.write(`
 \[
 \text{Df}_{\text{residual}} = n - k - 1
 \]</div>
-<p><strong>Ecuación 4.1.2.</strong> Grados de libertad de los residuos.</p>
+<p><strong>Ecuación 5.1.2.</strong> Grados de libertad de los residuos.</p>
 <div class="math notranslate nohighlight">
 \[
 \text{Df}_{\text{residual}} = 2768 - 9 - 1
@@ -414,7 +413,7 @@ document.write(`
 <p>Representa los grados de libertad restantes después de ajustar el modelo.</p>
 </section>
 <section id="errores-estandar">
-<h3>5.2 Errores estándar<a class="headerlink" href="#errores-estandar" title="Link to this heading">#</a></h3>
+<h2>5.2 Errores estándar<a class="headerlink" href="#errores-estandar" title="Link to this heading">#</a></h2>
 <p>En un modelo de regresión lineal, los <strong>errores estándar de los coeficientes</strong> miden la incertidumbre asociada a cada estimador <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span>.<br />
 En otras palabras, nos indican cuánto esperaríamos que varíen los coeficientes si repitiéramos el experimento con nuevas muestras del mismo tamaño. Coeficientes con errores estándar grandes son menos precisos y más sensibles al muestreo.</p>
 <p>La suma de cuadrados de los residuos se define como:</p>
@@ -422,26 +421,26 @@ En otras palabras, nos indican cuánto esperaríamos que varíen los coeficiente
 \[
 SS_{\text{Res}} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
 \]</div>
-<p><strong>Ecuación 5.1.1.</strong> Suma de cuadrados de los residuos.</p>
+<p><strong>Ecuación 5.2.1.</strong> Suma de cuadrados de los residuos.</p>
 <p>Esta cantidad representa la <strong>variabilidad de <code class="docutils literal notranslate"><span class="pre">y</span></code> no explicada por el modelo</strong>.</p>
 <p>La varianza de los errores se estima dividiendo <span class="math notranslate nohighlight">\(SS_{\text{Res}}\)</span> por los grados de libertad de los residuos (<span class="math notranslate nohighlight">\(\text{Df}_{\text{residual}}\)</span>):</p>
 <div class="math notranslate nohighlight">
 \[
 \hat{\sigma}^2 = \frac{SS_{\text{Res}}}{\text{Df}_{\text{residual}}}
 \]</div>
-<p><strong>Ecuación 5.1.2.</strong> Estimación de la varianza de los errores.</p>
+<p><strong>Ecuación 5.2.2.</strong> Estimación de la varianza de los errores.</p>
 <p>La matriz de varianzas-covarianzas de los coeficientes se calcula como:</p>
 <div class="math notranslate nohighlight">
 \[
 \text{Var}(\hat{\beta}) = \hat{\sigma}^2 (X^\top X)^{-1}
 \]</div>
-<p><strong>Ecuación 5.1.3.</strong> Matriz de varianzas-covarianzas de los coeficientes.</p>
+<p><strong>Ecuación 5.2.3.</strong> Matriz de varianzas-covarianzas de los coeficientes.</p>
 <p>Finalmente, el <strong>error estándar</strong> de cada coeficiente <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span> se obtiene tomando la raíz cuadrada de la diagonal correspondiente:</p>
 <div class="math notranslate nohighlight">
 \[
 SE(\hat{\beta}_j) = \sqrt{[\text{Var}(\hat{\beta})]_{jj}}
 \]</div>
-<p><strong>Ecuación 5.1.4.</strong> Error estándar de los coeficientes.</p>
+<p><strong>Ecuación 5.2.4.</strong> Error estándar de los coeficientes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -484,7 +483,7 @@ SE(\hat{\beta}_j) = \sqrt{[\text{Var}(\hat{\beta})]_{jj}}
 </div>
 </section>
 <section id="valores-p">
-<h3>5.3 Valores P<a class="headerlink" href="#valores-p" title="Link to this heading">#</a></h3>
+<h2>5.3 Valores P<a class="headerlink" href="#valores-p" title="Link to this heading">#</a></h2>
 <p>Consecuentemente, los <strong>valores p</strong> permiten evaluar la significancia estadística de cada coeficiente <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span>.<br />
 En otras palabras, nos indican la probabilidad de obtener un coeficiente tan extremo como el observado si, en realidad, el coeficiente fuera cero (hipótesis nula <span class="math notranslate nohighlight">\(H_0: \beta_j = 0\)</span>).</p>
 <p>Para calcular el valor p, primero se construye el <strong>estadístico t</strong> de cada coeficiente:</p>
@@ -662,7 +661,6 @@ p_j = 2 \cdot P(T &gt; |t_j|)
 <p>Coeficientes con <strong>errores estándar</strong> muy pequeños, como los de <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code> o <code class="docutils literal notranslate"><span class="pre">Year</span> <span class="pre">Built</span></code>, indican que estas estimaciones son bastante precisas. Por el contrario, un coeficiente con error estándar relativamente más grande, como <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> o <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code>, refleja mayor incertidumbre en la estimación de su efecto sobre el precio de la vivienda.</p>
 <p><strong>Valores p</strong> menores que 0.05 se consideran significativos, indicando que los coeficientes son distintos de 0. En este modelo, la mayoría de las variables cumplen este criterio, de forma que contribuyen significativamente a explicar <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>. Por el contrario, <code class="docutils literal notranslate"><span class="pre">1st</span> <span class="pre">Flr</span> <span class="pre">SF</span></code> y <code class="docutils literal notranslate"><span class="pre">Full</span> <span class="pre">Bath</span></code> tienen valores p mayores a 0.05, sugiriendo que su efecto podría no ser relevante al controlar por los demás predictores.</p>
 </section>
-</section>
 <section id="takeaways">
 <h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -737,12 +735,10 @@ p_j = 2 \cdot P(T &gt; |t_j|)
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">5.1 Grados de libertad</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">5.2 Errores estándar</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">5.3 Valores P</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grados-de-libertad">5.1 Grados de libertad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errores-estandar">5.2 Errores estándar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#valores-p">5.3 Valores P</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
   </nav></div>

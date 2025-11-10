@@ -21,7 +21,7 @@ print("Usando CSV:", DATA_PATH.resolve())
 df = pd.read_csv(DATA_PATH)
 df.shape
 ```
-### 4.1 Definición del modelo
+## 4.1 Definición del modelo
 
 El modelo de regresión lineal puede expresarse de forma matricial como:
 

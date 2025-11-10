@@ -177,8 +177,8 @@
 <li class="toctree-l1"><a class="reference internal" href="04-ols-matrix.html">Capítulo 4: Formulación matricial del modelo OLS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05-inference.html">Capítulo 5: Inferencia y grados de libertad</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06-diagnostics.html">Capítulo 6: Diagnóstico de supuestos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7: Remedios y métodos robustos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capitulo 8. Validación y selección de modelo (Train/Test)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-robust-methods.html">Capítulo 7 — Remedios y métodos robustos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-validation.html">Capítulo 8 — Validación y selección de modelos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="09-monte-carlo.html">Capitulo 09. Montecarlo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="10-interpretation.html">Capitulo 10. Interpretacion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="11-conclusions.html">Capítulo 11 · Conclusiones y trabajo futuro</a></li>
@@ -330,12 +330,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.1 Distribución de la variable respuesta</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.2 Correlaciones entre variables numéricas</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.3 Relaciones de variables categóricas</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.1 Distribución de la variable respuesta</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.2 Correlaciones entre variables numéricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.4 Relaciones de variables categóricas</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
             </nav>
@@ -378,9 +376,9 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
 <section id="distribucion-de-la-variable-respuesta">
-<h3>3.1 Distribución de la variable respuesta<a class="headerlink" href="#distribucion-de-la-variable-respuesta" title="Link to this heading">#</a></h3>
-<p><strong>Figura 3.1.</strong> Visualización generada por el código siguiente. Ver interpretación posterior.</p>
+<h2>3.1 Distribución de la variable respuesta<a class="headerlink" href="#distribucion-de-la-variable-respuesta" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -413,15 +411,13 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/151fe09cd8405c7b4f1b2fcec263710a8e6972e0e56c0f531cce8e86b8fd6d90.png" src="../_images/151fe09cd8405c7b4f1b2fcec263710a8e6972e0e56c0f531cce8e86b8fd6d90.png" />
+<img alt="../_images/f1c5caa75b21017fc1e935a1220b8193773e8c842e8ea146b2167a2b93375d63.png" src="../_images/f1c5caa75b21017fc1e935a1220b8193773e8c842e8ea146b2167a2b93375d63.png" />
 </div>
 </div>
-<p><em>Interpretación (Figura 3.1).</em> Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.</p>
 <p><strong>Figura 3.1.1.</strong> Histogramas y boxplots de SalePrice y SalePrice_log.</p>
 <p>La tabla muestra la distribución de la variable de respuesta <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> antes y después de aplicar la transformación logarítmica.</p>
 <p>La distribución original (panel superior) presenta una <strong>asimetría positiva marcada</strong>, con una cola larga hacia la derecha y presencia de varios valores atípicos.</p>
 <p>Tras aplicar la transformación logarítmica (<a class="reference internal" href="#eq-2-2-2"><span class="xref myst">Ecuación 2.2.2</span></a>), la variable <code class="docutils literal notranslate"><span class="pre">SalePrice_log</span></code> adquiere una dispersión más homogénea y reducción significativa de los outliers.</p>
-<p><strong>Figura 3.2.</strong> Visualización generada por el código siguiente. Ver interpretación posterior.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
@@ -444,19 +440,15 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/3b006aacc5e4f549b21211d6504f715f1244e299f1c33624698de68ac2dd3266.png" src="../_images/3b006aacc5e4f549b21211d6504f715f1244e299f1c33624698de68ac2dd3266.png" />
+<img alt="../_images/9b191f662d44d954b4c021db07a34b2c25ae584f99b7baccea8274d0f9badda9.png" src="../_images/9b191f662d44d954b4c021db07a34b2c25ae584f99b7baccea8274d0f9badda9.png" />
 </div>
 </div>
-<p><em>Interpretación (Figura 3.2).</em> Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.</p>
 <p><strong>Figura 3.1.2.</strong> Diagramas de dispersión Gr Liv Area vs. SalePrice.</p>
 <p>Se compara la relación entre el <strong>precio de venta</strong> (<code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>) y el <strong>área habitable</strong> (<code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>) antes y después de la transformación logarítmica (<a class="reference internal" href="#eq-2-2-2"><span class="xref myst">Ecuación 2.2.2</span></a>) aplicada a la variable respuesta.</p>
 <p>Inicialmente se observa una <strong>dispersión notable en los valores altos</strong>. Tras aplicar la transformación, el patrón muestra una <strong>relación más lineal y estable</strong>, reduciendo la asimetría y atenuando la influencia de valores extremos.</p>
 </section>
 <section id="correlaciones-entre-variables-numericas">
-<h3>3.2 Correlaciones entre variables numéricas<a class="headerlink" href="#correlaciones-entre-variables-numericas" title="Link to this heading">#</a></h3>
-<p><strong>Tabla 3.1.</strong> Vista/tabulación relevante del conjunto de datos. Se discute en el texto.</p>
-<p><em>Comentario:</em> Esta tabla resume aspectos clave para el capítulo; ver discusión inmediata.</p>
-<p><strong>Figura 3.3.</strong> Visualización generada por el código siguiente. Ver interpretación posterior.</p>
+<h2>3.2 Correlaciones entre variables numéricas<a class="headerlink" href="#correlaciones-entre-variables-numericas" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
@@ -477,11 +469,9 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/eb92ccc778302cb5ebae0142b61aa9551929cf4db7ffd9101030bd7a2b4fc032.png" src="../_images/eb92ccc778302cb5ebae0142b61aa9551929cf4db7ffd9101030bd7a2b4fc032.png" />
+<img alt="../_images/75eb57f89e359421bf9dcfd111ca12aa473814dd7b0e4093228f7e9ca712a612.png" src="../_images/75eb57f89e359421bf9dcfd111ca12aa473814dd7b0e4093228f7e9ca712a612.png" />
 </div>
 </div>
-<p><em>Interpretación (Figura 3.3).</em> Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.</p>
-<p><em>Interpretación (Tabla 3.1).</em> Comentar métricas clave (mediana, dispersión, conteos) y su impacto en el modelado.</p>
 <p><strong>Figura 3.2.1.</strong> Heatmap de correlaciones.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -514,13 +504,12 @@ Name: SalePrice, dtype: float64
 </div>
 </div>
 </div>
-<p><strong>Tabla 3.2.1.</strong> Correlaciones principales con SalePrice.</p>
+<p><strong>Tabla 3.2.2.</strong> Correlaciones principales con SalePrice.</p>
 <p>Variables como <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>, <code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>, <code class="docutils literal notranslate"><span class="pre">Exter</span> <span class="pre">Qual</span></code> y <code class="docutils literal notranslate"><span class="pre">Bsmt</span> <span class="pre">Qual</span></code> tienen una correlación alta con la variable de respuesta (<code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>), por lo que son candidatas a elegirse para el modelo.</p>
 <p>Sin embargo, variables como <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Cars</span></code> y <code class="docutils literal notranslate"><span class="pre">Garage</span> <span class="pre">Area</span></code> tienen una correlación alta entre sí, de modo que puede no ser necesario incluir ambas.</p>
 </section>
 <section id="relaciones-de-variables-categoricas">
-<h3>3.3 Relaciones de variables categóricas<a class="headerlink" href="#relaciones-de-variables-categoricas" title="Link to this heading">#</a></h3>
-<p><strong>Figura 3.4.</strong> Visualización generada por el código siguiente. Ver interpretación posterior.</p>
+<h2>3.4 Relaciones de variables categóricas<a class="headerlink" href="#relaciones-de-variables-categoricas" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">)</span>
@@ -550,14 +539,13 @@ Name: SalePrice, dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/4a562df436b7ee6530f80fa032c5011731108380c08bf351836116527a141e9a.png" src="../_images/4a562df436b7ee6530f80fa032c5011731108380c08bf351836116527a141e9a.png" />
-<img alt="../_images/c9e6892d52fa7b0f08d587a79270d07221b9da77c31218d61981f669d4781ccc.png" src="../_images/c9e6892d52fa7b0f08d587a79270d07221b9da77c31218d61981f669d4781ccc.png" />
-<img alt="../_images/20e5fe121110c0176579a38fc9a7f4bf2c3fe1720cf87bdb966b664df7cce607.png" src="../_images/20e5fe121110c0176579a38fc9a7f4bf2c3fe1720cf87bdb966b664df7cce607.png" />
-<img alt="../_images/30d7efe99aea99e42fd461f69297fe3031f36873f67922461856dc235ebdb69f.png" src="../_images/30d7efe99aea99e42fd461f69297fe3031f36873f67922461856dc235ebdb69f.png" />
+<img alt="../_images/086fc5babf68fcb64bedb23b6c4f2fdcaf2ecfa0ec185eeee26210db8c3aa745.png" src="../_images/086fc5babf68fcb64bedb23b6c4f2fdcaf2ecfa0ec185eeee26210db8c3aa745.png" />
+<img alt="../_images/1eed78171cca419992e875e962c7bf35834b2c624cfd5646f917a3961b15befe.png" src="../_images/1eed78171cca419992e875e962c7bf35834b2c624cfd5646f917a3961b15befe.png" />
+<img alt="../_images/d16377082ac9dc7eca495647a64e2336dc72b3eeba3407e52a79a3c6ebe0f2fd.png" src="../_images/d16377082ac9dc7eca495647a64e2336dc72b3eeba3407e52a79a3c6ebe0f2fd.png" />
+<img alt="../_images/f1533512a0c58539cd1a6b078dc22f474969791e4888d0d9dd15cf1a5c6d363d.png" src="../_images/f1533512a0c58539cd1a6b078dc22f474969791e4888d0d9dd15cf1a5c6d363d.png" />
 </div>
 </div>
-<p><em>Interpretación (Figura 3.4).</em> Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.</p>
-<p><strong>Tabla 3.3.1.</strong> Boxplots de SalePrice y SalePrice_log vs. Neighborhood y Overall Qual.</p>
+<p><strong>Tabla 3.4.1.</strong> Boxplots de SalePrice y SalePrice_log vs. Neighborhood y Overall Qual.</p>
 <p>De acuerdo con los diagramas de caja y bigote, parece haber una relación entre <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> y variables categóricas como <code class="docutils literal notranslate"><span class="pre">Neighborhood</span></code> y <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code>.</p>
 <p>Además, se notan diferencias entre la variable de respuesta original (<code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>) y la transformada logarítmicamente (<code class="docutils literal notranslate"><span class="pre">SalePrice_log</span></code>).</p>
 <div class="cell docutils container">
@@ -596,7 +584,6 @@ Name: SalePrice, dtype: float64
 </div>
 </div>
 <p>Se eligen 9 variables predictoras, teniendo en cuenta una <strong>alta correlación con la variable de respuesta</strong>, <strong>baja correlación entre ellas</strong> (para evitar redundancia en el modelo) y <strong>sentido práctico</strong>.</p>
-</section>
 </section>
 <section id="takeaways">
 <h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
@@ -672,12 +659,10 @@ Name: SalePrice, dtype: float64
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.1 Distribución de la variable respuesta</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.2 Correlaciones entre variables numéricas</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.3 Relaciones de variables categóricas</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-la-variable-respuesta">3.1 Distribución de la variable respuesta</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlaciones-entre-variables-numericas">3.2 Correlaciones entre variables numéricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-de-variables-categoricas">3.4 Relaciones de variables categóricas</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
 </ul>
   </nav></div>

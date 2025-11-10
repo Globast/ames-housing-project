@@ -23,7 +23,7 @@ df.shape
 ```
 
 
-### 6.1 Linealidad y normalidad
+## 6.1 Linealidad y normalidad
 
 El supuesto de **linealidad** indica que la relación entre las variables predictoras y la respuesta es aproximadamente lineal. Representado en la ecuación de regresión lineal ([Ecuación 4.1.1](#ecuacion-411-regresion-lineal)), se evalúa con un gráfico de residuales vs valores ajustados; una dispersión aleatoria alrededor de cero sin patrones sugiere que se cumple, desviaciones sugieren una relación no lineal o la necesidad de alguna transformación.
 
@@ -76,9 +76,6 @@ sm.qqplot(resultados.resid, line="45", fit=True)
 plt.title("Normalidad: QQ-plot de los residuos")
 plt.show()
 ```
-
-_Interpretación (Figura 6.1)._ Patrón visual consistente con hipótesis del capítulo; comentar tendencias, outliers y posibles transformaciones.
-
 **Figura 6.1.1.** Linealidad y normalidad del modelo 1.
 
 En cuanto a la linealidad, la mayoría de los residuales se distribuyen de manera aleatoria alrededor de 0, lo que indica que el modelo captura correctamente la tendencia general. Sin embargo, se observan algunos valores extremos a lo largo del eje x, incluyendo un residual notablemente por debajo de los demás.  
