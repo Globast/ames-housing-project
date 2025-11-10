@@ -1,21 +1,21 @@
 # Jupyter Book configuration
 # Más opciones: https://jupyterbook.org/en/stable/customize/config.html
 title: "Ames Housing: Regresión lineal, inferencia, diagnóstico y métodos robustos"
-author: "Tu nombre / equipo"
+author: "Gloria Bastidas - Daniel Carbono - Luis Perez"
 language: es
 only_build_toc_files: true
 
 repository:
-  url: https://github.com/usuario/ames-housing-project  # Cambia esto
+  url: https://github.com/Globast/ames-housing-project  # Cambia esto
   path_to_book: ./
   branch: main
 
 html:
   favicon: ""
-  use_issues_button: true
-  use_repository_button: true
-  use_edit_page_button: true
-  home_page_in_navbar: true
+  use_issues_button: false
+  use_repository_button: false
+  use_edit_page_button: false
+  home_page_in_navbar: false
 
 parse:
   myst_enable_extensions:
@@ -32,3 +32,9 @@ sphinx:
       TeX:
         equationNumbers:
           autoNumber: "all"
+
+sphinx:
+  config:
+    mathjax3_config:
+      tex:
+        inlineMath: [["$", "$"], ["\\(", "\\)"]]
