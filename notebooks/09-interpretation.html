@@ -57,8 +57,6 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>window.MathJax = {"tex": {"tags": "all", "inlineMath": [["$", "$"], ["\\\\(", "\\\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/09-interpretation';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -365,13 +363,13 @@ document.write(`
 <td><p>Presenta el coeficiente más alto en el modelo, lo que confirma que es el principal determinante del valor de la vivienda. Un incremento de un punto en la calificación de calidad se asocia con un aumento promedio del <strong>9–10% en el precio</strong>. El intervalo de confianza muestra una relación consistentemente positiva, lo que refuerza su peso estructural en la explicación del valor.</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Espacio habitable</strong></p></td>
-<td><p>El coeficiente positivo y estadísticamente sólido indica que el tamaño interior tiene un efecto directo y significativo sobre el precio. Un incremento de <strong>100 ft²</strong> en el área habitable promedio eleva el valor estimado entre <strong><span class="math notranslate nohighlight">\(7,500 y \)</span>8,000</strong>. Los intervalos estrechos sugieren alta precisión en la estimación.</p></td>
+<td><p>El coeficiente positivo y estadísticamente sólido indica que el tamaño interior tiene un efecto directo y significativo sobre el precio. Un incremento de <strong>100 ft²</strong> en el área habitable promedio eleva el valor estimado entre <strong>USD7,500 y USD8,000</strong>. Los intervalos estrechos sugieren alta precisión en la estimación.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>Área del garaje (capacidad de autos)</strong></p></td>
-<td><p>El efecto estimado muestra que cada espacio adicional en el garaje se asocia con un incremento de <strong><span class="math notranslate nohighlight">\(12,000–\)</span>14,000</strong> en el precio. La magnitud del coeficiente refleja su relevancia práctica y coincide con el comportamiento observado en los datos, donde las viviendas con mayor capacidad de estacionamiento alcanzan precios más altos.</p></td>
+<tr class="row-even"><td><p><strong>Área del garaje (capacidad del garaje)</strong></p></td>
+<td><p>El efecto estimado muestra que cada espacio adicional en el garaje se asocia con un incremento de <strong>USD12,000–USD14,000</strong> en el precio. La magnitud del coeficiente refleja su relevancia práctica y coincide con el comportamiento observado en los datos, donde las viviendas con mayor capacidad de estacionamiento alcanzan precios más altos.</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Tamaño del sótano</strong></p></td>
-<td><p>La relación estimada es positiva y de menor magnitud que la del área habitable. Por cada <strong>100 ft² adicionales</strong>, el precio aumenta entre <strong><span class="math notranslate nohighlight">\(2,000 y \)</span>2,500</strong>, lo que indica que el espacio subterráneo agrega valor, aunque en menor proporción que las áreas principales.</p></td>
+<td><p>La relación estimada es positiva y de menor magnitud que la del área habitable. Por cada <strong>100 ft² adicionales</strong>, el precio aumenta entre <strong>USD2,000 y USD2,500</strong>, lo que indica que el espacio subterráneo agrega valor, aunque en menor proporción que las áreas principales.</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Área del primer piso</strong></p></td>
 <td><p>Esta variable fue eliminada por el modelo Lasso, lo que indica que su efecto está capturado por el espacio habitable total. En términos prácticos, el impacto del primer piso no es independiente, sino que se integra en la medición global del tamaño de la vivienda.</p></td>

@@ -305,7 +305,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -321,6 +323,27 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#que-preguntamos-y-que-respondimos">10.1. 10.1. ¿Qué preguntamos y qué respondimos?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integracion-teorica-empirica">10.2. Integración teórica + empírica</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calidad-de-la-evidencia">10.3. Calidad de la evidencia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reglas-de-bolsillo-con-incertidumbre-para-decidir-mejor">10.4. “Reglas de bolsillo” con incertidumbre (para decidir mejor)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lo-que-no-podemos-concluir-todavia">10.5. Lo que <strong>no</strong> podemos concluir (todavía)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trabajo-futuro-como-dar-el-siguiente-salto">10.6. Trabajo futuro: cómo dar el siguiente salto</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inferencia-bayesiana">10.6.1. Inferencia Bayesiana</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#causalidad-aplicada">10.6.2. Causalidad aplicada</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#no-linealidad-e-interpretabilidad-gam-ml-con-lupa">10.6.3. No linealidad e interpretabilidad (GAM/ML con lupa)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#efectos-espaciales-y-temporalidad">10.6.4. Efectos espaciales y temporalidad</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checklist-de-replicacion-y-transferencia">10.7. Checklist de replicación y transferencia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-ejecutivo">10.8. Resumen ejecutivo</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -332,9 +355,227 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-10-conclusiones-y-trabajo-futuro">
 <h1><span class="section-number">10. </span>Capítulo 10: Conclusiones y trabajo futuro<a class="headerlink" href="#capitulo-10-conclusiones-y-trabajo-futuro" title="Link to this heading">#</a></h1>
-<p>Responder preguntas iniciales.</p>
-<p>Integrar hallazgos teóricos y empíricos.</p>
-<p>Proponer extensiones (p. ej., inferencia bayesiana, causalidad).</p>
+<p>Este capítulo cierra el recorrido conectando lo que preguntamos al inicio con lo que efectivamente aprendimos. El objetivo es entregar un mapa claro: qué respuestas respaldan los datos, con qué grado de confianza, qué no sabemos aún y cómo avanzar. Mantendremos el tono didáctico, privilegiando ejemplos, tablas-resumen y “reglas de bolsillo”.</p>
+<section id="que-preguntamos-y-que-respondimos">
+<h2><span class="section-number">10.1. </span>10.1. ¿Qué preguntamos y qué respondimos?<a class="headerlink" href="#que-preguntamos-y-que-respondimos" title="Link to this heading">#</a></h2>
+<p>A continuación, una síntesis que liga cada pregunta inicial con la respuesta operativa y la evidencia que la sustenta en el proyecto Ames Housing.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Pregunta inicial</p></th>
+<th class="head"><p>Respuesta breve (operativa)</p></th>
+<th class="head"><p>Evidencia empírica</p></th>
+<th class="head"><p>Alcance e interpretación</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>¿Cuánto “pesa” el área habitable en el precio?</p></td>
+<td><p>Regla de bolsillo: <strong>+100 ft² ⇒ ≈ +$7.5k</strong> en el precio promedio.</p></td>
+<td><p>Coeficiente OLS positivo y estable para <code class="docutils literal notranslate"><span class="pre">GrLivArea</span></code>; consistencia bajo especificaciones con controles y errores estándar robustos.</p></td>
+<td><p>Asociación condicionada; el retorno marginal puede atenuarse en tamaños extremos y variar por calidad/vecindario.</p></td>
+</tr>
+<tr class="row-odd"><td><p>¿La calidad general es tan influyente como parece?</p></td>
+<td><p>Sí, cambios de 1 punto en <code class="docutils literal notranslate"><span class="pre">OverallQual</span></code> muestran incrementos notables en precio.</p></td>
+<td><p>Coeficientes grandes y estadísticamente significativos; efectos estables con controles.</p></td>
+<td><p>Señal fuerte, pero puede capturar componentes de acabados y estado no totalmente observados.</p></td>
+</tr>
+<tr class="row-even"><td><p>¿Garaje y sótano añaden valor de forma sistemática?</p></td>
+<td><p>En promedio, sí; su efecto es positivo, aunque menor que área/calidad.</p></td>
+<td><p>Coeficientes positivos en OLS; robustos a HC3; sensibles a la distribución.</p></td>
+<td><p>Efecto depende del segmento; utilidad marginal decreciente plausible.</p></td>
+</tr>
+<tr class="row-odd"><td><p>¿El modelo predice razonablemente bien?</p></td>
+<td><p>Sí, con buen ajuste en rango medio; peor en colas.</p></td>
+<td><p>Métricas fuera de muestra aceptables; diagnósticos muestran heterocedasticidad manejable.</p></td>
+<td><p>No extrapolar a propiedades extremadamente atípicas; evaluar intervalos de predicción.</p></td>
+</tr>
+<tr class="row-even"><td><p>.</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="integracion-teorica-empirica">
+<h2><span class="section-number">10.2. </span>Integración teórica + empírica<a class="headerlink" href="#integracion-teorica-empirica" title="Link to this heading">#</a></h2>
+<p>La teoría sugiere que el precio capitaliza atributos estructurales (tamaño, calidad) y contextuales (ubicación). Los datos del proyecto confirman el papel central de área y calidad, y además señalan variaciones por entorno y por no linealidad. La tabla siguiente resume el “puente” entre conceptos y resultados.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Concepto teórico</p></th>
+<th class="head"><p>Evidencia empírica observada</p></th>
+<th class="head"><p>Implicación práctica</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Productividad del espacio (más metros, más utilidad)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GrLivArea</span></code> con coeficiente positivo y estable; mejores métricas al permitir curvaturas en tamaños altos.</p></td>
+<td><p>El metro adicional “rinde”, pero no siempre al mismo ritmo; considerar tramos.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Calidad como multiplicador del valor</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OverallQual</span></code> con efecto grande y robusto; interacciones con área mejoran ajuste.</p></td>
+<td><p>Un pie cuadrado en alta calidad vale más que en baja calidad.</p></td>
+</tr>
+<tr class="row-even"><td><p>Ubicación como capitalización de amenidades</p></td>
+<td><p>Inclusión de dummies/controles de vecindario cambia magnitudes de coeficientes.</p></td>
+<td><p>Parte del “efecto tamaño” era vecindario; imprescindible controlar entorno.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Imperfecciones de mercado y heterocedasticidad</p></td>
+<td><p>Residuos con patrón; HC3 y bootstrap estabilizan inferencia.</p></td>
+<td><p>Reportar siempre bandas de incertidumbre robustas.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="calidad-de-la-evidencia">
+<h2><span class="section-number">10.3. </span>Calidad de la evidencia<a class="headerlink" href="#calidad-de-la-evidencia" title="Link to this heading">#</a></h2>
+<p>La fuerza de los hallazgos depende de qué tan bien se cumplan los supuestos. Esta lectura rápida ayuda a comunicar honestamente el grado de certeza.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspecto</p></th>
+<th class="head"><p>Estado en el proyecto</p></th>
+<th class="head"><p>Riesgo si se viola</p></th>
+<th class="head"><p>Qué hicimos / Qué falta</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Linealidad global</p></td>
+<td><p>Aceptable en rango medio; señales de curvatura en colas</p></td>
+<td><p>Sesgo en coeficientes marginales</p></td>
+<td><p>Añadimos términos/curvaturas; sugerimos GAM/ splines (§10.6)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Exogeneidad (sin omitidas relevantes)</p></td>
+<td><p>Parcial, mejora con controles de vecindario</p></td>
+<td><p>Sesgo por variables omitidas</p></td>
+<td><p>Más controles, interacciones; avanzar a diseños causales (§10.6)</p></td>
+</tr>
+<tr class="row-even"><td><p>Homocedasticidad</p></td>
+<td><p>No se cumple estrictamente</p></td>
+<td><p>Inferencia optimista</p></td>
+<td><p>Usamos HC3/ bootstrap; proponer modelos con varianza flexible</p></td>
+</tr>
+<tr class="row-odd"><td><p>Influencia de outliers</p></td>
+<td><p>Presente en segmentos extremos</p></td>
+<td><p>Estimaciones inestables</p></td>
+<td><p>Diagnósticos y robustez; revisar estimadores resistentes</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="reglas-de-bolsillo-con-incertidumbre-para-decidir-mejor">
+<h2><span class="section-number">10.4. </span>“Reglas de bolsillo” con incertidumbre (para decidir mejor)<a class="headerlink" href="#reglas-de-bolsillo-con-incertidumbre-para-decidir-mejor" title="Link to this heading">#</a></h2>
+<p>Las reglas ayudan a negociar, pero deben ir con su banda de confianza. La siguiente tabla ilustra el formato de reporte sugerido (valores de ejemplo para ilustrar la forma).</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Regla</p></th>
+<th class="head"><p>Estimado central</p></th>
+<th class="head"><p>IC 95% (método robusto)</p></th>
+<th class="head"><p>Comentario pedagógico</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>+100 ft² en área habitable</p></td>
+<td><p>+$7,500</p></td>
+<td><p>[+$3,600, +$11,400]</p></td>
+<td><p>Es una <strong>asociación condicional</strong>; puede variar por calidad/vecindario.</p></td>
+</tr>
+<tr class="row-odd"><td><p>+1 punto en calidad general</p></td>
+<td><p>+$x</p></td>
+<td><p>[+$x₁, +$x₂]</p></td>
+<td><p>A veces captura mejoras de acabados; prudencia al inferir causalidad.</p></td>
+</tr>
+<tr class="row-even"><td><p>+1 plaza de garaje</p></td>
+<td><p>+$y</p></td>
+<td><p>[+$y₁, +$y₂]</p></td>
+<td><p>Efecto medio menor que área/calidad; depende del segmento.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<div><p>Sugerencia de formato: si el modelo está en log-precio, convierta a <strong>porcentajes</strong> para una comunicación más natural entre zonas con distintos niveles de precios.</p>
+</div></blockquote>
+</section>
+<section id="lo-que-no-podemos-concluir-todavia">
+<h2><span class="section-number">10.5. </span>Lo que <strong>no</strong> podemos concluir (todavía)<a class="headerlink" href="#lo-que-no-podemos-concluir-todavia" title="Link to this heading">#</a></h2>
+<p>No podemos afirmar que aumentar el área <strong>causa</strong> el aumento exacto reportado en todos los contextos. Parte del efecto puede provenir de localización, estado interno o preferencias del comprador no observadas. Tampoco aseguramos que el retorno de 100 ft² sea constante para viviendas extremadamente pequeñas o de lujo; en esos bordes, la pendiente cambia y conviene modelar tramos o usar enfoques no lineales.</p>
+</section>
+<section id="trabajo-futuro-como-dar-el-siguiente-salto">
+<h2><span class="section-number">10.6. </span>Trabajo futuro: cómo dar el siguiente salto<a class="headerlink" href="#trabajo-futuro-como-dar-el-siguiente-salto" title="Link to this heading">#</a></h2>
+<p>Para pasar de buenas asociaciones a conclusiones más sólidas y decisiones más finas, proponemos un plan en cuatro líneas complementarias.</p>
+<section id="inferencia-bayesiana">
+<h3><span class="section-number">10.6.1. </span>Inferencia Bayesiana<a class="headerlink" href="#inferencia-bayesiana" title="Link to this heading">#</a></h3>
+<p>La perspectiva bayesiana permite integrar información previa (por ejemplo, estimaciones históricas del mercado) y producir intervalos creíbles directamente sobre cantidades de interés, como el efecto de +100 ft² en distintos vecindarios. Además, los modelos <strong>jerárquicos</strong> bayesianos permiten “compartir fuerza” entre barrios: vecindarios con pocos datos se benefician de la información de vecinos similares (shrinkage), estabilizando estimaciones.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Pieza</p></th>
+<th class="head"><p>¿Qué aporta?</p></th>
+<th class="head"><p>Resultado esperado</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Priors informativos/weakly-informative</p></td>
+<td><p>Evitan sobreajustes, estabilizan coeficientes</p></td>
+<td><p>Bandas más realistas en muestras pequeñas</p></td>
+</tr>
+<tr class="row-odd"><td><p>Modelos jerárquicos por vecindario</p></td>
+<td><p>Efectos específicos con pooling parcial</p></td>
+<td><p>Mapas de retornos por zona con menor varianza</p></td>
+</tr>
+<tr class="row-even"><td><p>Predicción posterior (PPC)</p></td>
+<td><p>Diagnósticos en el espacio de los datos</p></td>
+<td><p>Validaciones más intuitivas para usuarios</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="causalidad-aplicada">
+<h3><span class="section-number">10.6.2. </span>Causalidad aplicada<a class="headerlink" href="#causalidad-aplicada" title="Link to this heading">#</a></h3>
+<p>Para evaluar efectos causales se requieren supuestos y diseños explícitos. Tres rutas prácticas:</p>
+<ol class="arabic simple">
+<li><p><strong>DAGs + control dirigido</strong>: explicitar el grafo causal, identificar conjuntos de ajuste mínimos y evitar sobrecontrol.</p></li>
+<li><p><strong>Diseños cuasi-experimentales</strong>:</p>
+<ul class="simple">
+<li><p><strong>RDD</strong> cuando hay umbrales de política o clasificación (por ejemplo, rangos impositivos).</p></li>
+<li><p><strong>DiD</strong> si existen shocks locales/temporales observables.</p></li>
+<li><p><strong>Variables instrumentales</strong> cuando hay una fuente válida de variación exógena en área o calidad.</p></li>
+</ul>
+</li>
+<li><p><strong>Emparejamiento / peso por propensión</strong>: construir grupos comparables para evaluar diferencias promedio con menor sesgo.</p></li>
+</ol>
+<p>Cada enfoque exige <strong>pruebas de validez</strong> (balance, placebo, sensibilidad). La decisión no es “mecánica”: se elige en función de la pregunta y de la estructura del mercado.</p>
+</section>
+<section id="no-linealidad-e-interpretabilidad-gam-ml-con-lupa">
+<h3><span class="section-number">10.6.3. </span>No linealidad e interpretabilidad (GAM/ML con lupa)<a class="headerlink" href="#no-linealidad-e-interpretabilidad-gam-ml-con-lupa" title="Link to this heading">#</a></h3>
+<p>La evidencia sugiere curvaturas en colas y posibles interacciones. Proponemos:</p>
+<ul class="simple">
+<li><p><strong>GAM</strong> (Modelos Aditivos Generalizados) para capturar formas suaves por variable con interpretabilidad.</p></li>
+<li><p><strong>Bosques/Boosting</strong> para mejorar predicción en colas, siempre acompañados de herramientas explicativas como <strong>efectos acumulados</strong> (PDP), <strong>ICE</strong> y <strong>SHAP</strong> con verificación de estabilidad.</p></li>
+<li><p><strong>Intervalos conformales</strong> para predicciones con cobertura controlada, útiles en tasación operativa.</p></li>
+</ul>
+</section>
+<section id="efectos-espaciales-y-temporalidad">
+<h3><span class="section-number">10.6.4. </span>Efectos espaciales y temporalidad<a class="headerlink" href="#efectos-espaciales-y-temporalidad" title="Link to this heading">#</a></h3>
+<p>Incorporar <strong>dependencia espacial</strong> (SAR/SEM) y medidas de accesibilidad real (tiempos a amenidades) puede redefinir el peso del vecindario. Si hay series en el tiempo, usar ventanas móviles o modelos con efectos fijos temporales ayuda a separar tendencias del “ruido” coyuntural.</p>
+</section>
+</section>
+<section id="checklist-de-replicacion-y-transferencia">
+<h2><span class="section-number">10.7. </span>Checklist de replicación y transferencia<a class="headerlink" href="#checklist-de-replicacion-y-transferencia" title="Link to this heading">#</a></h2>
+<p>Para que un tercero replique y utilice el trabajo sin fricciones, recomendamos este flujo operativo:</p>
+<ol class="arabic simple">
+<li><p>Documentar rutas de datos limpias y versiones de librerías empleadas.</p></li>
+<li><p>Proveer un cuaderno end-to-end con: carga de datos, especificaciones comparadas, diagnósticos, y generación de tablas y figuras.</p></li>
+<li><p>Incluir un anexo de <strong>sensibilidad a omitidas</strong> y otro de <strong>reglas de bolsillo</strong> por tramos de tamaño y por vecindario.</p></li>
+<li><p>Exportar artefactos de servicio: diccionario de variables, plantillas de reporte e intervalos de predicción listos para consumo.</p></li>
+</ol>
+</section>
+<section id="resumen-ejecutivo">
+<h2><span class="section-number">10.8. </span>Resumen ejecutivo<a class="headerlink" href="#resumen-ejecutivo" title="Link to this heading">#</a></h2>
+<p>El proyecto confirma, con consistencia, que área habitable y calidad general son pilares del precio, y que su efecto se matiza por vecindario y por no linealidad en los extremos. Las reglas de bolsillo —como “+100 ft² ≈ +$7.5k”— son útiles para decidir, siempre acompañadas por bandas de incertidumbre y la advertencia de que describen asociaciones, no causalidad asegurada. El camino natural para fortalecer conclusiones pasa por adoptar inferencia bayesiana para una incertidumbre mejor calibrada, por incorporar diseños causales cuando la pregunta lo requiera y por modelar curvaturas e interacciones con herramientas interpretables. Así, pasamos de una buena brújula a un mapa más preciso para valoración, negociación y política pública.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -382,6 +623,34 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#que-preguntamos-y-que-respondimos">10.1. 10.1. ¿Qué preguntamos y qué respondimos?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integracion-teorica-empirica">10.2. Integración teórica + empírica</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calidad-de-la-evidencia">10.3. Calidad de la evidencia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reglas-de-bolsillo-con-incertidumbre-para-decidir-mejor">10.4. “Reglas de bolsillo” con incertidumbre (para decidir mejor)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lo-que-no-podemos-concluir-todavia">10.5. Lo que <strong>no</strong> podemos concluir (todavía)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trabajo-futuro-como-dar-el-siguiente-salto">10.6. Trabajo futuro: cómo dar el siguiente salto</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inferencia-bayesiana">10.6.1. Inferencia Bayesiana</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#causalidad-aplicada">10.6.2. Causalidad aplicada</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#no-linealidad-e-interpretabilidad-gam-ml-con-lupa">10.6.3. No linealidad e interpretabilidad (GAM/ML con lupa)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#efectos-espaciales-y-temporalidad">10.6.4. Efectos espaciales y temporalidad</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checklist-de-replicacion-y-transferencia">10.7. Checklist de replicación y transferencia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-ejecutivo">10.8. Resumen ejecutivo</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
