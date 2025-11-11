@@ -41,162 +41,104 @@ book/
 
 ## Demostraciones solicitadas
 
-prueba: si actualiza
-
-### Modelo y notación
+## Modelo y notación
 
 El modelo lineal es:
 
-$$
-\mathbf{y} = X\boldsymbol{\beta} + \boldsymbol{\varepsilon}, 
-\qquad 
-\boldsymbol{\varepsilon} \sim N(\mathbf{0}, \sigma^2 I_n)
-$$
+y = Xβ + ε,  ε ~ N(0, σ²Iₙ)
 
 donde:
 
-- $X$: matriz de diseño $n \times k$  
-- $\boldsymbol{\beta}$: vector de parámetros  
-- $\boldsymbol{\varepsilon}$: vector de errores  
+- X: matriz de diseño n × k  
+- β: vector de parámetros  
+- ε: vector de errores  
 
----
 
-## Estimador OLS y matriz *hat*
+## Estimador OLS y matriz hat
 
 El estimador de mínimos cuadrados es:
 
-$$
-\hat{\boldsymbol{\beta}} = (X'X)^{-1} X' \mathbf{y}
-$$
+β̂ = (X'X)⁻¹ X'y
 
-Las predicciones se obtienen con:
+Las predicciones:
 
-$$
-\hat{\mathbf{y}} = X\hat{\boldsymbol{\beta}} = H\mathbf{y},
-\quad 
-H = X(X'X)^{-1}X'
-$$
+ŷ = Xβ̂ = H y,  H = X(X'X)⁻¹X'
 
-La matriz $H$ (llamada hat matrix) proyecta $\mathbf{y}$ sobre el espacio columna de $X$.
+Propiedades de H:
+- Simétrica: H' = H  
+- Idempotente: H² = H  
+- Rango: rank(H) = k  
 
-*Propiedades de $H$:*
-- Simétrica: $H' = H$
-- Idempotente: $H^2 = H$
-- Rango: $\operatorname{rank}(H) = k$
 
----
+## Residuos y operador (I - H)
 
-## Residuos y operador $(I - H)$
+Los residuos:
 
-Los residuos son:
+e = y - ŷ = (I - H)y
 
-$$
-\mathbf{e} = \mathbf{y} - \hat{\mathbf{y}} = (I - H)\mathbf{y}
-$$
+Sustituyendo y = Xβ + ε y usando (I - H)X = 0:
 
-Sustituyendo $\mathbf{y} = X\boldsymbol{\beta} + \boldsymbol{\varepsilon}$ y usando que $(I - H)X = 0$:
+e = (I - H)ε
 
-$$
-\boxed{\mathbf{e} = (I - H)\boldsymbol{\varepsilon}}
-$$
+Cada residuo es una combinación lineal de los errores originales.
 
-Cada residuo es una *combinación lineal* de los errores originales.
 
----
+## Suma de cuadrados residual
 
-## Suma de cuadrados residual como forma cuadrática
+SSR = e'e = [(I-H)ε]'[(I-H)ε] = ε'(I-H)'(I-H)ε
 
-$$
-SS_{\text{Res}} 
-= \mathbf{e}'\mathbf{e} 
-= [(I-H)\boldsymbol{\varepsilon}]'[(I-H)\boldsymbol{\varepsilon}]
-= \boldsymbol{\varepsilon}'(I-H)'(I-H)\boldsymbol{\varepsilon}
-$$
+Como (I - H) es simétrica e idempotente:
 
-Como $(I - H)$ es simétrica e idempotente:
+SSR = ε'(I - H)ε
 
-$$
-\boxed{SS_{\text{Res}} = \boldsymbol{\varepsilon}'(I - H)\boldsymbol{\varepsilon}}
-$$
+El SSR es una forma cuadrática en los errores.
 
-Es decir, el *SSR* es una forma cuadrática en los errores.
 
----
+## Rango y grados de libertad
 
-## Rango de $(I - H)$ y grados de libertad
+rank(I - H) = n - rank(H) = n - k
 
-El rango de $(I - H)$ se obtiene de:
+→ El espacio de los residuos tiene dimensión n - k.  
+→ Solo n - k residuos son independientes (pues X'e = 0).
 
-$$
-\operatorname{rank}(I - H) = n - \operatorname{rank}(H) = n - k
-$$
-
-Por tanto:
-- El espacio de los residuos tiene *dimensión $n - k$*.  
-- Solo *$n - k$* residuos son independientes (los otros están restringidos por $X'e = 0$).
-
-En un modelo lineal simple ($k = 2$) → grados de libertad: *$n - 2$*.
-
----
 
 ## Distribución Chi-cuadrado
 
-*Resultado general:*
+Si ε ~ N(0, σ²I) y A es simétrica e idempotente de rango r:
 
-> Si $\boldsymbol{\varepsilon} \sim N(0, \sigma^2 I)$ y $A$ es simétrica e idempotente de rango $r$:  
-> $$
-> \frac{1}{\sigma^2} \boldsymbol{\varepsilon}'A\boldsymbol{\varepsilon} \sim \chi^2_r
-> $$
+(1/σ²) ε'Aε ~ χ²ᵣ
 
-Aplicando con $A = I - H$ (rango $n - k$):
+Aplicando A = I - H:
 
-$$
-\boxed{
-\frac{SS_{\text{Res}}}{\sigma^2}
-= 
-\frac{\boldsymbol{\varepsilon}'(I - H)\boldsymbol{\varepsilon}}{\sigma^2}
-\sim 
-\chi^2_{\,n-k}
-}
-$$
+(1/σ²) ε'(I - H)ε ~ χ²ₙ₋ₖ
 
----
+Por tanto:
 
-## Por qué no basta con elevar cada residuo al cuadrado
+SSR / σ² ~ χ²ₙ₋ₖ
 
-- Los errores $\varepsilon_i$ son independientes normales ⇒  
-  $(\varepsilon_i / \sigma)^2 \sim \chi^2_1$.
-- Pero los *residuos* $e_i$ no son iguales a $\varepsilon_i$:  
-  son combinaciones lineales ⇒ *no independientes*.
-- Además, $\operatorname{Var}(e_i) = \sigma^2 (1 - h_{ii})$, donde $h_{ii}$ es el leverage.  
-- Por eso, la *suma total de cuadrados* $e'e$ sigue una chi-cuadrado, no cada residuo individual.
 
----
+## Por qué no basta con elevar los residuos al cuadrado
+
+- Los errores εᵢ son normales independientes, por lo que (εᵢ / σ)² ~ χ²₁  
+- Pero los residuos eᵢ son combinaciones lineales → no independientes  
+- Además, Var(eᵢ) = σ²(1 - hᵢᵢ)  
+- Por eso, solo la suma total e'e sigue χ², no cada residuo por separado.
+
 
 ## Intuición geométrica
 
-- $\boldsymbol{\varepsilon}$ vive en un espacio de dimensión $n$.  
-- $H$: proyección sobre el subespacio de las predicciones (dimensión $k$).  
-- $I - H$: proyección sobre el *espacio ortogonal de los residuos* (dimensión $n - k$).  
-- La longitud al cuadrado de esa proyección, dividida por $\sigma^2$, sigue una $\chi^2_{n-k}$.
+- ε vive en un espacio de dimensión n  
+- H proyecta sobre el subespacio de predicciones (dimensión k)  
+- (I - H) proyecta sobre el espacio ortogonal de residuos (dimensión n - k)  
+- La longitud al cuadrado de esa proyección, dividida por σ², sigue χ²ₙ₋ₖ
 
----
 
 ## Resultado final
 
-$$
-\boxed{
-SS_{\text{Res}} = \boldsymbol{\varepsilon}'(I - H)\boldsymbol{\varepsilon},
-\quad
-\frac{SS_{\text{Res}}}{\sigma^2} \sim \chi^2_{\,n-k}
-}
-$$
+SSR = ε'(I - H)ε  
+SSR / σ² ~ χ²ₙ₋ₖ  
 
-En regresión lineal simple:  
-$$
-k = 2 \Rightarrow n - 2 \text{ grados de libertad.}
-$$
-
+En regresión lineal simple (k = 2): n - 2 grados de libertad.
 
 
 1. Sea un modelo de regresión lineal simple; muestra que la suma de cuadrados de los residuos dividida por $ \sigma^2 $ puede escribirse como una **combinación cuadrática** de los errores $ \varepsilon_i $ y, usando ese resultado, que su distribución es $ \chi^2_{n-2} $.
