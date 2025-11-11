@@ -49,6 +49,8 @@ La varianza es $ \sigma^2 $.
 
 La esperanza es \( \mathbb{E}[X] \).
 
+1. … dividida por $ \sigma^2 $ … los errores $ \varepsilon_i $ … es $ \chi^2_{n-2} $.
+
 ### Paso 1 — Modelo y notación matricial
 
 ```{math}
