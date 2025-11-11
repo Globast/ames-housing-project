@@ -63,7 +63,7 @@ La tabla muestra la distribución de la variable de respuesta `SalePrice` antes 
 
 La distribución original (panel superior) presenta una **asimetría positiva marcada**, con una cola larga hacia la derecha y presencia de varios valores atípicos.  
 
-Tras aplicar la transformación logarítmica ([Ecuación 2.2.2](#eq-2-2-2)), la variable `SalePrice_log` adquiere una dispersión más homogénea y reducción significativa de los outliers.
+Tras aplicar la transformación logarítmica ([Ecuación 2.3.2](#eq-2-3-2)), la variable `SalePrice_log` adquiere una dispersión más homogénea y reducción significativa de los outliers.
 
 
 ```{code-cell} ipython3
