@@ -35,4 +35,6 @@ sphinx:
       tex:
         tags: 'all'               
         inlineMath: [['$', '$'], ['\\(', '\\)']]
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+        processEscapes: true
 

@@ -41,7 +41,9 @@ book/
 
 ## Demostraciones solicitadas
 
-## Modelo y notación
+prueba: si actualiza
+
+### Modelo y notación
 
 El modelo lineal es:
 
@@ -194,6 +196,8 @@ En regresión lineal simple:
 $$
 k = 2 \Rightarrow n - 2 \text{ grados de libertad.}
 $$
+
+
 
 1. Sea un modelo de regresión lineal simple; muestra que la suma de cuadrados de los residuos dividida por $ \sigma^2 $ puede escribirse como una **combinación cuadrática** de los errores $ \varepsilon_i $ y, usando ese resultado, que su distribución es $ \chi^2_{n-2} $.
 
