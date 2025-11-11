@@ -44,6 +44,12 @@ Propiedades de $H$:
 - Idempotente: $H^2 = H$  
 - Rango: $\text{rank}(H) = k$
 
+Propiedades de $\,H\,$:
+
+- Simétrica: $\,H' = H\,$,  
+- Idempotente: $\,H^2 = H\,$,  
+- Rango: $\,\text{rank}(H) = k\,$,
+
 
 ## Demostraciones solicitadas
 ### Modelo y notación
