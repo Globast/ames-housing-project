@@ -442,7 +442,7 @@ Este capitulo examina la distribución de la respuesta (original y log) y relaci
 </div>
 </div>
 <p><strong>Figura 3.1.2.</strong> Diagramas de dispersión Gr Liv Area vs. SalePrice.</p>
-<p>Se compara la relación entre el <strong>precio de venta</strong> (<code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>) y el <strong>área habitable</strong> (<code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>) antes y después de la transformación logarítmica (<a class="reference internal" href="#eq-2-2-2"><span class="xref myst">Ecuación 2.2.2</span></a>) aplicada a la variable respuesta.</p>
+<p>Se compara la relación entre el <strong>precio de venta</strong> (<code class="docutils literal notranslate"><span class="pre">SalePrice</span></code>) y el <strong>área habitable</strong> (<code class="docutils literal notranslate"><span class="pre">Gr</span> <span class="pre">Liv</span> <span class="pre">Area</span></code>) antes y después de la transformación logarítmica  aplicada a la variable respuesta.</p>
 <p>Inicialmente se observa una <strong>dispersión notable en los valores altos</strong>. Tras aplicar la transformación, el patrón muestra una <strong>relación más lineal y estable</strong>, reduciendo la asimetría y atenuando la influencia de valores extremos.</p>
 </section>
 <section id="correlaciones-entre-variables-numericas">
@@ -587,9 +587,6 @@ Name: SalePrice, dtype: float64
 <ul class="simple">
 <li><p>La transformación log estabiliza varianza y linealiza relaciones.</p></li>
 <li><p>Top correlaciones: Overall Qual, Gr Liv Area, Garage, Bsmt, Year Built.</p></li>
-<li><p>Cuidar colinealidad al elegir entre variables muy relacionadas.
--Los gráficos bivariados revelan no linealidades y motivan transformaciones previas al ajuste.</p></li>
-<li><p>La detección temprana de colinealidad reduce la varianza de los estimadores y mejora la estabilidad.</p></li>
 </ul>
 </div></blockquote>
 </section>

@@ -199,5 +199,3 @@ Coeficientes con **errores estándar** muy pequeños, como los de `Overall Qual`
 >- Intervalos y p-valores dependen de supuestos de homocedasticidad y normalidad de errores.
 >- Los efectos significativos son coherentes con el EDA, reforzando validez del modelo.
 >- Se reconoce el riesgo de error tipo I por múltiples comparaciones.
->Los intervalos de confianza comunican precisión y deben acompañar toda estimación puntual.
->-La interpretación sustantiva exige distinguir significancia estadística de relevancia práctica.

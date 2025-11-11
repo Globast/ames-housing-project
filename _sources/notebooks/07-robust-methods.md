@@ -333,8 +333,6 @@ de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
 Alineados con los errores estándar ([Tabla 7.4.2](#tabla-742-se-ols-hc3-boot)), los intervalos calculados con OLS son consistentemente más estrechos que los obtenidos con HC3 o bootstrap, llegando a la misma conclusión de que el OLS inicial es menos robusto.
 
 > **Key takeaways**
->- **Sobre heterocedasticidad.** Si los errores estándar HC3 (o HC2) superan de manera consistente a los de OLS, esto sugiere varianza no constante. En tal caso, la inferencia debe basarse en versiones robustas (HC3 recomendado).
-Además, el **ancho de los IC** es un buen indicador del impacto en la precisión de la estimación.
->- **Sobre RLM (Huber/Tukey).** Cuando existen outliers influyentes, RLM puede reducir su peso. Cambios sustanciales en coeficientes o en su significancia, frente a OLS, ameritan diagnosticar
-casos influyentes y revisar la especificación.
->- **Sobre bootstrap.** El bootstrap  brinda una validación empírica de la variabilidad de los parámetros.
+>- HC3 es una corrección prudente cuando hay heterocedasticidad.
+>- Modelos robustos reponderan residuales grandes sin eliminar datos.
+>- Bootstrap complementa la incertidumbre paramétrica con evidencia empírica.

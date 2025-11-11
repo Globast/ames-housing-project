@@ -88,7 +88,7 @@ plt.show()
 
 **Figura 3.1.2.** Diagramas de dispersión Gr Liv Area vs. SalePrice.
 
-Se compara la relación entre el **precio de venta** (`SalePrice`) y el **área habitable** (`Gr Liv Area`) antes y después de la transformación logarítmica ([Ecuación 2.2.2](#eq-2-2-2)) aplicada a la variable respuesta.
+Se compara la relación entre el **precio de venta** (`SalePrice`) y el **área habitable** (`Gr Liv Area`) antes y después de la transformación logarítmica  aplicada a la variable respuesta.
 
 Inicialmente se observa una **dispersión notable en los valores altos**. Tras aplicar la transformación, el patrón muestra una **relación más lineal y estable**, reduciendo la asimetría y atenuando la influencia de valores extremos.
 
@@ -181,8 +181,6 @@ Se eligen 9 variables predictoras, teniendo en cuenta una alta correlación con 
 > **Key takeaways**
 >- La transformación log estabiliza varianza y linealiza relaciones.
 >- Top correlaciones: Overall Qual, Gr Liv Area, Garage, Bsmt, Year Built.
->- Cuidar colinealidad al elegir entre variables muy relacionadas.
->-Los gráficos bivariados revelan no linealidades y motivan transformaciones previas al ajuste.
->- La detección temprana de colinealidad reduce la varianza de los estimadores y mejora la estabilidad.
+
 
 
