@@ -52,13 +52,6 @@ El modelo lineal es:
 \boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{0}, \sigma^2 \mathbf{I}_n)
 ```
 
-donde:
-
-- $ X $: matriz de diseño $ \ n \times k\ $  
-- $ \boldsymbol \beta $: vector de parámetros  
-- $ \boldsymbol\varepsilon $: vector de errores
-
-Donde $ \alpha \ge 0 $ es el hiperparámetro de regularización.
 
 donde:
 
