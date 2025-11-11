@@ -38,26 +38,6 @@ book/
 **Semillas reproducibles**: todos los experimentos fijan `random_state`.
 **Mapa del libro**: ver la barra lateral y `_toc.yml`.
 
-Propiedades de $H$:
-
-- Simétrica: $H' = H$  
-- Idempotente: $H^2 = H$  
-- Rango: $\text{rank}(H) = k$
-
-Propiedades de $\,H\,$:
-
-- Simétrica: $\,H' = H\,$,  
-- Idempotente: $\,H^2 = H\,$,  
-- Rango: $\,\text{rank}(H) = k\,$,
-
-
-Propiedades de H:
-
-- Simétrica: H' = H,  
-- Idempotente: H² = H,  
-- Rango: rank(H) = k,  
-
-
 ## Demostraciones solicitadas
 ### Modelo y notación
 
