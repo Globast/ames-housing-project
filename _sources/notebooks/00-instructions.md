@@ -57,7 +57,7 @@ donde:
 - $ \boldsymbol \beta $: vector de parámetros  
 - $ \boldsymbol\varepsilon $: vector de errores
 
-$ \alpha \ge 0 $ 
+Donde $ \alpha \ge 0 $ es el hiperparámetro de regularización.
 
 donde:
 
