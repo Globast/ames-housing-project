@@ -53,6 +53,14 @@ El modelo lineal es:
 
 donde:
 
+- $ X $: matriz de diseño $ \ n \times k\ $  
+- $ \boldsymbol \beta $: vector de parámetros  
+- $ \boldsymbol\varepsilon $: vector de errores
+
+$ \alpha \ge 0 $ 
+
+donde:
+
 - X: matriz de diseño n × k  
 - β: vector de parámetros  
 - ε: vector de errores  
