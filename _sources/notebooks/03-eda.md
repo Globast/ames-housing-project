@@ -176,10 +176,10 @@ for v in vars_candidatas:
     print("-", v)
 ```
 
-Se eligen 9 variables predictoras, teniendo en cuenta una **alta correlación con la variable de respuesta**, **baja correlación entre ellas** (para evitar redundancia en el modelo) y **sentido práctico**.
+Se eligen 9 variables predictoras, teniendo en cuenta una alta correlación con la variable de respuesta, baja correlación entre ellas (para evitar redundancia en el modelo) y sentido práctico.
 
 > **Key takeaways**
 - Las distribuciones sugieren posibles transformaciones para linealidad/normalidad.
 - Se identifican variables con fuerte asociación a la respuesta (útiles para el modelo base).
-- Se detectan indicios de colinealidad que se confirman en C6.
+- Se detectan indicios de colinealidad.
 

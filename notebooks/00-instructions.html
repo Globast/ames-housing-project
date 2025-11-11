@@ -57,6 +57,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"tags": "all", "inlineMath": [["$", "$"], ["\\\\(", "\\\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/00-instructions';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -331,16 +333,18 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instrucciones-de-reproduccion-y-demostraciones">Instrucciones de reproducción y Demostraciones</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#como-compilar-el-libro">Cómo compilar el libro:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demostraciones-solicitadas">Demostraciones solicitadas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo-y-notacion">Modelo y notación</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimador-ols-y-matriz-hat">Estimador OLS y matriz hat</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residuos-y-operador-i-h">Residuos y operador (I - H)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#suma-de-cuadrados-residual">Suma de cuadrados residual</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rango-y-grados-de-libertad">Rango y grados de libertad</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-chi-cuadrado">Distribución Chi-cuadrado</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-no-basta-con-elevar-los-residuos-al-cuadrado">Por qué no basta con elevar los residuos al cuadrado</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intuicion-geometrica">Intuición geométrica</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultado-final">Resultado final</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demostraciones-solicitadas">Demostraciones solicitadas</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo-y-notacion">Modelo y notación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimador-ols-y-matriz-hat">Estimador OLS y matriz hat</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#residuos-y-operador-i-h">Residuos y operador (I - H)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#suma-de-cuadrados-residual">Suma de cuadrados residual</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rango-y-grados-de-libertad">Rango y grados de libertad</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-chi-cuadrado">Distribución Chi-cuadrado</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-no-basta-con-elevar-los-residuos-al-cuadrado">Por qué no basta con elevar los residuos al cuadrado</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intuicion-geometrica">Intuición geométrica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultado-final">Resultado final</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -388,11 +392,13 @@ mv<span class="w"> </span>data/AmesHousing.csv<span class="w"> </span>data/ames_
 </section>
 <section id="demostraciones-solicitadas">
 <h2>Demostraciones solicitadas<a class="headerlink" href="#demostraciones-solicitadas" title="Link to this heading">#</a></h2>
-</section>
 <section id="modelo-y-notacion">
-<h2>Modelo y notación<a class="headerlink" href="#modelo-y-notacion" title="Link to this heading">#</a></h2>
+<h3>Modelo y notación<a class="headerlink" href="#modelo-y-notacion" title="Link to this heading">#</a></h3>
 <p>El modelo lineal es:</p>
-<p>y = Xβ + ε,  ε ~ N(0, σ²Iₙ)</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m1-modelo">
+<span class="eqno">(1)<a class="headerlink" href="#equation-eq-7-m1-modelo" title="Link to this equation">#</a></span>\[\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}, 
+\qquad 
+\boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{0}, \sigma^2 \mathbf{I}_n)\]</div>
 <p>donde:</p>
 <ul class="simple">
 <li><p>X: matriz de diseño n × k</p></li>
@@ -401,11 +407,15 @@ mv<span class="w"> </span>data/AmesHousing.csv<span class="w"> </span>data/ames_
 </ul>
 </section>
 <section id="estimador-ols-y-matriz-hat">
-<h2>Estimador OLS y matriz hat<a class="headerlink" href="#estimador-ols-y-matriz-hat" title="Link to this heading">#</a></h2>
+<h3>Estimador OLS y matriz hat<a class="headerlink" href="#estimador-ols-y-matriz-hat" title="Link to this heading">#</a></h3>
 <p>El estimador de mínimos cuadrados es:</p>
-<p>β̂ = (X’X)⁻¹ X’y</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m2-beta">
+<span class="eqno">(2)<a class="headerlink" href="#equation-eq-7-m2-beta" title="Link to this equation">#</a></span>\[\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1}\mathbf{X}^\top \mathbf{y}\]</div>
 <p>Las predicciones:</p>
-<p>ŷ = Xβ̂ = H y,  H = X(X’X)⁻¹X’</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m3-yhat-h">
+<span class="eqno">(3)<a class="headerlink" href="#equation-eq-7-m3-yhat-h" title="Link to this equation">#</a></span>\[\hat{\mathbf{y}} = \mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{H}\mathbf{y},
+\qquad
+\mathbf{H} = \mathbf{X}(\mathbf{X}^\top \mathbf{X})^{-1}\mathbf{X}^\top\]</div>
 <p>Propiedades de H:</p>
 <ul class="simple">
 <li><p>Simétrica: H’ = H</p></li>
@@ -414,37 +424,49 @@ mv<span class="w"> </span>data/AmesHousing.csv<span class="w"> </span>data/ames_
 </ul>
 </section>
 <section id="residuos-y-operador-i-h">
-<h2>Residuos y operador (I - H)<a class="headerlink" href="#residuos-y-operador-i-h" title="Link to this heading">#</a></h2>
+<h3>Residuos y operador (I - H)<a class="headerlink" href="#residuos-y-operador-i-h" title="Link to this heading">#</a></h3>
 <p>Los residuos:</p>
-<p>e = y - ŷ = (I - H)y</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m4-residuos">
+<span class="eqno">(4)<a class="headerlink" href="#equation-eq-7-m4-residuos" title="Link to this equation">#</a></span>\[\mathbf{e} = \mathbf{y} - \hat{\mathbf{y}} = (\mathbf{I}-\mathbf{H})\mathbf{y}\]</div>
 <p>Sustituyendo y = Xβ + ε y usando (I - H)X = 0:</p>
-<p>e = (I - H)ε</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m5-e-from-eps">
+<span class="eqno">(5)<a class="headerlink" href="#equation-eq-7-m5-e-from-eps" title="Link to this equation">#</a></span>\[\mathbf{e} = (\mathbf{I}-\mathbf{H})\boldsymbol{\varepsilon}\]</div>
 <p>Cada residuo es una combinación lineal de los errores originales.</p>
 </section>
 <section id="suma-de-cuadrados-residual">
-<h2>Suma de cuadrados residual<a class="headerlink" href="#suma-de-cuadrados-residual" title="Link to this heading">#</a></h2>
-<p>SSR = e’e = [(I-H)ε]’[(I-H)ε] = ε’(I-H)’(I-H)ε</p>
+<h3>Suma de cuadrados residual<a class="headerlink" href="#suma-de-cuadrados-residual" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight" id="equation-eq-7-m6-ssr-expand">
+<span class="eqno">(6)<a class="headerlink" href="#equation-eq-7-m6-ssr-expand" title="Link to this equation">#</a></span>\[\mathrm{SSR} 
+= \mathbf{e}^\top \mathbf{e} 
+= \big[(\mathbf{I}-\mathbf{H})\boldsymbol{\varepsilon}\big]^\top
+   \big[(\mathbf{I}-\mathbf{H})\boldsymbol{\varepsilon}\big]
+= \boldsymbol{\varepsilon}^\top (\mathbf{I}-\mathbf{H})^\top(\mathbf{I}-\mathbf{H}) \boldsymbol{\varepsilon}\]</div>
 <p>Como (I - H) es simétrica e idempotente:</p>
-<p>SSR = ε’(I - H)ε</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m7-ssr-qf">
+<span class="eqno">(7)<a class="headerlink" href="#equation-eq-7-m7-ssr-qf" title="Link to this equation">#</a></span>\[\mathrm{SSR} = \boldsymbol{\varepsilon}^\top (\mathbf{I}-\mathbf{H}) \boldsymbol{\varepsilon}\]</div>
 <p>El SSR es una forma cuadrática en los errores.</p>
 </section>
 <section id="rango-y-grados-de-libertad">
-<h2>Rango y grados de libertad<a class="headerlink" href="#rango-y-grados-de-libertad" title="Link to this heading">#</a></h2>
-<p>rank(I - H) = n - rank(H) = n - k</p>
+<h3>Rango y grados de libertad<a class="headerlink" href="#rango-y-grados-de-libertad" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight" id="equation-eq-7-m8-rank">
+<span class="eqno">(8)<a class="headerlink" href="#equation-eq-7-m8-rank" title="Link to this equation">#</a></span>\[\operatorname{rank}(\mathbf{I}-\mathbf{H}) = n - \operatorname{rank}(\mathbf{H}) = n-k\]</div>
 <p>→ El espacio de los residuos tiene dimensión n - k.<br />
 → Solo n - k residuos son independientes (pues X’e = 0).</p>
 </section>
 <section id="distribucion-chi-cuadrado">
-<h2>Distribución Chi-cuadrado<a class="headerlink" href="#distribucion-chi-cuadrado" title="Link to this heading">#</a></h2>
+<h3>Distribución Chi-cuadrado<a class="headerlink" href="#distribucion-chi-cuadrado" title="Link to this heading">#</a></h3>
 <p>Si ε ~ N(0, σ²I) y A es simétrica e idempotente de rango r:</p>
-<p>(1/σ²) ε’Aε ~ χ²ᵣ</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m9-chi2-theorem">
+<span class="eqno">(9)<a class="headerlink" href="#equation-eq-7-m9-chi2-theorem" title="Link to this equation">#</a></span>\[\frac{1}{\sigma^2}\,\boldsymbol{\varepsilon}^\top \mathbf{A}\,\boldsymbol{\varepsilon} \sim \chi^2_r\]</div>
 <p>Aplicando A = I - H:</p>
-<p>(1/σ²) ε’(I - H)ε ~ χ²ₙ₋ₖ</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m10-chi2-apply">
+<span class="eqno">(10)<a class="headerlink" href="#equation-eq-7-m10-chi2-apply" title="Link to this equation">#</a></span>\[\frac{1}{\sigma^2}\,\boldsymbol{\varepsilon}^\top (\mathbf{I}-\mathbf{H})\,\boldsymbol{\varepsilon} \sim \chi^2_{n-k}\]</div>
 <p>Por tanto:</p>
-<p>SSR / σ² ~ χ²ₙ₋ₖ</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m11-ssr-chi2">
+<span class="eqno">(11)<a class="headerlink" href="#equation-eq-7-m11-ssr-chi2" title="Link to this equation">#</a></span>\[\frac{\mathrm{SSR}}{\sigma^2} \sim \chi^2_{n-k}\]</div>
 </section>
 <section id="por-que-no-basta-con-elevar-los-residuos-al-cuadrado">
-<h2>Por qué no basta con elevar los residuos al cuadrado<a class="headerlink" href="#por-que-no-basta-con-elevar-los-residuos-al-cuadrado" title="Link to this heading">#</a></h2>
+<h3>Por qué no basta con elevar los residuos al cuadrado<a class="headerlink" href="#por-que-no-basta-con-elevar-los-residuos-al-cuadrado" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Los errores εᵢ son normales independientes, por lo que (εᵢ / σ)² ~ χ²₁</p></li>
 <li><p>Pero los residuos eᵢ son combinaciones lineales → no independientes</p></li>
@@ -453,19 +475,22 @@ mv<span class="w"> </span>data/AmesHousing.csv<span class="w"> </span>data/ames_
 </ul>
 </section>
 <section id="intuicion-geometrica">
-<h2>Intuición geométrica<a class="headerlink" href="#intuicion-geometrica" title="Link to this heading">#</a></h2>
+<h3>Intuición geométrica<a class="headerlink" href="#intuicion-geometrica" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>ε vive en un espacio de dimensión n</p></li>
 <li><p>H proyecta sobre el subespacio de predicciones (dimensión k)</p></li>
 <li><p>(I - H) proyecta sobre el espacio ortogonal de residuos (dimensión n - k)</p></li>
-<li><p>La longitud al cuadrado de esa proyección, dividida por σ², sigue χ²ₙ₋ₖ</p></li>
+<li><p>La <strong>longitud al cuadrado</strong> de esa proyección, dividida por σ², sigue χ²ₙ₋ₖ</p></li>
 </ul>
 </section>
 <section id="resultado-final">
-<h2>Resultado final<a class="headerlink" href="#resultado-final" title="Link to this heading">#</a></h2>
-<p>SSR = ε’(I - H)ε<br />
-SSR / σ² ~ χ²ₙ₋ₖ</p>
+<h3>Resultado final<a class="headerlink" href="#resultado-final" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight" id="equation-eq-7-m12-resultado">
+<span class="eqno">(12)<a class="headerlink" href="#equation-eq-7-m12-resultado" title="Link to this equation">#</a></span>\[\mathrm{SSR} = \boldsymbol{\varepsilon}^\top (\mathbf{I}-\mathbf{H}) \boldsymbol{\varepsilon},
+\qquad
+\frac{\mathrm{SSR}}{\sigma^2} \sim \chi^2_{n-k}\]</div>
 <p>En regresión lineal simple (k = 2): n - 2 grados de libertad.</p>
+</section>
 </section>
 </section>
 
@@ -535,16 +560,18 @@ SSR / σ² ~ χ²ₙ₋ₖ</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instrucciones-de-reproduccion-y-demostraciones">Instrucciones de reproducción y Demostraciones</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#como-compilar-el-libro">Cómo compilar el libro:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demostraciones-solicitadas">Demostraciones solicitadas</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo-y-notacion">Modelo y notación</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimador-ols-y-matriz-hat">Estimador OLS y matriz hat</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residuos-y-operador-i-h">Residuos y operador (I - H)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#suma-de-cuadrados-residual">Suma de cuadrados residual</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rango-y-grados-de-libertad">Rango y grados de libertad</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-chi-cuadrado">Distribución Chi-cuadrado</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-no-basta-con-elevar-los-residuos-al-cuadrado">Por qué no basta con elevar los residuos al cuadrado</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intuicion-geometrica">Intuición geométrica</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultado-final">Resultado final</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demostraciones-solicitadas">Demostraciones solicitadas</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo-y-notacion">Modelo y notación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimador-ols-y-matriz-hat">Estimador OLS y matriz hat</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#residuos-y-operador-i-h">Residuos y operador (I - H)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#suma-de-cuadrados-residual">Suma de cuadrados residual</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rango-y-grados-de-libertad">Rango y grados de libertad</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-chi-cuadrado">Distribución Chi-cuadrado</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-no-basta-con-elevar-los-residuos-al-cuadrado">Por qué no basta con elevar los residuos al cuadrado</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intuicion-geometrica">Intuición geométrica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultado-final">Resultado final</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
