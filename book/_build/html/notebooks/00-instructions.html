@@ -389,6 +389,24 @@ mv<span class="w"> </span>data/AmesHousing.csv<span class="w"> </span>data/ames_
 </div>
 <p><strong>Semillas reproducibles</strong>: todos los experimentos fijan <code class="docutils literal notranslate"><span class="pre">random_state</span></code>.
 <strong>Mapa del libro</strong>: ver la barra lateral y <code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code>.</p>
+<p>Propiedades de <span class="math notranslate nohighlight">\(H\)</span>:</p>
+<ul class="simple">
+<li><p>Simétrica: <span class="math notranslate nohighlight">\(H' = H\)</span></p></li>
+<li><p>Idempotente: <span class="math notranslate nohighlight">\(H^2 = H\)</span></p></li>
+<li><p>Rango: <span class="math notranslate nohighlight">\(\text{rank}(H) = k\)</span></p></li>
+</ul>
+<p>Propiedades de <span class="math notranslate nohighlight">\(\,H\,\)</span>:</p>
+<ul class="simple">
+<li><p>Simétrica: <span class="math notranslate nohighlight">\(\,H' = H\,\)</span>,</p></li>
+<li><p>Idempotente: <span class="math notranslate nohighlight">\(\,H^2 = H\,\)</span>,</p></li>
+<li><p>Rango: <span class="math notranslate nohighlight">\(\,\text{rank}(H) = k\,\)</span>,</p></li>
+</ul>
+<p>Propiedades de H:</p>
+<ul class="simple">
+<li><p>Simétrica: H’ = H,</p></li>
+<li><p>Idempotente: H² = H,</p></li>
+<li><p>Rango: rank(H) = k,</p></li>
+</ul>
 </section>
 <section id="demostraciones-solicitadas">
 <h2>Demostraciones solicitadas<a class="headerlink" href="#demostraciones-solicitadas" title="Link to this heading">#</a></h2>
@@ -399,13 +417,6 @@ mv<span class="w"> </span>data/AmesHousing.csv<span class="w"> </span>data/ames_
 <span class="eqno">(1)<a class="headerlink" href="#equation-eq-7-m1-modelo" title="Link to this equation">#</a></span>\[\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}, 
 \qquad 
 \boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{0}, \sigma^2 \mathbf{I}_n)\]</div>
-<p>donde:</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\( X \)</span>: matriz de diseño <span class="math notranslate nohighlight">\( \ n \times k\ \)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\( \boldsymbol \beta \)</span>: vector de parámetros</p></li>
-<li><p><span class="math notranslate nohighlight">\( \boldsymbol\varepsilon \)</span>: vector de errores</p></li>
-</ul>
-<p>Donde <span class="math notranslate nohighlight">\( \alpha \ge 0 \)</span> es el hiperparámetro de regularización.</p>
 <p>donde:</p>
 <ul class="simple">
 <li><p>X: matriz de diseño n × k</p></li>

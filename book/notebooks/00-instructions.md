@@ -38,8 +38,6 @@ book/
 **Semillas reproducibles**: todos los experimentos fijan `random_state`.
 **Mapa del libro**: ver la barra lateral y `_toc.yml`.
 
-
-
 ## Demostraciones solicitadas
 ### Modelo y notación
 

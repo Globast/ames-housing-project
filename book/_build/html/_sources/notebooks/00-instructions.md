@@ -38,6 +38,24 @@ book/
 **Semillas reproducibles**: todos los experimentos fijan `random_state`.
 **Mapa del libro**: ver la barra lateral y `_toc.yml`.
 
+Propiedades de $H$:
+
+- Simétrica: $H' = H$  
+- Idempotente: $H^2 = H$  
+- Rango: $\text{rank}(H) = k$
+
+Propiedades de $\,H\,$:
+
+- Simétrica: $\,H' = H\,$,  
+- Idempotente: $\,H^2 = H\,$,  
+- Rango: $\,\text{rank}(H) = k\,$,
+
+
+Propiedades de H:
+
+- Simétrica: H' = H,  
+- Idempotente: H² = H,  
+- Rango: rank(H) = k,  
 
 
 ## Demostraciones solicitadas
@@ -52,13 +70,6 @@ El modelo lineal es:
 \boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{0}, \sigma^2 \mathbf{I}_n)
 ```
 
-donde:
-
-- $ X $: matriz de diseño $ \ n \times k\ $  
-- $ \boldsymbol \beta $: vector de parámetros  
-- $ \boldsymbol\varepsilon $: vector de errores
-
-Donde $ \alpha \ge 0 $ es el hiperparámetro de regularización.
 
 donde:
 
