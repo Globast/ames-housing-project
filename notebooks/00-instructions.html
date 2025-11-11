@@ -333,6 +333,7 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instrucciones-de-reproduccion-y-demostraciones">Instrucciones de reproducción y Demostraciones</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#como-compilar-el-libro">Cómo compilar el libro:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intuicion-geometrica">Intuición geométrica</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demostraciones-solicitadas">Demostraciones solicitadas</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo-y-notacion">Modelo y notación</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimador-ols-y-matriz-hat">Estimador OLS y matriz hat</a></li>
@@ -341,7 +342,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rango-y-grados-de-libertad">Rango y grados de libertad</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-chi-cuadrado">Distribución Chi-cuadrado</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-no-basta-con-elevar-los-residuos-al-cuadrado">Por qué no basta con elevar los residuos al cuadrado</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intuicion-geometrica">Intuición geométrica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Intuición geométrica</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultado-final">Resultado final</a></li>
 </ul>
 </li>
@@ -389,6 +390,15 @@ mv<span class="w"> </span>data/AmesHousing.csv<span class="w"> </span>data/ames_
 </div>
 <p><strong>Semillas reproducibles</strong>: todos los experimentos fijan <code class="docutils literal notranslate"><span class="pre">random_state</span></code>.
 <strong>Mapa del libro</strong>: ver la barra lateral y <code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code>.</p>
+</section>
+<section id="intuicion-geometrica">
+<h2>Intuición geométrica<a class="headerlink" href="#intuicion-geometrica" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>( \varepsilon ) vive en un espacio de dimensión ( n ).</p></li>
+<li><p>( H ) proyecta sobre el subespacio de predicciones (dimensión ( k )).</p></li>
+<li><p>( (I - H) ) proyecta sobre el espacio ortogonal de residuos (dimensión ( n - k )).</p></li>
+<li><p>La longitud al cuadrado de esa proyección, dividida por ( \sigma^2 ), sigue ( \chi^2_{n - k} ).</p></li>
+</ul>
 </section>
 <section id="demostraciones-solicitadas">
 <h2>Demostraciones solicitadas<a class="headerlink" href="#demostraciones-solicitadas" title="Link to this heading">#</a></h2>
@@ -474,8 +484,8 @@ mv<span class="w"> </span>data/AmesHousing.csv<span class="w"> </span>data/ames_
 <li><p>Por eso, solo la suma total e’e sigue χ², no cada residuo por separado.</p></li>
 </ul>
 </section>
-<section id="intuicion-geometrica">
-<h3>Intuición geométrica<a class="headerlink" href="#intuicion-geometrica" title="Link to this heading">#</a></h3>
+<section id="id1">
+<h3>Intuición geométrica<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>ε vive en un espacio de dimensión n</p></li>
 <li><p>H proyecta sobre el subespacio de predicciones (dimensión k)</p></li>
@@ -569,6 +579,7 @@ mv<span class="w"> </span>data/AmesHousing.csv<span class="w"> </span>data/ames_
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instrucciones-de-reproduccion-y-demostraciones">Instrucciones de reproducción y Demostraciones</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#como-compilar-el-libro">Cómo compilar el libro:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intuicion-geometrica">Intuición geométrica</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demostraciones-solicitadas">Demostraciones solicitadas</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo-y-notacion">Modelo y notación</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimador-ols-y-matriz-hat">Estimador OLS y matriz hat</a></li>
@@ -577,7 +588,7 @@ mv<span class="w"> </span>data/AmesHousing.csv<span class="w"> </span>data/ames_
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rango-y-grados-de-libertad">Rango y grados de libertad</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-chi-cuadrado">Distribución Chi-cuadrado</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-no-basta-con-elevar-los-residuos-al-cuadrado">Por qué no basta con elevar los residuos al cuadrado</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intuicion-geometrica">Intuición geométrica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Intuición geométrica</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultado-final">Resultado final</a></li>
 </ul>
 </li>

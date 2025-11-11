@@ -40,6 +40,13 @@ book/
 
 
 
+## Intuición geométrica
+
+- \( \varepsilon \) vive en un espacio de dimensión \( n \).  
+- \( H \) proyecta sobre el subespacio de predicciones (dimensión \( k \)).  
+- \( (I - H) \) proyecta sobre el espacio ortogonal de residuos (dimensión \( n - k \)).  
+- La longitud al cuadrado de esa proyección, dividida por \( \sigma^2 \), sigue \( \chi^2_{n - k} \).
+
 ## Demostraciones solicitadas
 ### Modelo y notación
 
