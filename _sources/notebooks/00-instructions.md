@@ -45,6 +45,9 @@ book/
 
 1. Sea un modelo de regresión lineal simple; muestra que la suma de cuadrados de los residuos dividida por $ \sigma^2 $ puede escribirse como una **combinación cuadrática** de los errores $ \varepsilon_i $ y, usando ese resultado, que su distribución es $ \chi^2_{n-2} $.
 
+La varianza es $ \sigma^2 $.
+
+La esperanza es \( \mathbb{E}[X] \).
 
 ### Paso 1 — Modelo y notación matricial
 
