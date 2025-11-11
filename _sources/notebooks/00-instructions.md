@@ -4,6 +4,7 @@ jupytext:
   text_representation: {extension: .md, format_name: myst}
 kernelspec: {name: python3, display_name: Python 3}
 ---
+
 # Capítulo 0 · Instrucciones de reproducción
 ## Instrucciones de reproducción y Demostraciones
 > **Overview**: Este capitulo presenta instrucciones de reproducción. Se muestran las demostraciones solicitadas.
@@ -42,7 +43,7 @@ book/
 
 ### Enunciado
 
-1. Sea un modelo de regresión lineal simple; muestra que la suma de cuadrados de los residuos dividida por $ \sigma^2$ puede escribirse como una **combinación cuadrática** de los errores $ \varepsilon_i$ y, usando ese resultado, que su distribución es $ \chi^2_{n-2}$.
+1. Sea un modelo de regresión lineal simple; muestra que la suma de cuadrados de los residuos dividida por $\ sigma^2$ puede escribirse como una **combinación cuadrática** de los errores $ \varepsilon_i$ y, usando ese resultado, que su distribución es $ \chi^2_{n-2}$.
 
 ### Paso 1 — Modelo y notación matricial
 
