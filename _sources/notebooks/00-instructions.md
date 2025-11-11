@@ -51,6 +51,13 @@ Propiedades de $\,H\,$:
 - Rango: $\,\text{rank}(H) = k\,$,
 
 
+Propiedades de H:
+
+- Simétrica: H' = H,  
+- Idempotente: H² = H,  
+- Rango: rank(H) = k,  
+
+
 ## Demostraciones solicitadas
 ### Modelo y notación
 
