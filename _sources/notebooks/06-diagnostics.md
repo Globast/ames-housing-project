@@ -7,7 +7,7 @@ kernelspec: {name: python3, display_name: Python 3}
 # Capítulo 6: Diagnóstico de supuestos
 
 > **Overview**:
-Se llevan a cabo diagnósticos: residuos, heterocedasticidad, normalidad, influencia y multicolinealidad. Cada figura/tablas se discute con recomendaciones.
+Evalúa linealidad (residuos vs. ajustados), normalidad (QQ-plot), heterocedasticidad (Breusch–Pagan/White), independencia (Durbin–Watson) y multicolinealidad (VIF). Encuentra heterocedasticidad, independencia razonable y VIF aceptables.
 
 **Definir ruta de datos**
 
@@ -154,6 +154,6 @@ El estadístico de Durbin–Watson es 1.79, lo que se encuentra dentro del rango
 Con respecto a la multicolinealidad, todos los valores de VIF de los predictores son menores a 5, lo que indica que no hay problemas importantes de colinealidad en el modelo.
 
 > **Key takeaways**
-- Patrones en residuos guían transformaciones o selección de variables.
-- Se evidencia si hay heterocedasticidad (motivando errores estándar robustos).
-- La influencia (Cook’s distance/DFBETAs) orienta decisiones sobre puntos anómalos.
+>-Patrones en residuos sugieren transformaciones o reespecificaciones.
+>-Heterocedasticidad → EE clásicos optimistas; motivan correcciones robustas.
+>-VIF < 5 indica colinealidad manejable en el modelo base.

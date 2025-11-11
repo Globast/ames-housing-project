@@ -27,7 +27,4 @@ Además, existen **factores omitidos** que pueden influir en el precio y que el 
 - Las conclusiones complementan la interpretación de capítulos anteriores.
 
 ---
-cd book
-jupyter-book clean .
-jupyter-book build .
-ghp-import -n -p -f _build/html   
+ 

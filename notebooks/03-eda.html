@@ -347,7 +347,7 @@ document.write(`
 <h1><span class="section-number">3. </span>Capítulo 3: Análisis exploratorio (EDA)<a class="headerlink" href="#capitulo-3-analisis-exploratorio-eda" title="Link to this heading">#</a></h1>
 <blockquote>
 <div><p><strong>Overview</strong>:
-Incluye distribución de variables, relaciones bivariadas y detección preliminar de colinealidad.</p>
+Este capitulo examina la distribución de la respuesta (original y log) y relaciones con predictores. Identifica correlaciones altas con calidad, área habitable y variables de tamaño; advierte colinealidades (Garage Cars vs Garage Area). Selecciona variables candidatas para el modelo base</p>
 </div></blockquote>
 <p><strong>Definir ruta de datos</strong></p>
 <div class="cell docutils container">
@@ -584,12 +584,14 @@ Name: SalePrice, dtype: float64
 <p>Se eligen 9 variables predictoras, teniendo en cuenta una alta correlación con la variable de respuesta, baja correlación entre ellas (para evitar redundancia en el modelo) y sentido práctico.</p>
 <blockquote>
 <div><p><strong>Key takeaways</strong></p>
-</div></blockquote>
 <ul class="simple">
-<li><p>Las distribuciones sugieren posibles transformaciones para linealidad/normalidad.</p></li>
-<li><p>Se identifican variables con fuerte asociación a la respuesta (útiles para el modelo base).</p></li>
-<li><p>Se detectan indicios de colinealidad.</p></li>
+<li><p>La transformación log estabiliza varianza y linealiza relaciones.</p></li>
+<li><p>Top correlaciones: Overall Qual, Gr Liv Area, Garage, Bsmt, Year Built.</p></li>
+<li><p>Cuidar colinealidad al elegir entre variables muy relacionadas.
+-Los gráficos bivariados revelan no linealidades y motivan transformaciones previas al ajuste.</p></li>
+<li><p>La detección temprana de colinealidad reduce la varianza de los estimadores y mejora la estabilidad.</p></li>
 </ul>
+</div></blockquote>
 </section>
 </section>
 

@@ -7,7 +7,7 @@ kernelspec: {name: python3, display_name: Python 3}
 # Capítulo 3: Análisis exploratorio (EDA)
 
 > **Overview**:
-Incluye distribución de variables, relaciones bivariadas y detección preliminar de colinealidad. 
+Este capitulo examina la distribución de la respuesta (original y log) y relaciones con predictores. Identifica correlaciones altas con calidad, área habitable y variables de tamaño; advierte colinealidades (Garage Cars vs Garage Area). Selecciona variables candidatas para el modelo base 
 
 **Definir ruta de datos**
 ```{code-cell} ipython3
@@ -179,7 +179,10 @@ for v in vars_candidatas:
 Se eligen 9 variables predictoras, teniendo en cuenta una alta correlación con la variable de respuesta, baja correlación entre ellas (para evitar redundancia en el modelo) y sentido práctico.
 
 > **Key takeaways**
-- Las distribuciones sugieren posibles transformaciones para linealidad/normalidad.
-- Se identifican variables con fuerte asociación a la respuesta (útiles para el modelo base).
-- Se detectan indicios de colinealidad.
+>- La transformación log estabiliza varianza y linealiza relaciones.
+>- Top correlaciones: Overall Qual, Gr Liv Area, Garage, Bsmt, Year Built.
+>- Cuidar colinealidad al elegir entre variables muy relacionadas.
+>-Los gráficos bivariados revelan no linealidades y motivan transformaciones previas al ajuste.
+>- La detección temprana de colinealidad reduce la varianza de los estimadores y mejora la estabilidad.
+
 

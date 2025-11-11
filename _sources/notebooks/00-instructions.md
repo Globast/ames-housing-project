@@ -7,7 +7,8 @@ kernelspec: {name: python3, display_name: Python 3}
 
 # Capítulo 0 · Instrucciones de reproducción
 ## Instrucciones de reproducción y Demostraciones
-> **Overview**: Este capitulo presenta instrucciones de reproducción. Se muestran las demostraciones solicitadas.
+> **Overview**: Este capitulo presenta cómo compilar el libro, la estructura de las carpetas y las dependencias para garantizar reproducibilidad. Incluye demostraciones teóricas y comandos mínimos para construir el proyecto. 
+
 
 
 ## Cómo compilar el libro:
@@ -193,3 +194,9 @@ Por tanto:
 ```
 
 En regresión lineal simple (k = 2): n - 2 grados de libertad.
+
+> **Key takeaways**
+>- Hay instrucciones claras de build y control de versiones, con dataset esperado y seeds fijas.
+>- Las demostraciones cubren de forma compacta OLS en álgebra lineal y propiedades del SSR.
+>- El capítulo es la “bitácora” de reproducibilidad del libro.
+>-La reproducibilidad se garantiza fijando semillas y documentando versiones de paquetes.

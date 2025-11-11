@@ -1,43 +1,48 @@
 # Capítulo 1: Introduccióny pregunta de investigación 
 ---
-> **Overview**:
-Este capítulo presenta el dataset **Ames Housing**, su contexto y relevancia para modelado e inferencia.
-Planteamos preguntas de investigación sobre la contribución de variables estructurales/vecinales al precio
-y sobre la estabilidad de coeficientes bajo métodos robustos.
-Definimos objetivos, alcance y criterios de éxito con énfasis en reproducibilidad y validez inferencial.
----
-## Contexto del dataset y su relevancia estadística
-Usaremos el **Ames Housing** (versión “AmesHousing.csv”), un registro inmobiliario del condado de Story, Iowa (EE. UU.).
-Describe atributos estructurales, de sitio y de vecindario; la respuesta es SalePrice (USD).
-`SalePrice` suele presentar asimetría positiva, por lo que `log(SalePrice)` mejora supuestos de MCO.
-Existen faltantes altos en variables “estructurales” (p. ej., `Alley`, `Pool QC`), y correlaciones esperadas con `Overall Qual`, `Gr Liv Area`, `Garage Area/Cars`, `Total Bsmt SF`, `Year Built`.
+## Contexto del estudio
+
+El conjunto de datos **Ames Housing Dataset** es una base de datos ampliamente utilizada en análisis estadístico y ciencia de datos, que recopila información detallada sobre más de 2900 viviendas ubicadas en la ciudad de Ames, Iowa (EE. UU.). Fue desarrollado por Dean De Cock como una alternativa moderna y más completa al clásico *Boston Housing Dataset*, e incluye **82 variables** que describen características estructurales, de ubicación y de calidad de las propiedades, junto con su **precio de venta**.  
 
 ## Preguntas de investigación
-- ¿Qué variables estructurales y de vecindario explican en mayor medida `SalePrice`/`log(SalePrice)` al controlar por calidad y antigüedad?  
-- ¿Qué tan estables son los coeficientes bajo métodos robustos (MCO vs. Huber/Tukey) frente a outliers y heterocedasticidad?  
-- ¿Hay no linealidades relevantes o interacciones (`Overall Qual × Neighborhood`) que mejoren la explicación sin perder interpretabilidad?
 
-## Objetivo general
-Desarrollar un marco reproducible para explicar y modelar el precio de vivienda en Ames, comparando enfoques lineales (clásicos y robustos) y no lineales, priorizando validez inferencial y estabilidad.
+1. ¿Qué implicaciones prácticas pueden derivarse de los resultados para la valoración inmobiliaria en Ames, Iowa?
+2. ¿Hasta qué punto los métodos de regularización (Ridge y Lasso) mejoran la capacidad predictiva frente al modelo OLS?
+3. ¿Cuál es el precio promedio esperado de una vivienda cuando se mantienen constantes las demás variables relevantes?
+4. ¿Qué tan bien predice el modelo los precios?
 
-## Objetivos específicos
-1) Preparación: auditoría de faltantes, imputación, codificación y estandarización; VIF.  
-2) Lineal: MCO sobre `log(SalePrice)` + diagnósticos (BP, QQ, Cook) y contraste con estimadores robustos.  
-3) Alternativos (opcional): GAM/boosting para no linealidades; importancia de variables.  
-4) Validación: k-fold; métricas RMSE/MAE/R² out-of-sample; sensibilidad; reporte reproducible.
+## Objetivos del estudio
 
-## Criterios de éxito
-**Reproducibilidad** (semillas/dependencias/CI), validez inferencial (heterocedasticidad controlada, VIF moderado, sin influencia extrema),
-desempeño (p. ej., RMSE ≤ ~0,5·IQR, MAE ≤ ~0,35·IQR; R² ≥ 0,75) y estabilidad (signo consistente y magnitudes similares entre MCO y robusto).
+**Objetivo general**
 
-## Alcances y supuestos
-Respuesta primaria: `log(SalePrice)`; tratamiento de NA “estructurales” (categoría “None” o exclusión razonada); posibles splines/transformaciones en extensiones.
+Aplicar de manera integrada los conceptos de regresión lineal, inferencia estadística, diagnóstico de supuestos y métodos robustos sobre el conjunto de datos *Ames Housing Dataset*, con el fin de identificar los factores que más influyen en el precio de venta de las viviendas y evaluar la estabilidad y precisión de los modelos obtenidos.
 
----
+**Objetivos específicos**
+
+1. **Describir y preparar el conjunto de datos Ames Housing**, documentando su estructura, tipos de variables y el tratamiento de valores faltantes, outliers, transformaciones y codificaciones aplicadas.  
+
+2. **Explorar las relaciones entre variables** mediante análisis descriptivo y visual (histogramas, boxplots, correlaciones y mapas de calor), identificando los predictores más relevantes para el precio de venta.  
+
+3. **Formular y estimar el modelo base de regresión lineal múltiple (OLS)**, expresándolo en su forma matricial, verificando la invertibilidad de matrices y comparando los resultados con la implementación en `statsmodels`.  
+
+4. **Realizar inferencia estadística sobre los coeficientes del modelo**, interpretando errores estándar, valores *t*, *p*-values e intervalos de confianza para determinar la significancia y magnitud de los efectos.  
+
+5. **Evaluar los supuestos clásicos del modelo lineal** (linealidad, homocedasticidad, normalidad, independencia y multicolinealidad) mediante pruebas y gráficos diagnósticos, documentando los resultados en una tabla resumen.  
+
+6. **Aplicar métodos robustos frente a violaciones de supuestos**, incluyendo:
+   - Correcciones HC0–HC3 para heterocedasticidad.  
+   - Modelos RLM con funciones Huber y Tukey.  
+   - Estimación de errores e intervalos por *bootstrap*.  
+
+7. **Comparar los resultados de OLS y métodos robustos**, analizando diferencias en coeficientes, errores estándar e intervalos de confianza.  
+
+8. **Implementar y validar modelos de regularización Ridge y Lasso**, ajustando hiperparámetros por validación cruzada y comparando su desempeño con OLS mediante métricas (R², RMSE, MAE).  
+
+9. **Evaluar la estabilidad y capacidad predictiva de los modelos** en conjuntos de entrenamiento, validación y prueba, identificando posibles casos de sobreajuste.  
+
+10. **Interpretar los hallazgos en términos prácticos y aplicados**, traduciendo los resultados estadísticos a conclusiones útiles para la valoración inmobiliaria y proponiendo líneas de investigación futura.
 
 > **Key takeaways**
-- El Ames Housing es ideal para contrastar enfoques explicativos vs. predictivos en un escenario realista.
-- `log(SalePrice)` ayuda a mitigar asimetría y heterocedasticidad en modelos lineales.
-- Calidad global y tamaño habitable concentran gran parte de la señal explicativa del precio.
-- Los estimadores robustos permiten evaluar la estabilidad de conclusiones frente a outliers.
-- Éxito = reproducibilidad, validez inferencial y buen rendimiento fuera de muestra.
+>- Las preguntas de investigación delimitan qué medir, cómo evaluarlo y con qué métricas.
+>- La elección de la transformación de la respuesta condiciona la interpretación de los coeficientes.
+

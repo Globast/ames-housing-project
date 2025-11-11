@@ -350,7 +350,7 @@ document.write(`
 <h1><span class="section-number">6. </span>Capítulo 6: Diagnóstico de supuestos<a class="headerlink" href="#capitulo-6-diagnostico-de-supuestos" title="Link to this heading">#</a></h1>
 <blockquote>
 <div><p><strong>Overview</strong>:
-Se llevan a cabo diagnósticos: residuos, heterocedasticidad, normalidad, influencia y multicolinealidad. Cada figura/tablas se discute con recomendaciones.</p>
+Evalúa linealidad (residuos vs. ajustados), normalidad (QQ-plot), heterocedasticidad (Breusch–Pagan/White), independencia (Durbin–Watson) y multicolinealidad (VIF). Encuentra heterocedasticidad, independencia razonable y VIF aceptables.</p>
 </div></blockquote>
 <p><strong>Definir ruta de datos</strong></p>
 <div class="cell docutils container">
@@ -552,13 +552,11 @@ r_{jk} = \frac{\text{Cov}(X_j, X_k)}{\sigma_{X_j} \, \sigma_{X_k}}
 <p>El estadístico de Durbin–Watson es 1.79, lo que se encuentra dentro del rango de 1.5 a 2. Por lo tanto, no se observa autocorrelación significativa entre los residuos, y el supuesto de independencia se cumple razonablemente.</p>
 <p>Con respecto a la multicolinealidad, todos los valores de VIF de los predictores son menores a 5, lo que indica que no hay problemas importantes de colinealidad en el modelo.</p>
 <blockquote>
-<div><p><strong>Key takeaways</strong></p>
+<div><p><strong>Key takeaways</strong>
+-Patrones en residuos sugieren transformaciones o reespecificaciones.
+-Heterocedasticidad → EE clásicos optimistas; motivan correcciones robustas.
+-VIF &lt; 5 indica colinealidad manejable en el modelo base.</p>
 </div></blockquote>
-<ul class="simple">
-<li><p>Patrones en residuos guían transformaciones o selección de variables.</p></li>
-<li><p>Se evidencia si hay heterocedasticidad (motivando errores estándar robustos).</p></li>
-<li><p>La influencia (Cook’s distance/DFBETAs) orienta decisiones sobre puntos anómalos.</p></li>
-</ul>
 </section>
 </section>
 </section>
