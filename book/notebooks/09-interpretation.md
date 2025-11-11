@@ -22,9 +22,7 @@ Ahora bien, los resultados obtenidos **describen asociaciones, no relaciones de 
 
 Además, existen **factores omitidos** que pueden influir en el precio y que el modelo no incorpora directamente, entre ellos los **factores de mercado:** año de venta, demanda local o condiciones económicas.
 
-## Takeaways
-- Se documentan resultados adicionales con el mismo estándar reproducible.
-- Las conclusiones complementan la interpretación de capítulos anteriores.
+
 
 ---
  

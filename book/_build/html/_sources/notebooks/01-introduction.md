@@ -42,7 +42,7 @@ Aplicar de manera integrada los conceptos de regresión lineal, inferencia estad
 
 10. **Interpretar los hallazgos en términos prácticos y aplicados**, traduciendo los resultados estadísticos a conclusiones útiles para la valoración inmobiliaria y proponiendo líneas de investigación futura.
 
-## Criterios de Éxito
+## Criterios de éxito
 Reproducibilidad (semillas/dependencias/CI), validez inferencial (heterocedasticidad controlada, VIF moderado, sin influencia extrema), desempeño (p. ej., RMSE ≤ ~0,5·IQR, MAE ≤ ~0,35·IQR; R² ≥ 0,75) y estabilidad (signo consistente y magnitudes similares entre MCO y robusto).
 
 > **Key takeaways**

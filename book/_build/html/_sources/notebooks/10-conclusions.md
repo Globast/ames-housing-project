@@ -12,11 +12,11 @@ El modelo OLS presentó un ajuste con R² = 0.84 y evidencia de heterocedasticid
 
 3. **¿Cuál es el precio promedio esperado de una vivienda cuando se mantienen constantes las demás variables relevantes?**
 
-El intercepto del modelo Lasso corresponde a un precio promedio estimado cercano a $180000, representando una vivienda típica en Ames con valores medios en sus características. A partir de esa base, la calidad, el tamaño habitable y el garaje son los principales factores que aumentan el valor, mientras que la antigüedad lo reduce de forma moderada.
+El intercepto del modelo Lasso corresponde a un precio promedio estimado cercano a USD 180000, representando una vivienda típica en Ames con valores medios en sus características. A partir de esa base, la calidad, el tamaño habitable y el garaje son los principales factores que aumentan el valor, mientras que la antigüedad lo reduce de forma moderada.
 
 4. **¿Qué tan bien predice el modelo los precios?**
 
-El modelo Lasso explica aproximadamente el 85% de la variación en los precios (R² = 0.85) y presenta un error absoluto medio entre $17000 y $19000. Los residuos no muestran patrones sistemáticos, lo que sugiere un buen ajuste general y ausencia de sobreajuste.
+El modelo Lasso explica aproximadamente el 85% de la variación en los precios (R² = 0.85) y presenta un error absoluto medio entre USD 17000 y USD 19000. Los residuos no muestran patrones sistemáticos, lo que sugiere un buen ajuste general y ausencia de sobreajuste.
 
 ## Conclusiones
 
