@@ -28,8 +28,8 @@ df.shape
 
 En regresión lineal, sea:
 
-- $n$ = número de observaciones  
-- $k$ = número de variables predictoras (sin contar el intercepto)
+- n = número de observaciones  
+- k = número de variables predictoras (sin contar el intercepto)
 
 Se definen:
 
@@ -42,7 +42,7 @@ $$
 \text{Df}_{\text{model}} = 9
 $$
 
-Representa la cantidad de información utilizada para estimar los $k$ coeficientes.
+Representa la cantidad de información utilizada para estimar los k coeficientes.
 
 $$
 \text{Df}_{\text{residual}} = n - k - 1
@@ -61,7 +61,7 @@ Representa los grados de libertad restantes después de ajustar el modelo.
 
 ## Errores estándar
 
-En un modelo de regresión lineal, los **errores estándar de los coeficientes** miden la incertidumbre asociada a cada estimador $\hat{\beta}_j$.  
+En un modelo de regresión lineal, los **errores estándar de los coeficientes** miden la incertidumbre asociada a cada estimador Beta
 En otras palabras, nos indican cuánto esperaríamos que varíen los coeficientes si repitiéramos el experimento con nuevas muestras del mismo tamaño. Coeficientes con errores estándar grandes son menos precisos y más sensibles al muestreo.
 
 La suma de cuadrados de los residuos se define como:
@@ -90,7 +90,7 @@ $$
 
 **Ecuación 5.2.3.** Matriz de varianzas-covarianzas de los coeficientes.
 
-Finalmente, el **error estándar** de cada coeficiente $\hat{\beta}_j$ se obtiene tomando la raíz cuadrada de la diagonal correspondiente:
+Finalmente, el **error estándar** de cada coeficiente βj se obtiene tomando la raíz cuadrada de la diagonal correspondiente:
 
 $$
 SE(\hat{\beta}_j) = \sqrt{[\text{Var}(\hat{\beta})]_{jj}}
@@ -132,7 +132,7 @@ print(n)
 
 ## Valores P
 
-Consecuentemente, los **valores p** permiten evaluar la significancia estadística de cada coeficiente $\hat{\beta}_j$.  
+Consecuentemente, los **valores p** permiten evaluar la significancia estadística de cada coeficiente  βj. 
 En otras palabras, nos indican la probabilidad de obtener un coeficiente tan extremo como el observado si, en realidad, el coeficiente fuera cero (hipótesis nula $H_0: \beta_j = 0$).
 
 Para calcular el valor p, primero se construye el **estadístico t** de cada coeficiente:

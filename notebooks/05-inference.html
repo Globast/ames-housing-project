@@ -381,8 +381,8 @@ Se realiza inferencia: intervalos de confianza, pruebas de hipótesis sobre coef
 <h2><span class="section-number">5.1. </span>Grados de libertad<a class="headerlink" href="#grados-de-libertad" title="Link to this heading">#</a></h2>
 <p>En regresión lineal, sea:</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(n\)</span> = número de observaciones</p></li>
-<li><p><span class="math notranslate nohighlight">\(k\)</span> = número de variables predictoras (sin contar el intercepto)</p></li>
+<li><p>n = número de observaciones</p></li>
+<li><p>k = número de variables predictoras (sin contar el intercepto)</p></li>
 </ul>
 <p>Se definen:</p>
 <div class="math notranslate nohighlight">
@@ -394,7 +394,7 @@ Se realiza inferencia: intervalos de confianza, pruebas de hipótesis sobre coef
 \[
 \text{Df}_{\text{model}} = 9
 \]</div>
-<p>Representa la cantidad de información utilizada para estimar los <span class="math notranslate nohighlight">\(k\)</span> coeficientes.</p>
+<p>Representa la cantidad de información utilizada para estimar los k coeficientes.</p>
 <div class="math notranslate nohighlight">
 \[
 \text{Df}_{\text{residual}} = n - k - 1
@@ -412,7 +412,7 @@ Se realiza inferencia: intervalos de confianza, pruebas de hipótesis sobre coef
 </section>
 <section id="errores-estandar">
 <h2><span class="section-number">5.2. </span>Errores estándar<a class="headerlink" href="#errores-estandar" title="Link to this heading">#</a></h2>
-<p>En un modelo de regresión lineal, los <strong>errores estándar de los coeficientes</strong> miden la incertidumbre asociada a cada estimador <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span>.<br />
+<p>En un modelo de regresión lineal, los <strong>errores estándar de los coeficientes</strong> miden la incertidumbre asociada a cada estimador Beta
 En otras palabras, nos indican cuánto esperaríamos que varíen los coeficientes si repitiéramos el experimento con nuevas muestras del mismo tamaño. Coeficientes con errores estándar grandes son menos precisos y más sensibles al muestreo.</p>
 <p>La suma de cuadrados de los residuos se define como:</p>
 <div class="math notranslate nohighlight">
@@ -433,7 +433,7 @@ SS_{\text{Res}} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
 \text{Var}(\hat{\beta}) = \hat{\sigma}^2 (X^\top X)^{-1}
 \]</div>
 <p><strong>Ecuación 5.2.3.</strong> Matriz de varianzas-covarianzas de los coeficientes.</p>
-<p>Finalmente, el <strong>error estándar</strong> de cada coeficiente <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span> se obtiene tomando la raíz cuadrada de la diagonal correspondiente:</p>
+<p>Finalmente, el <strong>error estándar</strong> de cada coeficiente βj se obtiene tomando la raíz cuadrada de la diagonal correspondiente:</p>
 <div class="math notranslate nohighlight">
 \[
 SE(\hat{\beta}_j) = \sqrt{[\text{Var}(\hat{\beta})]_{jj}}
@@ -482,7 +482,7 @@ SE(\hat{\beta}_j) = \sqrt{[\text{Var}(\hat{\beta})]_{jj}}
 </section>
 <section id="valores-p">
 <h2><span class="section-number">5.3. </span>Valores P<a class="headerlink" href="#valores-p" title="Link to this heading">#</a></h2>
-<p>Consecuentemente, los <strong>valores p</strong> permiten evaluar la significancia estadística de cada coeficiente <span class="math notranslate nohighlight">\(\hat{\beta}_j\)</span>.<br />
+<p>Consecuentemente, los <strong>valores p</strong> permiten evaluar la significancia estadística de cada coeficiente  βj.
 En otras palabras, nos indican la probabilidad de obtener un coeficiente tan extremo como el observado si, en realidad, el coeficiente fuera cero (hipótesis nula <span class="math notranslate nohighlight">\(H_0: \beta_j = 0\)</span>).</p>
 <p>Para calcular el valor p, primero se construye el <strong>estadístico t</strong> de cada coeficiente:</p>
 <div class="math notranslate nohighlight">
