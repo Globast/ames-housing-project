@@ -4,6 +4,7 @@ jupytext:
   text_representation: {extension: .md, format_name: myst}
 kernelspec: {name: python3, display_name: Python 3}
 ---
+
 # Capítulo 0 · Instrucciones de reproducción
 ## Instrucciones de reproducción y Demostraciones
 > **Overview**: Este capitulo presenta instrucciones de reproducción. Se muestran las demostraciones solicitadas.
@@ -39,17 +40,168 @@ book/
 
 
 ## Demostraciones solicitadas
+
+## Modelo y notación
+
+El modelo lineal es:
+
+$$
+\mathbf{y} = X\boldsymbol{\beta} + \boldsymbol{\varepsilon}, 
+\qquad 
+\boldsymbol{\varepsilon} \sim N(\mathbf{0}, \sigma^2 I_n)
+$$
+
+donde:
+
+- $X$: matriz de diseño $n \times k$  
+- $\boldsymbol{\beta}$: vector de parámetros  
+- $\boldsymbol{\varepsilon}$: vector de errores  
+
 ---
-jupytext:
-  formats: md:myst
-  text_representation: {extension: .md, format_name: myst}
-kernelspec: {name: python3, display_name: Python 3}
+
+## Estimador OLS y matriz *hat*
+
+El estimador de mínimos cuadrados es:
+
+$$
+\hat{\boldsymbol{\beta}} = (X'X)^{-1} X' \mathbf{y}
+$$
+
+Las predicciones se obtienen con:
+
+$$
+\hat{\mathbf{y}} = X\hat{\boldsymbol{\beta}} = H\mathbf{y},
+\quad 
+H = X(X'X)^{-1}X'
+$$
+
+La matriz $H$ (llamada hat matrix) proyecta $\mathbf{y}$ sobre el espacio columna de $X$.
+
+*Propiedades de $H$:*
+- Simétrica: $H' = H$
+- Idempotente: $H^2 = H$
+- Rango: $\operatorname{rank}(H) = k$
+
 ---
 
+## Residuos y operador $(I - H)$
 
-### Enunciado
+Los residuos son:
 
-1. Sea un modelo de regresión lineal simple; muestra que la suma de cuadrados de los residuos dividida por $\sigma^2$ puede escribirse como una **combinación cuadrática** de los errores $\varepsilon_i$ y, usando ese resultado, que su distribución es $\chi^2_{n-2}$.
+$$
+\mathbf{e} = \mathbf{y} - \hat{\mathbf{y}} = (I - H)\mathbf{y}
+$$
+
+Sustituyendo $\mathbf{y} = X\boldsymbol{\beta} + \boldsymbol{\varepsilon}$ y usando que $(I - H)X = 0$:
+
+$$
+\boxed{\mathbf{e} = (I - H)\boldsymbol{\varepsilon}}
+$$
+
+Cada residuo es una *combinación lineal* de los errores originales.
+
+---
+
+## Suma de cuadrados residual como forma cuadrática
+
+$$
+SS_{\text{Res}} 
+= \mathbf{e}'\mathbf{e} 
+= [(I-H)\boldsymbol{\varepsilon}]'[(I-H)\boldsymbol{\varepsilon}]
+= \boldsymbol{\varepsilon}'(I-H)'(I-H)\boldsymbol{\varepsilon}
+$$
+
+Como $(I - H)$ es simétrica e idempotente:
+
+$$
+\boxed{SS_{\text{Res}} = \boldsymbol{\varepsilon}'(I - H)\boldsymbol{\varepsilon}}
+$$
+
+Es decir, el *SSR* es una forma cuadrática en los errores.
+
+---
+
+## Rango de $(I - H)$ y grados de libertad
+
+El rango de $(I - H)$ se obtiene de:
+
+$$
+\operatorname{rank}(I - H) = n - \operatorname{rank}(H) = n - k
+$$
+
+Por tanto:
+- El espacio de los residuos tiene *dimensión $n - k$*.  
+- Solo *$n - k$* residuos son independientes (los otros están restringidos por $X'e = 0$).
+
+En un modelo lineal simple ($k = 2$) → grados de libertad: *$n - 2$*.
+
+---
+
+## Distribución Chi-cuadrado
+
+*Resultado general:*
+
+> Si $\boldsymbol{\varepsilon} \sim N(0, \sigma^2 I)$ y $A$ es simétrica e idempotente de rango $r$:  
+> $$
+> \frac{1}{\sigma^2} \boldsymbol{\varepsilon}'A\boldsymbol{\varepsilon} \sim \chi^2_r
+> $$
+
+Aplicando con $A = I - H$ (rango $n - k$):
+
+$$
+\boxed{
+\frac{SS_{\text{Res}}}{\sigma^2}
+= 
+\frac{\boldsymbol{\varepsilon}'(I - H)\boldsymbol{\varepsilon}}{\sigma^2}
+\sim 
+\chi^2_{\,n-k}
+}
+$$
+
+---
+
+## Por qué no basta con elevar cada residuo al cuadrado
+
+- Los errores $\varepsilon_i$ son independientes normales ⇒  
+  $(\varepsilon_i / \sigma)^2 \sim \chi^2_1$.
+- Pero los *residuos* $e_i$ no son iguales a $\varepsilon_i$:  
+  son combinaciones lineales ⇒ *no independientes*.
+- Además, $\operatorname{Var}(e_i) = \sigma^2 (1 - h_{ii})$, donde $h_{ii}$ es el leverage.  
+- Por eso, la *suma total de cuadrados* $e'e$ sigue una chi-cuadrado, no cada residuo individual.
+
+---
+
+## Intuición geométrica
+
+- $\boldsymbol{\varepsilon}$ vive en un espacio de dimensión $n$.  
+- $H$: proyección sobre el subespacio de las predicciones (dimensión $k$).  
+- $I - H$: proyección sobre el *espacio ortogonal de los residuos* (dimensión $n - k$).  
+- La longitud al cuadrado de esa proyección, dividida por $\sigma^2$, sigue una $\chi^2_{n-k}$.
+
+---
+
+## Resultado final
+
+$$
+\boxed{
+SS_{\text{Res}} = \boldsymbol{\varepsilon}'(I - H)\boldsymbol{\varepsilon},
+\quad
+\frac{SS_{\text{Res}}}{\sigma^2} \sim \chi^2_{\,n-k}
+}
+$$
+
+En regresión lineal simple:  
+$$
+k = 2 \Rightarrow n - 2 \text{ grados de libertad.}
+$$
+
+1. Sea un modelo de regresión lineal simple; muestra que la suma de cuadrados de los residuos dividida por $ \sigma^2 $ puede escribirse como una **combinación cuadrática** de los errores $ \varepsilon_i $ y, usando ese resultado, que su distribución es $ \chi^2_{n-2} $.
+
+La varianza es $ \sigma^2 $.
+
+La esperanza es \( \mathbb{E}[X] \).
+
+1. … dividida por $$ \sigma^2 $$ … los errores $ \varepsilon_i $$ … es $ \chi^2_{n-2} $.
 
 ### Paso 1 — Modelo y notación matricial
 

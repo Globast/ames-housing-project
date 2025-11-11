@@ -24,6 +24,7 @@ parse:
     - linkify
     - substitution
     - tasklist
+    - amsmath
 
 sphinx:
   config:
