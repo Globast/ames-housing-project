@@ -1,8 +1,8 @@
-# Capítulo 1: Introduccióny pregunta de investigación 
+# Capítulo 1: Introducción y pregunta de investigación 
 ---
 ## Contexto del estudio
 
-El conjunto de datos **Ames Housing Dataset** es una base de datos ampliamente utilizada en análisis estadístico y ciencia de datos, que recopila información detallada sobre más de 2900 viviendas ubicadas en la ciudad de Ames, Iowa (EE. UU.). Fue desarrollado por Dean De Cock como una alternativa moderna y más completa al clásico *Boston Housing Dataset*, e incluye **82 variables** que describen características estructurales, de ubicación y de calidad de las propiedades, junto con su **precio de venta**.  
+El conjunto de datos **Ames Housing Dataset** es una base de datos co y ciencia de datos, que recopila información detallada sobre más de 2900 viviendas ubicadas en la ciudad de Ames, Iowa (EE. UU.). Fue desarrollado por Dean De Cock como una alternativa moderna y más completa al clásico *Boston Housing Dataset*, e incluye **82 variables** que describen características estructurales, de ubicación y de calidad de las propiedades, junto con su **precio de venta**.  
 
 ## Preguntas de investigación
 
@@ -42,7 +42,10 @@ Aplicar de manera integrada los conceptos de regresión lineal, inferencia estad
 
 10. **Interpretar los hallazgos en términos prácticos y aplicados**, traduciendo los resultados estadísticos a conclusiones útiles para la valoración inmobiliaria y proponiendo líneas de investigación futura.
 
+## Criterios de Éxito
+Reproducibilidad (semillas/dependencias/CI), validez inferencial (heterocedasticidad controlada, VIF moderado, sin influencia extrema), desempeño (p. ej., RMSE ≤ ~0,5·IQR, MAE ≤ ~0,35·IQR; R² ≥ 0,75) y estabilidad (signo consistente y magnitudes similares entre MCO y robusto).
+
 > **Key takeaways**
->- Las preguntas de investigación delimitan qué medir, cómo evaluarlo y con qué métricas.
->- La elección de la transformación de la respuesta condiciona la interpretación de los coeficientes.
+>- Las preguntas de investigación delimitan qué medir, cómo evaluarlo ampliamente utilizada en análisis estadístiy con qué métricas.
+
 
