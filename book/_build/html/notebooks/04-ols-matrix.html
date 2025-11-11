@@ -347,7 +347,7 @@ document.write(`
 <h1><span class="section-number">4. </span>Capítulo 4: Formulación matricial del modelo OLS<a class="headerlink" href="#capitulo-4-formulacion-matricial-del-modelo-ols" title="Link to this heading">#</a></h1>
 <blockquote>
 <div><p><strong>Overview</strong>:
-Se formula y ajusta un modelo OLS usando álgebra matricial. Se presentan las ecuaciones clave (normal equations) y se verifica la equivalencia con APIs de alto nivel.</p>
+Se formula y ajusta un modelo OLS usando álgebra matricial. Se presentan las ecuaciones clave (normal equations), verificando equivalencia con statsmodels. Presenta tabla de coeficientes en unidades monetarias para interpretación directa.</p>
 </div></blockquote>
 <p><strong>Definir ruta de datos</strong></p>
 <div class="cell docutils container">
@@ -528,12 +528,12 @@ S(\beta) = (Y - X\beta)^\top (Y - X\beta)
 <p>Cada coeficiente indica cuánto se espera que cambie el <code class="docutils literal notranslate"><span class="pre">SalePrice</span></code> por un incremento de una unidad en la variable correspondiente, manteniendo constantes las demás variables. Por ejemplo, el coeficiente de <code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">Qual</span></code> es aproximadamente 17 686. Esto significa que, en promedio, por cada punto adicional en la calificación general de la casa, se espera que el precio de venta aumente unos 17 686 dólares, manteniendo constantes las otras variables del modelo.</p>
 <blockquote>
 <div><p><strong>Key takeaways</strong></p>
-</div></blockquote>
 <ul class="simple">
-<li><p>La solución matricial (\hat{\beta}=(X^TX)^{-1}X^Ty) coincide con la obtenida vía librerías.</p></li>
-<li><p>El condicionamiento de (X^TX) anticipa problemas de varianza de coeficientes.</p></li>
-<li><p>Se sientan bases para contrastes de hipótesis.</p></li>
+<li><p>La solución matricial reproduce exactamente la de librerías.</p></li>
+<li><p>El condicionamiento de 𝑋′𝑋 anticipa varianzas grandes si hay colinealidad.</p></li>
+<li><p>Base teórica para pruebas e intervalos sobre 𝛽.</p></li>
 </ul>
+</div></blockquote>
 </section>
 </section>
 

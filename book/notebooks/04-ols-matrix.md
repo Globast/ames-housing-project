@@ -7,7 +7,7 @@ kernelspec: {name: python3, display_name: Python 3}
 # Capítulo 4: Formulación matricial del modelo OLS
 
 > **Overview**:
-Se formula y ajusta un modelo OLS usando álgebra matricial. Se presentan las ecuaciones clave (normal equations) y se verifica la equivalencia con APIs de alto nivel.
+Se formula y ajusta un modelo OLS usando álgebra matricial. Se presentan las ecuaciones clave (normal equations), verificando equivalencia con statsmodels. Presenta tabla de coeficientes en unidades monetarias para interpretación directa.
 
 **Definir ruta de datos**
 
@@ -95,7 +95,6 @@ Primero se calculan los coeficientes manualmente usando la formulación matricia
 Cada coeficiente indica cuánto se espera que cambie el `SalePrice` por un incremento de una unidad en la variable correspondiente, manteniendo constantes las demás variables. Por ejemplo, el coeficiente de `Overall Qual` es aproximadamente 17 686. Esto significa que, en promedio, por cada punto adicional en la calificación general de la casa, se espera que el precio de venta aumente unos 17 686 dólares, manteniendo constantes las otras variables del modelo.
 
 > **Key takeaways**
-- La solución matricial \(\hat{\beta}=(X^TX)^{-1}X^Ty\) coincide con la obtenida vía librerías.
-- El condicionamiento de \(X^TX\) anticipa problemas de varianza de coeficientes.
-- Se sientan bases para contrastes de hipótesis.
-
+>- La solución matricial reproduce exactamente la de librerías.
+>- El condicionamiento de 𝑋′𝑋 anticipa varianzas grandes si hay colinealidad.
+>- Base teórica para pruebas e intervalos sobre 𝛽.

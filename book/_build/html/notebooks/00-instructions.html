@@ -335,20 +335,14 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#como-compilar-el-libro">Cómo compilar el libro:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demostraciones-solicitadas">Demostraciones solicitadas</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo-y-notacion">Modelo y notación</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimador-ols-y-matriz-hat">Estimador OLS y matriz <em>hat</em></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residuos-y-operador-i-h">Residuos y operador <span class="math notranslate nohighlight">\((I - H)\)</span></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#suma-de-cuadrados-residual-como-forma-cuadratica">Suma de cuadrados residual como forma cuadrática</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rango-de-i-h-y-grados-de-libertad">Rango de <span class="math notranslate nohighlight">\((I - H)\)</span> y grados de libertad</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-chi-cuadrado">Distribución Chi-cuadrado</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-no-basta-con-elevar-cada-residuo-al-cuadrado">Por qué no basta con elevar cada residuo al cuadrado</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intuicion-geometrica">Intuición geométrica</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultado-final">Resultado final</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paso-1-modelo-y-notacion-matricial">Paso 1 — Modelo y notación matricial</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paso-2-forma-cuadratica">Paso 2 — Forma cuadrática</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paso-3-distribucion-chi-2-y-grados-de-libertad">Paso 3 — Distribución <span class="math notranslate nohighlight">\(\chi^2\)</span> y grados de libertad</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comentario-final-intuicion">Comentario final (intuición)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimador-ols-y-matriz-hat">Estimador OLS y matriz hat</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#residuos-y-operador-i-h">Residuos y operador (I - H)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#suma-de-cuadrados-residual">Suma de cuadrados residual</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rango-y-grados-de-libertad">Rango y grados de libertad</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-chi-cuadrado">Distribución Chi-cuadrado</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-no-basta-con-elevar-los-residuos-al-cuadrado">Por qué no basta con elevar los residuos al cuadrado</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intuicion-geometrica">Intuición geométrica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultado-final">Resultado final</a></li>
 </ul>
 </li>
 </ul>
@@ -367,7 +361,7 @@ document.write(`
 <section id="instrucciones-de-reproduccion-y-demostraciones">
 <h2>Instrucciones de reproducción y Demostraciones<a class="headerlink" href="#instrucciones-de-reproduccion-y-demostraciones" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p><strong>Overview</strong>: Este capitulo presenta instrucciones de reproducción. Se muestran las demostraciones solicitadas.</p>
+<div><p><strong>Overview</strong>: Este capitulo presenta cómo compilar el libro, la estructura de las carpetas y las dependencias para garantizar reproducibilidad. Incluye demostraciones teóricas y comandos mínimos para construir el proyecto.</p>
 </div></blockquote>
 </section>
 <section id="como-compilar-el-libro">
@@ -398,227 +392,120 @@ mv<span class="w"> </span>data/AmesHousing.csv<span class="w"> </span>data/ames_
 </section>
 <section id="demostraciones-solicitadas">
 <h2>Demostraciones solicitadas<a class="headerlink" href="#demostraciones-solicitadas" title="Link to this heading">#</a></h2>
-<p>prueba: si actualiza</p>
 <section id="modelo-y-notacion">
 <h3>Modelo y notación<a class="headerlink" href="#modelo-y-notacion" title="Link to this heading">#</a></h3>
 <p>El modelo lineal es:</p>
-<div class="math notranslate nohighlight">
-\[
-\mathbf{y} = X\boldsymbol{\beta} + \boldsymbol{\varepsilon}, 
+<div class="math notranslate nohighlight" id="equation-eq-7-m1-modelo">
+<span class="eqno">(1)<a class="headerlink" href="#equation-eq-7-m1-modelo" title="Link to this equation">#</a></span>\[\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}, 
 \qquad 
-\boldsymbol{\varepsilon} \sim N(\mathbf{0}, \sigma^2 I_n)
-\]</div>
+\boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{0}, \sigma^2 \mathbf{I}_n)\]</div>
 <p>donde:</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(X\)</span>: matriz de diseño <span class="math notranslate nohighlight">\(n \times k\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\beta}\)</span>: vector de parámetros</p></li>
-<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon}\)</span>: vector de errores</p></li>
+<li><p><span class="math notranslate nohighlight">\( X \)</span>: matriz de diseño <span class="math notranslate nohighlight">\( \ n \times k\ \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( \boldsymbol \beta \)</span>: vector de parámetros</p></li>
+<li><p><span class="math notranslate nohighlight">\( \boldsymbol\varepsilon \)</span>: vector de errores</p></li>
+</ul>
+<p>Donde <span class="math notranslate nohighlight">\( \alpha \ge 0 \)</span> es el hiperparámetro de regularización.</p>
+<p>donde:</p>
+<ul class="simple">
+<li><p>X: matriz de diseño n × k</p></li>
+<li><p>β: vector de parámetros</p></li>
+<li><p>ε: vector de errores</p></li>
 </ul>
 </section>
-</section>
-<hr class="docutils" />
 <section id="estimador-ols-y-matriz-hat">
-<h2>Estimador OLS y matriz <em>hat</em><a class="headerlink" href="#estimador-ols-y-matriz-hat" title="Link to this heading">#</a></h2>
+<h3>Estimador OLS y matriz hat<a class="headerlink" href="#estimador-ols-y-matriz-hat" title="Link to this heading">#</a></h3>
 <p>El estimador de mínimos cuadrados es:</p>
-<div class="math notranslate nohighlight">
-\[
-\hat{\boldsymbol{\beta}} = (X'X)^{-1} X' \mathbf{y}
-\]</div>
-<p>Las predicciones se obtienen con:</p>
-<div class="math notranslate nohighlight">
-\[
-\hat{\mathbf{y}} = X\hat{\boldsymbol{\beta}} = H\mathbf{y},
-\quad 
-H = X(X'X)^{-1}X'
-\]</div>
-<p>La matriz <span class="math notranslate nohighlight">\(H\)</span> (llamada hat matrix) proyecta <span class="math notranslate nohighlight">\(\mathbf{y}\)</span> sobre el espacio columna de <span class="math notranslate nohighlight">\(X\)</span>.</p>
-<p><em>Propiedades de <span class="math notranslate nohighlight">\(H\)</span>:</em></p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m2-beta">
+<span class="eqno">(2)<a class="headerlink" href="#equation-eq-7-m2-beta" title="Link to this equation">#</a></span>\[\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1}\mathbf{X}^\top \mathbf{y}\]</div>
+<p>Las predicciones:</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m3-yhat-h">
+<span class="eqno">(3)<a class="headerlink" href="#equation-eq-7-m3-yhat-h" title="Link to this equation">#</a></span>\[\hat{\mathbf{y}} = \mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{H}\mathbf{y},
+\qquad
+\mathbf{H} = \mathbf{X}(\mathbf{X}^\top \mathbf{X})^{-1}\mathbf{X}^\top\]</div>
+<p>Propiedades de H:</p>
 <ul class="simple">
-<li><p>Simétrica: <span class="math notranslate nohighlight">\(H' = H\)</span></p></li>
-<li><p>Idempotente: <span class="math notranslate nohighlight">\(H^2 = H\)</span></p></li>
-<li><p>Rango: <span class="math notranslate nohighlight">\(\operatorname{rank}(H) = k\)</span></p></li>
+<li><p>Simétrica: H’ = H</p></li>
+<li><p>Idempotente: H² = H</p></li>
+<li><p>Rango: rank(H) = k</p></li>
 </ul>
 </section>
-<hr class="docutils" />
 <section id="residuos-y-operador-i-h">
-<h2>Residuos y operador <span class="math notranslate nohighlight">\((I - H)\)</span><a class="headerlink" href="#residuos-y-operador-i-h" title="Link to this heading">#</a></h2>
-<p>Los residuos son:</p>
-<div class="math notranslate nohighlight">
-\[
-\mathbf{e} = \mathbf{y} - \hat{\mathbf{y}} = (I - H)\mathbf{y}
-\]</div>
-<p>Sustituyendo <span class="math notranslate nohighlight">\(\mathbf{y} = X\boldsymbol{\beta} + \boldsymbol{\varepsilon}\)</span> y usando que <span class="math notranslate nohighlight">\((I - H)X = 0\)</span>:</p>
-<div class="math notranslate nohighlight">
-\[
-\boxed{\mathbf{e} = (I - H)\boldsymbol{\varepsilon}}
-\]</div>
-<p>Cada residuo es una <em>combinación lineal</em> de los errores originales.</p>
+<h3>Residuos y operador (I - H)<a class="headerlink" href="#residuos-y-operador-i-h" title="Link to this heading">#</a></h3>
+<p>Los residuos:</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m4-residuos">
+<span class="eqno">(4)<a class="headerlink" href="#equation-eq-7-m4-residuos" title="Link to this equation">#</a></span>\[\mathbf{e} = \mathbf{y} - \hat{\mathbf{y}} = (\mathbf{I}-\mathbf{H})\mathbf{y}\]</div>
+<p>Sustituyendo y = Xβ + ε y usando (I - H)X = 0:</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m5-e-from-eps">
+<span class="eqno">(5)<a class="headerlink" href="#equation-eq-7-m5-e-from-eps" title="Link to this equation">#</a></span>\[\mathbf{e} = (\mathbf{I}-\mathbf{H})\boldsymbol{\varepsilon}\]</div>
+<p>Cada residuo es una combinación lineal de los errores originales.</p>
 </section>
-<hr class="docutils" />
-<section id="suma-de-cuadrados-residual-como-forma-cuadratica">
-<h2>Suma de cuadrados residual como forma cuadrática<a class="headerlink" href="#suma-de-cuadrados-residual-como-forma-cuadratica" title="Link to this heading">#</a></h2>
-<div class="math notranslate nohighlight">
-\[
-SS_{\text{Res}} 
-= \mathbf{e}'\mathbf{e} 
-= [(I-H)\boldsymbol{\varepsilon}]'[(I-H)\boldsymbol{\varepsilon}]
-= \boldsymbol{\varepsilon}'(I-H)'(I-H)\boldsymbol{\varepsilon}
-\]</div>
-<p>Como <span class="math notranslate nohighlight">\((I - H)\)</span> es simétrica e idempotente:</p>
-<div class="math notranslate nohighlight">
-\[
-\boxed{SS_{\text{Res}} = \boldsymbol{\varepsilon}'(I - H)\boldsymbol{\varepsilon}}
-\]</div>
-<p>Es decir, el <em>SSR</em> es una forma cuadrática en los errores.</p>
+<section id="suma-de-cuadrados-residual">
+<h3>Suma de cuadrados residual<a class="headerlink" href="#suma-de-cuadrados-residual" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight" id="equation-eq-7-m6-ssr-expand">
+<span class="eqno">(6)<a class="headerlink" href="#equation-eq-7-m6-ssr-expand" title="Link to this equation">#</a></span>\[\mathrm{SSR} 
+= \mathbf{e}^\top \mathbf{e} 
+= \big[(\mathbf{I}-\mathbf{H})\boldsymbol{\varepsilon}\big]^\top
+   \big[(\mathbf{I}-\mathbf{H})\boldsymbol{\varepsilon}\big]
+= \boldsymbol{\varepsilon}^\top (\mathbf{I}-\mathbf{H})^\top(\mathbf{I}-\mathbf{H}) \boldsymbol{\varepsilon}\]</div>
+<p>Como (I - H) es simétrica e idempotente:</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m7-ssr-qf">
+<span class="eqno">(7)<a class="headerlink" href="#equation-eq-7-m7-ssr-qf" title="Link to this equation">#</a></span>\[\mathrm{SSR} = \boldsymbol{\varepsilon}^\top (\mathbf{I}-\mathbf{H}) \boldsymbol{\varepsilon}\]</div>
+<p>El SSR es una forma cuadrática en los errores.</p>
 </section>
-<hr class="docutils" />
-<section id="rango-de-i-h-y-grados-de-libertad">
-<h2>Rango de <span class="math notranslate nohighlight">\((I - H)\)</span> y grados de libertad<a class="headerlink" href="#rango-de-i-h-y-grados-de-libertad" title="Link to this heading">#</a></h2>
-<p>El rango de <span class="math notranslate nohighlight">\((I - H)\)</span> se obtiene de:</p>
-<div class="math notranslate nohighlight">
-\[
-\operatorname{rank}(I - H) = n - \operatorname{rank}(H) = n - k
-\]</div>
-<p>Por tanto:</p>
-<ul class="simple">
-<li><p>El espacio de los residuos tiene <em>dimensión <span class="math notranslate nohighlight">\(n - k\)</span></em>.</p></li>
-<li><p>Solo <em><span class="math notranslate nohighlight">\(n - k\)</span></em> residuos son independientes (los otros están restringidos por <span class="math notranslate nohighlight">\(X'e = 0\)</span>).</p></li>
-</ul>
-<p>En un modelo lineal simple (<span class="math notranslate nohighlight">\(k = 2\)</span>) → grados de libertad: <em><span class="math notranslate nohighlight">\(n - 2\)</span></em>.</p>
+<section id="rango-y-grados-de-libertad">
+<h3>Rango y grados de libertad<a class="headerlink" href="#rango-y-grados-de-libertad" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight" id="equation-eq-7-m8-rank">
+<span class="eqno">(8)<a class="headerlink" href="#equation-eq-7-m8-rank" title="Link to this equation">#</a></span>\[\operatorname{rank}(\mathbf{I}-\mathbf{H}) = n - \operatorname{rank}(\mathbf{H}) = n-k\]</div>
+<p>→ El espacio de los residuos tiene dimensión n - k.<br />
+→ Solo n - k residuos son independientes (pues X’e = 0).</p>
 </section>
-<hr class="docutils" />
 <section id="distribucion-chi-cuadrado">
-<h2>Distribución Chi-cuadrado<a class="headerlink" href="#distribucion-chi-cuadrado" title="Link to this heading">#</a></h2>
-<p><em>Resultado general:</em></p>
-<blockquote>
-<div><p>Si <span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon} \sim N(0, \sigma^2 I)\)</span> y <span class="math notranslate nohighlight">\(A\)</span> es simétrica e idempotente de rango <span class="math notranslate nohighlight">\(r\)</span>:<br />
-$<span class="math notranslate nohighlight">\(
-\frac{1}{\sigma^2} \boldsymbol{\varepsilon}'A\boldsymbol{\varepsilon} \sim \chi^2_r
-\)</span>$</p>
-</div></blockquote>
-<p>Aplicando con <span class="math notranslate nohighlight">\(A = I - H\)</span> (rango <span class="math notranslate nohighlight">\(n - k\)</span>):</p>
-<div class="math notranslate nohighlight">
-\[
-\boxed{
-\frac{SS_{\text{Res}}}{\sigma^2}
-= 
-\frac{\boldsymbol{\varepsilon}'(I - H)\boldsymbol{\varepsilon}}{\sigma^2}
-\sim 
-\chi^2_{\,n-k}
-}
-\]</div>
+<h3>Distribución Chi-cuadrado<a class="headerlink" href="#distribucion-chi-cuadrado" title="Link to this heading">#</a></h3>
+<p>Si ε ~ N(0, σ²I) y A es simétrica e idempotente de rango r:</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m9-chi2-theorem">
+<span class="eqno">(9)<a class="headerlink" href="#equation-eq-7-m9-chi2-theorem" title="Link to this equation">#</a></span>\[\frac{1}{\sigma^2}\,\boldsymbol{\varepsilon}^\top \mathbf{A}\,\boldsymbol{\varepsilon} \sim \chi^2_r\]</div>
+<p>Aplicando A = I - H:</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m10-chi2-apply">
+<span class="eqno">(10)<a class="headerlink" href="#equation-eq-7-m10-chi2-apply" title="Link to this equation">#</a></span>\[\frac{1}{\sigma^2}\,\boldsymbol{\varepsilon}^\top (\mathbf{I}-\mathbf{H})\,\boldsymbol{\varepsilon} \sim \chi^2_{n-k}\]</div>
+<p>Por tanto:</p>
+<div class="math notranslate nohighlight" id="equation-eq-7-m11-ssr-chi2">
+<span class="eqno">(11)<a class="headerlink" href="#equation-eq-7-m11-ssr-chi2" title="Link to this equation">#</a></span>\[\frac{\mathrm{SSR}}{\sigma^2} \sim \chi^2_{n-k}\]</div>
 </section>
-<hr class="docutils" />
-<section id="por-que-no-basta-con-elevar-cada-residuo-al-cuadrado">
-<h2>Por qué no basta con elevar cada residuo al cuadrado<a class="headerlink" href="#por-que-no-basta-con-elevar-cada-residuo-al-cuadrado" title="Link to this heading">#</a></h2>
+<section id="por-que-no-basta-con-elevar-los-residuos-al-cuadrado">
+<h3>Por qué no basta con elevar los residuos al cuadrado<a class="headerlink" href="#por-que-no-basta-con-elevar-los-residuos-al-cuadrado" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>Los errores <span class="math notranslate nohighlight">\(\varepsilon_i\)</span> son independientes normales ⇒<br />
-<span class="math notranslate nohighlight">\((\varepsilon_i / \sigma)^2 \sim \chi^2_1\)</span>.</p></li>
-<li><p>Pero los <em>residuos</em> <span class="math notranslate nohighlight">\(e_i\)</span> no son iguales a <span class="math notranslate nohighlight">\(\varepsilon_i\)</span>:<br />
-son combinaciones lineales ⇒ <em>no independientes</em>.</p></li>
-<li><p>Además, <span class="math notranslate nohighlight">\(\operatorname{Var}(e_i) = \sigma^2 (1 - h_{ii})\)</span>, donde <span class="math notranslate nohighlight">\(h_{ii}\)</span> es el leverage.</p></li>
-<li><p>Por eso, la <em>suma total de cuadrados</em> <span class="math notranslate nohighlight">\(e'e\)</span> sigue una chi-cuadrado, no cada residuo individual.</p></li>
+<li><p>Los errores εᵢ son normales independientes, por lo que (εᵢ / σ)² ~ χ²₁</p></li>
+<li><p>Pero los residuos eᵢ son combinaciones lineales → no independientes</p></li>
+<li><p>Además, Var(eᵢ) = σ²(1 - hᵢᵢ)</p></li>
+<li><p>Por eso, solo la suma total e’e sigue χ², no cada residuo por separado.</p></li>
 </ul>
 </section>
-<hr class="docutils" />
 <section id="intuicion-geometrica">
-<h2>Intuición geométrica<a class="headerlink" href="#intuicion-geometrica" title="Link to this heading">#</a></h2>
+<h3>Intuición geométrica<a class="headerlink" href="#intuicion-geometrica" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon}\)</span> vive en un espacio de dimensión <span class="math notranslate nohighlight">\(n\)</span>.</p></li>
-<li><p><span class="math notranslate nohighlight">\(H\)</span>: proyección sobre el subespacio de las predicciones (dimensión <span class="math notranslate nohighlight">\(k\)</span>).</p></li>
-<li><p><span class="math notranslate nohighlight">\(I - H\)</span>: proyección sobre el <em>espacio ortogonal de los residuos</em> (dimensión <span class="math notranslate nohighlight">\(n - k\)</span>).</p></li>
-<li><p>La longitud al cuadrado de esa proyección, dividida por <span class="math notranslate nohighlight">\(\sigma^2\)</span>, sigue una <span class="math notranslate nohighlight">\(\chi^2_{n-k}\)</span>.</p></li>
+<li><p>ε vive en un espacio de dimensión n</p></li>
+<li><p>H proyecta sobre el subespacio de predicciones (dimensión k)</p></li>
+<li><p>(I - H) proyecta sobre el espacio ortogonal de residuos (dimensión n - k)</p></li>
+<li><p>La <strong>longitud al cuadrado</strong> de esa proyección, dividida por σ², sigue χ²ₙ₋ₖ</p></li>
 </ul>
 </section>
-<hr class="docutils" />
 <section id="resultado-final">
-<h2>Resultado final<a class="headerlink" href="#resultado-final" title="Link to this heading">#</a></h2>
-<div class="math notranslate nohighlight">
-\[
-\boxed{
-SS_{\text{Res}} = \boldsymbol{\varepsilon}'(I - H)\boldsymbol{\varepsilon},
-\quad
-\frac{SS_{\text{Res}}}{\sigma^2} \sim \chi^2_{\,n-k}
-}
-\]</div>
-<p>En regresión lineal simple:<br />
-$<span class="math notranslate nohighlight">\(
-k = 2 \Rightarrow n - 2 \text{ grados de libertad.}
-\)</span>$</p>
-<ol class="arabic simple">
-<li><p>Sea un modelo de regresión lineal simple; muestra que la suma de cuadrados de los residuos dividida por <span class="math notranslate nohighlight">\( \sigma^2 \)</span> puede escribirse como una <strong>combinación cuadrática</strong> de los errores <span class="math notranslate nohighlight">\( \varepsilon_i \)</span> y, usando ese resultado, que su distribución es <span class="math notranslate nohighlight">\( \chi^2_{n-2} \)</span>.</p></li>
-</ol>
-<p>La varianza es <span class="math notranslate nohighlight">\( \sigma^2 \)</span>.</p>
-<p>La esperanza es ( \mathbb{E}[X] ).</p>
-<ol class="arabic simple">
-<li><p>… dividida por $<span class="math notranslate nohighlight">\( \sigma^2 \)</span><span class="math notranslate nohighlight">\( … los errores \)</span> \varepsilon_i $<span class="math notranslate nohighlight">\( … es \)</span> \chi^2_{n-2} $.</p></li>
-</ol>
-<section id="paso-1-modelo-y-notacion-matricial">
-<h3>Paso 1 — Modelo y notación matricial<a class="headerlink" href="#paso-1-modelo-y-notacion-matricial" title="Link to this heading">#</a></h3>
-<div class="math notranslate nohighlight" id="equation-eq-2-11-1-modelo">
-<span class="eqno">(1)<a class="headerlink" href="#equation-eq-2-11-1-modelo" title="Link to this equation">#</a></span>\[\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}, \qquad
-\boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{0},\, \sigma^2 \mathbf{I}_n)\]</div>
-<p>donde en regresión simple
-<span class="math notranslate nohighlight">\(\mathbf{X} = [\mathbf{1}\ \ \mathbf{x}] \in \mathbb{R}^{n\times 2}\)</span>
-(tiene <strong>p = 2</strong> columnas: intercepto y regresor).</p>
-<p>El estimador OLS es</p>
-<div class="math notranslate nohighlight" id="equation-eq-2-11-1-beta">
-<span class="eqno">(2)<a class="headerlink" href="#equation-eq-2-11-1-beta" title="Link to this equation">#</a></span>\[\hat{\boldsymbol{\beta}} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}.\]</div>
-<p>El vector de <strong>residuos</strong> es</p>
-<div class="math notranslate nohighlight" id="equation-eq-2-11-1-residuos">
-<span class="eqno">(3)<a class="headerlink" href="#equation-eq-2-11-1-residuos" title="Link to this equation">#</a></span>\[\mathbf{e} = \mathbf{y} - \hat{\mathbf{y}} = \mathbf{y} - \mathbf{X}\hat{\boldsymbol{\beta}}
-= \left(\mathbf{I}_n - \mathbf{H}\right)\mathbf{y},\]</div>
-<p>con la <strong>matriz sombrero</strong> (proyección) definida por</p>
-<div class="math notranslate nohighlight" id="equation-eq-2-11-1-hat">
-<span class="eqno">(4)<a class="headerlink" href="#equation-eq-2-11-1-hat" title="Link to this equation">#</a></span>\[\mathbf{H} = \mathbf{X}(\mathbf{X}^\top \mathbf{X})^{-1}\mathbf{X}^\top, \qquad
-\mathbf{M} \equiv \mathbf{I}_n - \mathbf{H}.\]</div>
-</section>
-<section id="paso-2-forma-cuadratica">
-<h3>Paso 2 — Forma cuadrática<a class="headerlink" href="#paso-2-forma-cuadratica" title="Link to this heading">#</a></h3>
-<p>Sustituyendo <a class="reference internal" href="#equation-eq-2-11-1-modelo">(1)</a> en <a class="reference internal" href="#equation-eq-2-11-1-residuos">(3)</a>,</p>
-<div class="math notranslate nohighlight" id="equation-eq-2-11-1-e-m-eps">
-<span class="eqno">(5)<a class="headerlink" href="#equation-eq-2-11-1-e-m-eps" title="Link to this equation">#</a></span>\[\mathbf{e} = \mathbf{M}\mathbf{y} = \mathbf{M}(\mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon})
-= \underbrace{\mathbf{M}\mathbf{X}}_{=\ \mathbf{0}} \boldsymbol{\beta} + \mathbf{M}\boldsymbol{\varepsilon}
-= \mathbf{M}\boldsymbol{\varepsilon},\]</div>
-<p>pues <span class="math notranslate nohighlight">\(\mathbf{M}\mathbf{X} = (\mathbf{I}-\mathbf{H})\mathbf{X} = \mathbf{X} - \mathbf{X} = \mathbf{0}\)</span>.</p>
-<p>La <strong>suma de cuadrados de residuos</strong> es</p>
-<div class="math notranslate nohighlight" id="equation-eq-2-11-1-ssr">
-<span class="eqno">(6)<a class="headerlink" href="#equation-eq-2-11-1-ssr" title="Link to this equation">#</a></span>\[SS_{\text{Res}} = \mathbf{e}^\top \mathbf{e} = (\mathbf{M}\boldsymbol{\varepsilon})^\top(\mathbf{M}\boldsymbol{\varepsilon})
-= \boldsymbol{\varepsilon}^\top \mathbf{M}^\top \mathbf{M}\,\boldsymbol{\varepsilon}.\]</div>
-<p>Como <span class="math notranslate nohighlight">\(\mathbf{H}\)</span> es simétrica e idempotente (<span class="math notranslate nohighlight">\(\mathbf{H}=\mathbf{H}^\top\)</span>, <span class="math notranslate nohighlight">\(\mathbf{H}^2=\mathbf{H}\)</span>),
-entonces <span class="math notranslate nohighlight">\(\mathbf{M}=\mathbf{I}-\mathbf{H}\)</span> es también <strong>simétrica</strong> e <strong>idempotente</strong>:
-<span class="math notranslate nohighlight">\(\mathbf{M}^\top=\mathbf{M}\)</span> y <span class="math notranslate nohighlight">\(\mathbf{M}^2=\mathbf{M}\)</span>.
-Por tanto,</p>
-<div class="math notranslate nohighlight" id="equation-eq-2-11-1-ssr-forma">
-<span class="eqno">(7)<a class="headerlink" href="#equation-eq-2-11-1-ssr-forma" title="Link to this equation">#</a></span>\[SS_{\text{Res}} = \boldsymbol{\varepsilon}^\top \mathbf{M}\,\boldsymbol{\varepsilon}
-\qquad\Longrightarrow\qquad
-\frac{SS_{\text{Res}}}{\sigma^2} = \left(\frac{\boldsymbol{\varepsilon}}{\sigma}\right)^\top
-\mathbf{M}\left(\frac{\boldsymbol{\varepsilon}}{\sigma}\right).\]</div>
-<p>Esta es una <strong>combinación cuadrática</strong> de los errores, como se pedía.</p>
-</section>
-<section id="paso-3-distribucion-chi-2-y-grados-de-libertad">
-<h3>Paso 3 — Distribución <span class="math notranslate nohighlight">\(\chi^2\)</span> y grados de libertad<a class="headerlink" href="#paso-3-distribucion-chi-2-y-grados-de-libertad" title="Link to this heading">#</a></h3>
-<p>Sea <span class="math notranslate nohighlight">\(\mathbf{z} \equiv \boldsymbol{\varepsilon}/\sigma \sim \mathcal{N}(\mathbf{0}, \mathbf{I}_n)\)</span>.
-Entonces, por <a class="reference internal" href="#equation-eq-2-11-1-ssr-forma">(7)</a>,</p>
-<div class="math notranslate nohighlight" id="equation-eq-2-11-1-qf">
-<span class="eqno">(8)<a class="headerlink" href="#equation-eq-2-11-1-qf" title="Link to this equation">#</a></span>\[\frac{SS_{\text{Res}}}{\sigma^2} = \mathbf{z}^\top \mathbf{M}\,\mathbf{z}.\]</div>
-<p>Teorema clásico: si <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> es simétrica e idempotente con <strong>rango <span class="math notranslate nohighlight">\(r\)</span></strong>, y <span class="math notranslate nohighlight">\(\mathbf{z}\sim\mathcal{N}(\mathbf{0},\mathbf{I})\)</span>,
-entonces <span class="math notranslate nohighlight">\(\mathbf{z}^\top \mathbf{A}\,\mathbf{z} \sim \chi^2_r\)</span>. Aquí <span class="math notranslate nohighlight">\(\mathbf{A}=\mathbf{M}\)</span>.</p>
-<p>En regresión simple (<span class="math notranslate nohighlight">\(p=2\)</span>), <span class="math notranslate nohighlight">\(\operatorname{rank}(\mathbf{H})=p=2\)</span>, por lo que</p>
-<div class="math notranslate nohighlight" id="equation-eq-2-11-1-rank">
-<span class="eqno">(9)<a class="headerlink" href="#equation-eq-2-11-1-rank" title="Link to this equation">#</a></span>\[\operatorname{rank}(\mathbf{M}) = \operatorname{rank}(\mathbf{I}-\mathbf{H}) = n - \operatorname{rank}(\mathbf{H}) = n-2.\]</div>
-<p>Concluimos que</p>
-<div class="math notranslate nohighlight" id="equation-eq-2-11-1-chi2">
-<span class="eqno">(10)<a class="headerlink" href="#equation-eq-2-11-1-chi2" title="Link to this equation">#</a></span>\[\frac{SS_{\text{Res}}}{\sigma^2} \sim \chi^2_{\,n-2}.\]</div>
-</section>
-<section id="comentario-final-intuicion">
-<h3>Comentario final (intuición)<a class="headerlink" href="#comentario-final-intuicion" title="Link to this heading">#</a></h3>
+<h3>Resultado final<a class="headerlink" href="#resultado-final" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight" id="equation-eq-7-m12-resultado">
+<span class="eqno">(12)<a class="headerlink" href="#equation-eq-7-m12-resultado" title="Link to this equation">#</a></span>\[\mathrm{SSR} = \boldsymbol{\varepsilon}^\top (\mathbf{I}-\mathbf{H}) \boldsymbol{\varepsilon},
+\qquad
+\frac{\mathrm{SSR}}{\sigma^2} \sim \chi^2_{n-k}\]</div>
+<p>En regresión lineal simple (k = 2): n - 2 grados de libertad.</p>
+<blockquote>
+<div><p><strong>Key takeaways</strong></p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\mathbf{H}\)</span> proyecta <span class="math notranslate nohighlight">\(\mathbf{y}\)</span> sobre el subespacio generado por las columnas de <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> (dimensión <span class="math notranslate nohighlight">\(p\)</span>).</p></li>
-<li><p><span class="math notranslate nohighlight">\(\mathbf{M}\)</span> proyecta sobre su <strong>complemento ortogonal</strong> (dimensión <span class="math notranslate nohighlight">\(n-p\)</span>), donde viven los residuos.</p></li>
-<li><p>Al estandarizar los errores por <span class="math notranslate nohighlight">\(\sigma\)</span>, la energía de la proyección en ese subespacio (forma cuadrática) sigue una <span class="math notranslate nohighlight">\(\chi^2\)</span> con <span class="math notranslate nohighlight">\(n-p\)</span> grados de libertad, que aquí es <span class="math notranslate nohighlight">\(n-2\)</span>.</p></li>
+<li><p>Hay instrucciones claras de build y control de versiones, con dataset esperado y seeds fijas.</p></li>
+<li><p>Las demostraciones cubren de forma compacta OLS en álgebra lineal y propiedades del SSR.</p></li>
+<li><p>El capítulo es la “bitácora” de reproducibilidad del libro.
+-La reproducibilidad se garantiza fijando semillas y documentando versiones de paquetes.</p></li>
 </ul>
-<p><strong>Referencias internas.</strong> De <a class="reference internal" href="#equation-eq-2-11-1-e-m-eps">(5)</a> y <a class="reference internal" href="#equation-eq-2-11-1-ssr">(6)</a> se obtiene la forma cuadrática <a class="reference internal" href="#equation-eq-2-11-1-ssr-forma">(7)</a>; usando <a class="reference internal" href="#equation-eq-2-11-1-rank">(9)</a> se deduce la distribución en <a class="reference internal" href="#equation-eq-2-11-1-chi2">(10)</a>.</p>
+</div></blockquote>
 </section>
 </section>
 </section>
@@ -691,20 +578,14 @@ entonces <span class="math notranslate nohighlight">\(\mathbf{z}^\top \mathbf{A}
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#como-compilar-el-libro">Cómo compilar el libro:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demostraciones-solicitadas">Demostraciones solicitadas</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo-y-notacion">Modelo y notación</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimador-ols-y-matriz-hat">Estimador OLS y matriz <em>hat</em></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residuos-y-operador-i-h">Residuos y operador <span class="math notranslate nohighlight">\((I - H)\)</span></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#suma-de-cuadrados-residual-como-forma-cuadratica">Suma de cuadrados residual como forma cuadrática</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rango-de-i-h-y-grados-de-libertad">Rango de <span class="math notranslate nohighlight">\((I - H)\)</span> y grados de libertad</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-chi-cuadrado">Distribución Chi-cuadrado</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-no-basta-con-elevar-cada-residuo-al-cuadrado">Por qué no basta con elevar cada residuo al cuadrado</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intuicion-geometrica">Intuición geométrica</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultado-final">Resultado final</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paso-1-modelo-y-notacion-matricial">Paso 1 — Modelo y notación matricial</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paso-2-forma-cuadratica">Paso 2 — Forma cuadrática</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paso-3-distribucion-chi-2-y-grados-de-libertad">Paso 3 — Distribución <span class="math notranslate nohighlight">\(\chi^2\)</span> y grados de libertad</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comentario-final-intuicion">Comentario final (intuición)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimador-ols-y-matriz-hat">Estimador OLS y matriz hat</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#residuos-y-operador-i-h">Residuos y operador (I - H)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#suma-de-cuadrados-residual">Suma de cuadrados residual</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rango-y-grados-de-libertad">Rango y grados de libertad</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-chi-cuadrado">Distribución Chi-cuadrado</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#por-que-no-basta-con-elevar-los-residuos-al-cuadrado">Por qué no basta con elevar los residuos al cuadrado</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intuicion-geometrica">Intuición geométrica</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultado-final">Resultado final</a></li>
 </ul>
 </li>
 </ul>

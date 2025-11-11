@@ -57,6 +57,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"tags": "all", "inlineMath": [["$", "$"], ["\\\\(", "\\\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]], "processEscapes": true}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/10-conclusions';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -305,7 +307,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -321,6 +325,16 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#respuesta-a-preguntas-de-investigacion">10.1. Respuesta a preguntas de investigación</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusiones">10.2. Conclusiones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trabajo-futuro">10.3. Trabajo futuro</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -332,9 +346,55 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="capitulo-10-conclusiones-y-trabajo-futuro">
 <h1><span class="section-number">10. </span>Capítulo 10: Conclusiones y trabajo futuro<a class="headerlink" href="#capitulo-10-conclusiones-y-trabajo-futuro" title="Link to this heading">#</a></h1>
-<p>Responder preguntas iniciales.</p>
-<p>Integrar hallazgos teóricos y empíricos.</p>
-<p>Proponer extensiones (p. ej., inferencia bayesiana, causalidad).</p>
+<section id="respuesta-a-preguntas-de-investigacion">
+<h2><span class="section-number">10.1. </span>Respuesta a preguntas de investigación<a class="headerlink" href="#respuesta-a-preguntas-de-investigacion" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>¿Qué implicaciones prácticas pueden derivarse de los resultados para la valoración inmobiliaria en Ames, Iowa?</strong></p></li>
+</ol>
+<p>El modelo indica que el precio de las viviendas depende principalmente de la calidad general, el espacio habitable, el área del garaje y la antigüedad. Una mejora de un punto en la calidad general incrementa el valor en aproximadamente 9%–10%, mientras que cada 100 ft² adicionales en superficie habitable aumentan el precio entre <span class="math notranslate nohighlight">\(7500 y \)</span>8000. Cada espacio adicional en el garaje aporta cerca de <span class="math notranslate nohighlight">\(12000–\)</span>14000, y una diferencia de diez años en antigüedad se asocia con una reducción del 3%–5% en el valor. Estos resultados pueden guiar decisiones de tasación, remodelación y fijación de precios en el mercado inmobiliario de Ames.</p>
+<ol class="arabic simple" start="2">
+<li><p><strong>¿Hasta qué punto los métodos de regularización (Ridge y Lasso) mejoran la capacidad predictiva frente al modelo OLS?</strong></p></li>
+</ol>
+<p>El modelo OLS presentó un ajuste con R² = 0.84 y evidencia de heterocedasticidad. Los métodos Ridge y Lasso alcanzaron un R² cercano a 0.85, reduciendo el error de predicción y la sensibilidad ante variables correlacionadas. Lasso, además, eliminó predictores de bajo aporte sin pérdida de ajuste, mejorando la estabilidad y la interpretabilidad del modelo frente al OLS.</p>
+<ol class="arabic simple" start="3">
+<li><p><strong>¿Cuál es el precio promedio esperado de una vivienda cuando se mantienen constantes las demás variables relevantes?</strong></p></li>
+</ol>
+<p>El intercepto del modelo Lasso corresponde a un precio promedio estimado cercano a $180000, representando una vivienda típica en Ames con valores medios en sus características. A partir de esa base, la calidad, el tamaño habitable y el garaje son los principales factores que aumentan el valor, mientras que la antigüedad lo reduce de forma moderada.</p>
+<ol class="arabic simple" start="4">
+<li><p><strong>¿Qué tan bien predice el modelo los precios?</strong></p></li>
+</ol>
+<p>El modelo Lasso explica aproximadamente el 85% de la variación en los precios (R² = 0.85) y presenta un error absoluto medio entre <span class="math notranslate nohighlight">\(17000 y \)</span>19000. Los residuos no muestran patrones sistemáticos, lo que sugiere un buen ajuste general y ausencia de sobreajuste.</p>
+</section>
+<section id="conclusiones">
+<h2><span class="section-number">10.2. </span>Conclusiones<a class="headerlink" href="#conclusiones" title="Link to this heading">#</a></h2>
+<p>El análisis evidenció que los <strong>Modelos Lineales Clásicos (OLS)</strong> son una herramienta sólida para comprender los determinantes del precio de la vivienda, pero su desempeño depende del cumplimiento de los supuestos estadísticos. Se detectaron <strong>outliers</strong> y <strong>heterocedasticidad</strong>, lo que afectó la validez de los errores estándar. Al aplicar <strong>métodos robustos</strong> (Huber y Tukey) y de <strong>regularización</strong> (Ridge y Lasso), se obtuvo un modelo más <strong>estable, interpretativo y predictivo</strong>.</p>
+<p>En términos prácticos, la <strong>calidad general</strong> y la <strong>superficie habitable</strong> son los factores con mayor influencia positiva en el valor, seguidos por el <strong>garaje</strong> y el <strong>sótano</strong>. La <strong>antigüedad</strong> ejerce un efecto negativo moderado. El <strong>tamaño del terreno</strong> mostró un efecto marginal, lo que confirma que los compradores priorizan el <strong>espacio interior</strong> y la <strong>calidad constructiva</strong> sobre la extensión del lote.</p>
+<p>Los resultados empíricos validan la <strong>teoría económica inmobiliaria</strong> y demuestran que <strong>combinar el enfoque clásico con técnicas modernas de regularización</strong> permite desarrollar modelos más <strong>precisos, robustos y útiles</strong> para la toma de decisiones en <strong>tasación y predicción de precios</strong>.</p>
+</section>
+<section id="trabajo-futuro">
+<h2><span class="section-number">10.3. </span>Trabajo futuro<a class="headerlink" href="#trabajo-futuro" title="Link to this heading">#</a></h2>
+<p><strong>Líneas futuras de investigación</strong></p>
+<p>Para ampliar el alcance del estudio, se propone integrar <strong>modelos de Gradient Boosting</strong>, en particular <strong>XGBoost</strong>, como alternativa no lineal y de mayor potencia predictiva (véase: <em>An Optimal House Price Prediction Algorithm: XGBoost</em>, Sharma et al., 2024. <a class="reference external" href="https://www.mdpi.com/2813-2203/3/1/3">https://www.mdpi.com/2813-2203/3/1/3</a>).</p>
+<p><strong>Ventajas principales</strong></p>
+<ul class="simple">
+<li><p>No requiere los supuestos de <strong>linealidad</strong> u <strong>homocedasticidad</strong>.</p></li>
+<li><p>Captura <strong>interacciones complejas</strong> entre variables (por ejemplo, <em>calidad × tamaño</em>).</p></li>
+<li><p>Es <strong>robusto frente a outliers</strong> y escalas distintas de variables.</p></li>
+<li><p>Mejora la <strong>capacidad predictiva</strong>: estudios muestran reducciones del <strong>20%–40% en RMSE</strong> frente a OLS.</p></li>
+<li><p>Permite interpretar la <strong>importancia de las variables</strong> mediante <strong>SHAP values</strong>, que cuantifican la contribución individual de cada predictor.</p></li>
+</ul>
+<p><strong>Resultados exploratorios</strong></p>
+<p><strong>XGBoost</strong> alcanzó un <strong>R² ≈ 0.91</strong>, superando a <strong>OLS</strong> y <strong>RLM</strong>, y ajustándose mejor a los extremos del rango de precios.<br />
+Su capacidad para manejar <strong>no linealidades</strong> y <strong>efectos combinados</strong> lo convierte en una herramienta prometedora para <strong>sistemas de valoración automatizada</strong>.</p>
+<p><strong>Líneas futuras de trabajo</strong></p>
+<ul class="simple">
+<li><p>Implementar <strong>validación cruzada k-fold</strong> para estimar el error de generalización.</p></li>
+<li><p>Comparar el rendimiento de <strong>XGBoost</strong>, <strong>Random Forests</strong> y <strong>Redes Neuronales</strong>.</p></li>
+<li><p>Desarrollar un <strong>dashboard interactivo</strong> (por ejemplo, en <em>Streamlit</em> o <em>Power BI</em>) para simular precios según atributos.</p></li>
+<li><p>Explorar <strong>enfoques Bayesianos y causales</strong>, que aporten interpretabilidad y estimación de incertidumbre.</p></li>
+</ul>
+<p>En conjunto, la integración de <strong>métodos clásicos y modernos</strong> fortalece tanto la <strong>interpretabilidad</strong> como la <strong>efectividad empírica</strong> del análisis de precios de vivienda en Ames, estableciendo una base sólida para <strong>futuras aplicaciones en predicción y análisis inmobiliario</strong>.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -382,6 +442,23 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#respuesta-a-preguntas-de-investigacion">10.1. Respuesta a preguntas de investigación</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusiones">10.2. Conclusiones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trabajo-futuro">10.3. Trabajo futuro</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

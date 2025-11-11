@@ -7,7 +7,8 @@ kernelspec: {name: python3, display_name: Python 3}
 # Capítulo 2: Descripción y limpieza del dataset
 
 > **Overview**:
-En este capítulo se parte del CSV original **ames_housing.csv**, se realiza limpieza, codificación de variables categóricas y tratamiento de outliers. La salida produce **AmesHousing_codificada.csv** y **AmesHousing_sin_outliers.csv**. Se documentan las decisiones para garantizar reproducibilidad y coherencia para capítulos posteriores.
+En este capítulo arga el CSV original y audita faltantes; imputa mediana (numéricas) y moda (categóricas). Detecta y elimina outliers vía regla 3Z; transforma SalePrice a 
+log. Codifica ordinales por mapeos y nominales con dummies, dejando datos listos para modelar.
 
 ## Carga del dataset
 
@@ -231,7 +232,9 @@ El conjunto original contenía **2930 registros y 82 variables**, con un total d
 Tras el proceso de imputación, eliminación de outliers, transformación logarítmica y codificación de variables, el dataset final quedó compuesto por **2768 observaciones y 222 variables**, sin valores ausentes.
 
 > **Key takeaways**
-- El pipeline deja dos salidas canónicas: *AmesHousing_codificada.csv* y *AmesHousing_sin_outliers.csv*.
-- Las transformaciones son **deterministas** y documentadas para reproducibilidad.
-- Las decisiones sobre outliers afectan la estabilidad de coeficientes en capítulos posteriores.
+>- Imputación diferenciada (mediana/moda) reduce sesgo por faltantes.
+>- Regla 3Z controla influencia de extremos antes de ajustar el modelo.
+>- Codificación ordenada + dummies habilita especificaciones comparables.
+>- La limpieza de datos es esencial para asegurar la validez de los modelos de regresión.
+>- La coherencia entre tipos (numérico/ordinal/nominal) evita sesgos en la codificación y el modelado.
 

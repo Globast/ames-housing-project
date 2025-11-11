@@ -196,6 +196,8 @@ Coeficientes con **errores estándar** muy pequeños, como los de `Overall Qual`
 **Valores p** menores que 0.05 se consideran significativos, indicando que los coeficientes son distintos de 0. En este modelo, la mayoría de las variables cumplen este criterio, de forma que contribuyen significativamente a explicar `SalePrice`. Por el contrario, `1st Flr SF` y `Full Bath` tienen valores p mayores a 0.05, sugiriendo que su efecto podría no ser relevante al controlar por los demás predictores.
 
 > **Key takeaways**
-- Intervalos y p-valores dependen de supuestos de homocedasticidad y normalidad de errores.
-- Los efectos significativos son coherentes con el EDA, reforzando validez del modelo.
-- Se reconoce el riesgo de error tipo I por múltiples comparaciones.
+>- Intervalos y p-valores dependen de supuestos de homocedasticidad y normalidad de errores.
+>- Los efectos significativos son coherentes con el EDA, reforzando validez del modelo.
+>- Se reconoce el riesgo de error tipo I por múltiples comparaciones.
+>Los intervalos de confianza comunican precisión y deben acompañar toda estimación puntual.
+>-La interpretación sustantiva exige distinguir significancia estadística de relevancia práctica.

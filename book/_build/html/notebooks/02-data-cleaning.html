@@ -350,7 +350,8 @@ document.write(`
 <h1><span class="section-number">2. </span>Capítulo 2: Descripción y limpieza del dataset<a class="headerlink" href="#capitulo-2-descripcion-y-limpieza-del-dataset" title="Link to this heading">#</a></h1>
 <blockquote>
 <div><p><strong>Overview</strong>:
-En este capítulo se parte del CSV original <strong>ames_housing.csv</strong>, se realiza limpieza, codificación de variables categóricas y tratamiento de outliers. La salida produce <strong>AmesHousing_codificada.csv</strong> y <strong>AmesHousing_sin_outliers.csv</strong>. Se documentan las decisiones para garantizar reproducibilidad y coherencia para capítulos posteriores.</p>
+En este capítulo arga el CSV original y audita faltantes; imputa mediana (numéricas) y moda (categóricas). Detecta y elimina outliers vía regla 3Z; transforma SalePrice a
+log. Codifica ordinales por mapeos y nominales con dummies, dejando datos listos para modelar.</p>
 </div></blockquote>
 <section id="carga-del-dataset">
 <h2><span class="section-number">2.1. </span>Carga del dataset<a class="headerlink" href="#carga-del-dataset" title="Link to this heading">#</a></h2>
@@ -972,12 +973,14 @@ Y' = \log(1 + Y)
 Tras el proceso de imputación, eliminación de outliers, transformación logarítmica y codificación de variables, el dataset final quedó compuesto por <strong>2768 observaciones y 222 variables</strong>, sin valores ausentes.</p>
 <blockquote>
 <div><p><strong>Key takeaways</strong></p>
-</div></blockquote>
 <ul class="simple">
-<li><p>El pipeline deja dos salidas canónicas: <em>AmesHousing_codificada.csv</em> y <em>AmesHousing_sin_outliers.csv</em>.</p></li>
-<li><p>Las transformaciones son <strong>deterministas</strong> y documentadas para reproducibilidad.</p></li>
-<li><p>Las decisiones sobre outliers afectan la estabilidad de coeficientes en capítulos posteriores.</p></li>
+<li><p>Imputación diferenciada (mediana/moda) reduce sesgo por faltantes.</p></li>
+<li><p>Regla 3Z controla influencia de extremos antes de ajustar el modelo.</p></li>
+<li><p>Codificación ordenada + dummies habilita especificaciones comparables.</p></li>
+<li><p>La limpieza de datos es esencial para asegurar la validez de los modelos de regresión.</p></li>
+<li><p>La coherencia entre tipos (numérico/ordinal/nominal) evita sesgos en la codificación y el modelado.</p></li>
 </ul>
+</div></blockquote>
 </section>
 </section>
 

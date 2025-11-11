@@ -7,11 +7,7 @@ kernelspec: {name: python3, display_name: Python 3}
 # Capítulo 7 — Remedios y métodos robustos
 
 > **Overview**:
-
-En este capítulo se ajusta un modelo lineal OLS para **Ames Housing** y se comparan errores estándar y
-ancho de intervalos de confianza bajo OLS, correcciones robustas a la heterocedasticidad (HC0–HC3) y **bootstrap**.
-También se estiman modelos **RLM** (Huber y Tukey) para mitigar la influencia de outliers.
-Presentamos resultados en tablas y los discutimos, incluyendo recomendaciones prácticas.
+Compara OLS con errores estándar robustos (HC0–HC3), regresión robusta (Huber/Tukey) y bootstrap. Muestra que HC3 ensancha EE/IC de forma conservadora; RLM reduce influencia de outliers; bootstrap ofrece bandas empíricas adicionales.
 
 
 
@@ -337,16 +333,8 @@ de los coeficientes frente a remuestreo. (Ver «Takeaways» al final.)
 Alineados con los errores estándar ([Tabla 7.4.2](#tabla-742-se-ols-hc3-boot)), los intervalos calculados con OLS son consistentemente más estrechos que los obtenidos con HC3 o bootstrap, llegando a la misma conclusión de que el OLS inicial es menos robusto.
 
 > **Key takeaways**
->>**Sobre heterocedasticidad.** Si los errores estándar HC3 (o HC2) superan de manera consistente a los de OLS,
-esto sugiere varianza no constante. En tal caso, la inferencia debe basarse en versiones robustas (HC3 recomendado).
-Además, el **ancho de los IC** (Tabla 7.2) es un buen indicador del impacto en la precisión de la estimación.
->>**Sobre RLM (Huber/Tukey).** Cuando existen outliers influyentes, RLM puede reducir su peso (ver Tabla 7.3 y, si corresponde,
-los pesos por observación). Cambios sustanciales en coeficientes o en su significancia, frente a OLS, ameritan diagnosticar
+>- **Sobre heterocedasticidad.** Si los errores estándar HC3 (o HC2) superan de manera consistente a los de OLS, esto sugiere varianza no constante. En tal caso, la inferencia debe basarse en versiones robustas (HC3 recomendado).
+Además, el **ancho de los IC** es un buen indicador del impacto en la precisión de la estimación.
+>- **Sobre RLM (Huber/Tukey).** Cuando existen outliers influyentes, RLM puede reducir su peso. Cambios sustanciales en coeficientes o en su significancia, frente a OLS, ameritan diagnosticar
 casos influyentes y revisar la especificación.
->>**Sobre bootstrap.** El bootstrap (Tabla 7.4) brinda una validación empírica de la variabilidad de los parámetros.
-Considere comparar los percentiles 2.5%/97.5% de bootstrap con los IC teóricos; discrepancias marcadas sugieren
-sensibilidad a supuestos o a la muestra.
->>1. **Inferencia robusta:** En presencia de heterocedasticidad, utilice **HC3** para SE e IC; valide conclusiones frente a OLS.
->>2. **Diagnóstico de outliers:** Si RLM re-pondera fuertemente algunos casos, investigue esas observaciones (posibles errores o segmentos distintos).
->>3. **Validación por remuestreo:** Use **bootstrap** para verificar estabilidad de coeficientes y anchos de IC.
->>4. **Rutas deterministas:** Los datos se leen desde `DATA_PATH` y los resultados de bootstrap se guardan en `BOOTSTRAP_OUT` (book/data/).
+>- **Sobre bootstrap.** El bootstrap  brinda una validación empírica de la variabilidad de los parámetros.

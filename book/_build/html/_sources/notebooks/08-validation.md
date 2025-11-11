@@ -7,10 +7,9 @@ kernelspec: {name: python3, display_name: Python 3}
 # Capítulo 8 — Validación y selección de modelos
 
 > **Overview**:
+Este capítulo evalúa generalización con partición train/test y métricas (R², RMSE, MAE). Implementa Ridge y Lasso con escalamiento y búsqueda de 
+𝛼; compara OLS vs. regularizados para estabilidad y sesgo-varianza. 
 
-Este capítulo evalúa el desempeño del modelo mediante técnicas de **validación** (p. ej., holdout,
-*k*-fold cross-validation) y criterios de selección (AIC, BIC, errores de predicción).
-Se busca comparar configuraciones de modelos y reportar métricas de generalización.
 
 **Definir ruta de datos**
 
@@ -383,9 +382,6 @@ Todos los modelos presentan valores de R² muy similares, alrededor de 0.855–0
 En el caso de estudio Lasso logra el valor ligeramente más bajo en ambas métricas, sugiriendo un ajuste marginalmente más preciso. Además, simplifica el modelo al eliminar variables menos relevantes, mejorando la interpretabilidad sin sacrificar precisión.
 
 > **Key takeaways**
->>**Validez externa.** Compare las métricas de error entre entrenamiento y validación. Diferencias grandes sugieren sobreajuste.
-**Selección de modelo.** Use criterios comparables (AIC/BIC) y valide con *k*-fold para evitar conclusiones por azar.
-**Reporte.** Numere y cite cada tabla/figura en el texto (p. ej., «ver Tabla 8.1»). No deje resultados sin interpretación.
->>1. **Use validación cruzada** para estimar el error de generalización con menor varianza que un único split.
->>2. **Contraste AIC/BIC** con desempeño de validación; no se quede solo con un criterio.
->>3. **Rutas deterministas:** Los datos se cargan desde `DATA_PATH` y toda salida se guarda en `../data/`.
+>- Buen desempeño out-of-sample y sin sobreajuste marcado en el modelo base.
+>- Regularización estabiliza coeficientes; exceso de 𝛼 degrada ajuste.
+>- Seleccionar por validación (no solo por ajuste en entrenamiento).
