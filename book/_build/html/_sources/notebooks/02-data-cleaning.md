@@ -235,6 +235,5 @@ Tras el proceso de imputación, eliminación de outliers, transformación logar�
 >- Imputación diferenciada (mediana/moda) reduce sesgo por faltantes.
 >- Regla 3Z controla influencia de extremos antes de ajustar el modelo.
 >- Codificación ordenada + dummies habilita especificaciones comparables.
->- La limpieza de datos es esencial para asegurar la validez de los modelos de regresión.
 >- La coherencia entre tipos (numérico/ordinal/nominal) evita sesgos en la codificación y el modelado.
 

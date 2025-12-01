@@ -157,5 +157,3 @@ Con respecto a la multicolinealidad, todos los valores de VIF de los predictores
 >-Patrones en residuos sugieren transformaciones o reespecificaciones.
 >-Heterocedasticidad → EE clásicos optimistas; motivan correcciones robustas.
 >-VIF < 5 indica colinealidad manejable en el modelo base.
->-Patrones en residuos indican violaciones de supuestos y sugieren reespecificaciones del modelo.
->-VIF y pruebas de heterocedasticidad guían qué correcciones aplicar (robustos, transformaciones).
